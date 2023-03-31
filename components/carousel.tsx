@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import { Carousel, CarouselResponsiveOption } from "primereact/carousel";
-import { BoatMateService } from '../services/BoatMateService';
+// import { BoatMateService } from '../services/BoatMateService';
 
 interface Service {
   id: string;
@@ -33,7 +33,7 @@ const CarouselComponent = () => {
   ];
 
   useEffect(() => {
-    BoatMateService.getServicesSmall().then((data) => setServices(data.slice(0, 9)));
+    // BoatMateService.getServicesSmall().then((data) => setServices(data.slice(0, 9)));
   }, []);
 
   const serviceTemplate = (service: Service) => {
