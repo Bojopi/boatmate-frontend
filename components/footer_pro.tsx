@@ -50,14 +50,14 @@ export default function FooterProComponent() {
                     <p className="mt-1 text-base lg:text-2xl">1-888-819-2644</p>
                     <p className="mt-1 text-xs lg:text-sm font-light">Nationwide TDD/TTY: <span className="font-medium">Call 711</span></p>
                     <p className="mt-3 leading-none">Give us a call.</p>
-                    <p>We're standing by.</p>
+                    <p>We&apos;re standing by.</p>
                     <p className="mt-2 text-xs lg:text-sm">BoatMate Call Center</p>
                     <p className="mt-2 text-xs lg:text-sm font-light">M-F: 8:00am - 8:00pm EST</p>
                 </div>
                 <p className="col-span-3 text-xs text-center lg:text-left lg:text-sm tracking-wide">© Copyright 1995-2023, Angi. All Rights Reserved. | <Link href={'/pro'} className="font-bold">Terms of Use</Link> | <Link href={'/pro'} className="font-bold">Privacy Policy</Link> | <Link href={'/pro'} className="font-bold">Service Provider Agreement</Link> | <Link href={'/pro'} className="font-bold">California Privacy </Link>| Accessibility Tools</p>
                 <div className="col-span-2 mx-20 font-medium hidden lg:block">
                     <p>Drop us a line</p>
-                    <p className="mt-2 text-sm font-normal"><Link href={'/pro'} className="font-medium" >Email us </Link>and we'll reply as quickly as possible.</p>
+                    <p className="mt-2 text-sm font-normal"><Link href={'/pro'} className="font-medium" >Email us </Link>and we&apos;ll reply as quickly as possible.</p>
                 </div>
             </div>
         </footer>
