@@ -7,7 +7,7 @@ import SectionTitle from '../components/sectionTitle'
 const Welcome = () => {
   return (
     <>
-        <MenuBar />
+        <MenuBar linkMenu='Join Our Pro Network' urlMenu='/pro'  />
         <SectionTitle 
             title1="Welcome back"
             title2="Juan Perez"
