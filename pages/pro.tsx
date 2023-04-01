@@ -39,7 +39,7 @@ const ProPage = () => {
                 <p className='text-base lg:text-xl font-medium mt-4'>Manage Your Online Reputation</p>
                 <p className='mt-1 text-xs lg:text-sm'>Utilize your Angi profile and our exclusive tools to build a strong online business presence.</p>
                 <p className='text-base lg:text-xl font-medium mt-4'>Showcase your work</p>
-                <p className='mt-1 text-xs lg:text-sm'>Show off your best projects, and prove that you're the right business for the job.</p>
+                <p className='mt-1 text-xs lg:text-sm'>Show off your best projects, and prove that you&apos;re the right business for the job.</p>
                 <p className='text-base lg:text-xl font-medium mt-4'>Build Credibility</p>
                 <p className='mt-1 text-xs lg:text-sm'>Request reviews and feedback from your customers to establish credibility for your business.</p>
             </div>
@@ -54,7 +54,7 @@ const ProPage = () => {
                         <p><span className='pi pi-calendar text-xs'></span> 2023</p>
                         <p><span className='pi pi-map-marker text-xs'></span> 60606</p>
                     </div>
-                    <p className='text-[9px] mt-1'>In this project, we were asked to restore and refurnish a kitchen from the early 1940's. Older homes come with unique challenges, but we laid out a design plan and execute.</p>
+                    <p className='text-[9px] mt-1'>In this project, we were asked to restore and refurnish a kitchen from the early 1940&apos;s. Older homes come with unique challenges, but we laid out a design plan and execute.</p>
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@ const ProPage = () => {
                 <p className='text-sm lg:text-xl font-medium mt-1 lg:mt-4'>Build and Send Quotes</p>
                 <p className='mt-1 text-xs lg:text-sm'>We make it easy to build and send job quotes to potential customers.</p>
                 <p className='text-sm lg:text-xl font-medium mt-1 lg:mt-4'>Request Payment On the Go</p>
-                <p className='mt-1 text-xs lg:text-sm'>Send invoices and take payments, all while you're on the job.</p>
+                <p className='mt-1 text-xs lg:text-sm'>Send invoices and take payments, all while you&apos;re on the job.</p>
                 <p className='text-sm lg:text-xl font-medium mt-1 lg:mt-4'>Integrate with Your QuickBooks Account</p>
                 <p className='mt-1 text-xs lg:text-sm'>Integrate Quickbooks with your Angi Ads account to track and manage all quotes and payments.</p>
             </div>
@@ -80,7 +80,7 @@ const ProPage = () => {
                 <p className='text-sm lg:text-xl font-medium mt-1 lg:mt-4'>Communicate with Customers</p>
                 <p className='mt-1 text-xs lg:text-sm'>Use our convenient Message Center to communicate with Angi homeowners.</p>
                 <p className='text-sm lg:text-xl font-medium mt-1 lg:mt-4'>Get notified when you have a lead</p>
-                <p className='mt-1 text-xs lg:text-sm'>Set up PUSH or SMS notifications on your phone, so you're always notified as soon as a new lead comes through.</p>
+                <p className='mt-1 text-xs lg:text-sm'>Set up PUSH or SMS notifications on your phone, so you&apos;re always notified as soon as a new lead comes through.</p>
             </div>
             <div className='h-auto lg:h-[400px]'>
                 <img src="https://pro.angi.com/app/static/e201725bf4e996556daee1e0e3321890.png" className='object-contain h-full' alt="phone1" />

@@ -2,7 +2,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+ const query = async (req: NextApiRequest, res: NextApiResponse) => {
   // const response = await conn.query('SELECT NOW()')
   console.log('aqui')
 }
+
+export default query;
