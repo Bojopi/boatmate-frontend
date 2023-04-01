@@ -1,14 +1,10 @@
 import React from 'react'
-import MenuBar from './menuBar';
 
 const Layout = (props: any) => {
     return (
-        <>
-        <MenuBar />
-         <main className='pt-28 lg:pt-36'>
+         <main className='w-full absolute top-0 left-0'>
             {props.children}
          </main>
-        </>
      );
 }
 

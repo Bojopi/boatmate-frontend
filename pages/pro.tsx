@@ -1,230 +1,99 @@
 import Link from 'next/link'
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {
-    faGear,
-    faSheetPlastic,
-    faHammer,
-    faSailboat,
-    faBrush,
-    faPaintRoller,
-    faVolumeHigh,
-    faBroom,
-    faBolt,
-    faScrewdriverWrench,
-} from "@fortawesome/free-solid-svg-icons"
-
-import CardComponent from "../components/card"
-import FooterComponent from "../components/footer"
-import SectionTitle from "../components/sectionTitle"
-import { RaitingComponent } from '../components/rating';
-import { reduceRating } from '../functions/reduce';
 import Layout from '@/components/layout'
+import MenuBar from '@/components/menuBar'
+import { Button } from 'primereact/button'
+import FooterProComponent from '@/components/footer_pro'
 
 
 
 const ProPage = () => {
 
-    const items = [
-        {
-            name: "Engine Service",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faGear} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Boat Wraps",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faSheetPlastic} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Fiberglass Repair",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faHammer} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Canvas/Bi Mini Tops",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faSailboat} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "T-tops",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faSailboat} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Upholstery",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faBrush} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Barnacle Scraping",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faGear} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Maintenance & Repair",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faScrewdriverWrench} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Electronics",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faBolt} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Hull Cleaning",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faBroom} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Bottom Painting",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faPaintRoller} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Sound & Entertainment",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faVolumeHigh} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-    ];
-
-    const costGuides = ['Engine Service Cost', 'Fiberglass Repair Cost', 'Underwater Growth and Barnacle Removal Cost', 'Electronics Replacement Cost', 'Upholstery Repair Cost', 'Insurance Cost'];
-
   return (
     <>
     <Layout>
-        <SectionTitle
-            title1="Maximizing connectivity"
-            title2="in the boating industry"
-            btnLabel="Learn More"
-            img="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/54c3355d-4b60-4ed9-a168-e45abec1ea61/nicol-JrMzz7jUD5s-unsplash.png"
-        />
-        <div className="w-full p-10 lg:pl-28 text-white" style={{'backgroundColor': '#00CBA4'}}>
-            <h1 className="text-xl w-full lg:text-4xl font-black flex lg:w-2/3 tracking-wide">The modern way to get connected with trustworthy and vetted marine service providers</h1>
-            <p className="w-full pt-5 lg:w-2/3 tracking-wide">Mariners and novelty boat owners alike understand it’s all about who you know in the boating and marine industry. Let us make boating hassle-free for you!</p>
-        </div>
-        <div className="p-10 lg:pl-28 lg:pr-28 grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <CardComponent
-            footerVisibility={true}
-            btnLabel={'Learn more'}
-            title={'Get Back on the Water'}
-            image={'https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/f2e2a6b9-78d1-40f1-869c-90b28a108d50/pexels-oliver-sjo%CC%88stro%CC%88m-1223648.jpg'}
-            >
-                <p>We will help you find the right service for your needs. Let’s get you connected.</p>
-            </CardComponent>
-
-            <CardComponent
-            footerVisibility={true}
-            btnLabel={'Learn more'}
-            title={'Own Your Business.'}
-            image={'https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/bab94901-e3d8-47a3-a744-8097993adce4/pexels-andrea-piacquadio-3823418.jpg'}
-            >
-                <p>Do you specialize in boat or maritime services? We can help you generate leads and reach the right customers.</p>
-            </CardComponent>
-        </div>
-        <div className="w-full p-10 lg:py-10 lg:px-28">
-            <p className="text-xl lg:text-2xl font-extrabold">Popular projects near you</p>
-            <div className="w-full mt-5 grid grid-cols-2 lg:grid-cols-4 shadow-md">
-                {items.map((item: any, i: number) => (
-                    <Link href={'/'} className="w-full p-3 lg:p-5 border flex flex-row items-center gap-4 hover:bg-gray-200" key={i}>
-                        <div className="w-8">
-                            {item.img}
-                        </div>
-                        <div className="w-full">
-                            <p className="text-sm lg:text-base">{item.name}</p>
-                            <div className="w-full lg:hidden flex flex-row items-center gap-2 pt-1">
-                                <i className="pi pi-star-fill text-yellow-400" style={{'fontSize': '12px'}}></i>
-                                <p className="w-full font-semibold text-xs">{reduceRating(item.rate)}</p>
-                            </div>
-                            <p className="text-xs lg:text-sm font-bold pt-1"><span className="font-light">from: </span>{item.price}</p>
-                            <div className="hidden lg:flex pt-2">
-                                <RaitingComponent value={item.rate} />
-                            </div>
-                        </div>
-                    </Link>
-                ))}
-            </div>
-        </div>
-        <div className="w-full px-10 pb-10 lg:px-28">
-            <div className="bg-[#d2effb] w-full grid grid-cols-1 lg:grid-cols-2 gap-2 rounded-md">
-                <div className="p-5 lg:p-14 col-7">
-                    <span className="bg-[#109EDA] p-1 rounded-md text-[10px] lg:text-[11px] tracking-wide text-gray-700 font-bold">BOATMATE COST GUIDES</span>
-                    <p className="font-bold lg:font-extrabold leading-none lg:tracking-tight text-lg lg:text-xl mt-3 lg:mt-1">Knowledge is priceless — so our project cost guides are free.</p>
-                    <p className="text-xs lg:text-base mt-3 lg:mt-1 font-base text-justify lg:tracking-[-.9px]">Always know what to expect from a project price tag with our cost guides. From materials to labor and more, we have the data-backed info you need to get started with confidence.</p>
-                    <button className="mt-3 py-2 px-4 bg-[#3e42be] rounded-lg text-white tracking-tight font-semibold text-sm lg:text-base">Explore project costs</button>
-                </div>
-                <img src="https://media.angi.com/s3fs-public/HP-angi-costguides-image.png" alt="home" className="rounded-md col-4 self-end" />
-            </div>
-        </div>
-
-        <div className="w-full px-10 pt-3 pb-10 lg:pt-3 lg:pb-10 lg:px-28">
-            <p className="text-xl lg:text-2xl font-extrabold font-[National Bold]">Popular costs guides</p>
-            <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-3 mt-5">
-                {
-                    costGuides.map((value: string, i: number) => (
-                        <Link href={'/'} className="w-full p-3 rounded-md border-2 hover:bg-gray-200" key={i}>
-                            <span className="bg-[#109EDA] p-1 rounded-md text-[8px] lg:text-[11px] tracking-wide text-gray-700 font-bold">BOATMATE COST GUIDES</span>
-                            <div className="w-full flex flex-row justify-between items-center py-2">
-                                <p className="text-[13px] lg:text-base">{value}</p>
-                                <i className="pi pi-angle-right"></i>
-                            </div>
-                        </Link>
-                    ))
-                }
-            </div>
-        </div>
-
-        <div className="w-full p-10 lg:pl-28 text-[#282827] text-base lg:text-xl font-bold" style={{'backgroundColor': '#F5F5F2'}}>
-            <p>How it works</p>
-            <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-24 text-sm font-normal mt-10">
-                <div className="w-full flex flex-col gap-1 lg:gap-4">
-                    <div className="h-6 lg:h-12">
-                        <i className="pi pi-comment text-2xl lg:text-4xl"></i>
+        <MenuBar linkMenu='Sign In' urlMenu='/login' menuItem={false}/>
+        <div className='w-full h-[90vh] lg:h-auto grid grid-cols-1 lg:grid-cols-2 lg:mt-24 items-center overflow-hidden bg-[#373A85]'>
+            <div className='w-5/6 lg:w-7/12 mx-auto text-white'>
+                <p className='text-xl lg:text-3xl font-semibold'>Grow Your Business</p>
+                <p className='text-sm lg:text-base font-medium leading-tight mt-5 lg:mt-3'>Increase your exposure to millions of homeowners looking to find local contractors just like you.</p>
+                <p className='text-sm lg:text-base font-medium mt-5 lg:mt-3'>Signing up is free and easy. Start today!</p>
+                <Button label='List my business' className='mt-10 lg:mt-5 bg-white border-white text-black rounded-lg text-sm font-medium shadow-sm hover:bg-gray-200' />
+                <div className='flex flex-row gap-2 items-center mt-5 lg:mt-3 text-sm lg:text-base font-medium'>
+                    <p>Already have an account? </p>
+                    <div className='border-b border-b-white flex flex-row items-center gap-2 transform-none hover:gap-4 transition-all'>
+                        <Link href={''} >Sign in here</Link>
+                        <span className='pi pi-arrow-right'></span>
                     </div>
-                    <p className="mt-2 font-bold text-sm lg:text-lg leading-tight">1. Tell us what your home needs</p>
-                    <p>From routine maintenance and repairs to dream home renovations, we can help with any project — big or small.</p>
-                </div>
-                <div className="w-full flex flex-col gap-1 lg:gap-4">
-                    <div className="h-6 lg:h-12">
-                        <i className="pi pi-bolt text-2xl lg:text-4xl"></i>
-                    </div>
-                    <p className="mt-2 font-bold text-sm lg:text-lg leading-tight">2. We’ll match you with personalized solutions</p>
-                    <p>See your price and book services in an instant. Or, request and compare quotes from highly rated pros near you.</p>
-                </div>
-                <div className="w-full flex flex-col gap-1 lg:gap-4">
-                    <div className="h-6 lg:h-12">
-                        <i className="pi pi-home text-2xl lg:text-4xl"></i>
-                    </div>
-                    <p className="mt-2 font-bold text-sm lg:text-lg leading-tight">3. Start to finish, we’ve got you covered</p>
-                    <p>When you book and pay with Angi, you’re covered by our Happiness Guarantee. We’ll cover your projects up to full purchase price, plus limited damage protection.</p>
                 </div>
             </div>
-            <button type="button" className="bg-none border-2 mt-5 lg:mt-0 border-gray-600 rounded-lg py-2 px-4 text-base tracking-wide hover:border-[#01a282] hover:text-[#01a282]">Learn more</button>
+            <img src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/54c3355d-4b60-4ed9-a168-e45abec1ea61/nicol-JrMzz7jUD5s-unsplash.png" className='w-full hidden lg:block' alt="head" />
+        </div>
+        <div className="w-full py-2 lg:py-14 flex flex-col items-center gap-2 text-sm lg:text-lg">
+            <p className="tracking-wide">Use these tools to take your business to a new level.</p>
+            <Link href={'#features'}> <span className='pi pi-angle-down text-base lg:text-xl animate-bounce'></span></Link>
+        </div>
+        <div id='features' className="w-5/6 lg:w-2/3 h-auto lg:h-[450px] overflow-hidden mx-auto pt-20 lg:pt-28 grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+                <p className='text-xl lg:text-[25px] font-bold'>Feature your business to new customers</p>
+                <p className='text-base lg:text-xl font-medium mt-4'>Manage Your Online Reputation</p>
+                <p className='mt-1 text-xs lg:text-sm'>Utilize your Angi profile and our exclusive tools to build a strong online business presence.</p>
+                <p className='text-base lg:text-xl font-medium mt-4'>Showcase your work</p>
+                <p className='mt-1 text-xs lg:text-sm'>Show off your best projects, and prove that you're the right business for the job.</p>
+                <p className='text-base lg:text-xl font-medium mt-4'>Build Credibility</p>
+                <p className='mt-1 text-xs lg:text-sm'>Request reviews and feedback from your customers to establish credibility for your business.</p>
+            </div>
+            <div className='bg-[url("https://i.postimg.cc/gJrPfDPt/rebecca-sorto-M30w-Qq1-Th-Mw-unsplash.jpg")] bg-no-repeat bg-center flex flex-col justify-between'>
+                <div className='p-5'>
+                    <span className='py-1 px-3 text-xs rounded-full bg-purple-100 text-violet-800'>Consumer Reviewed</span>
+                </div>
+                <div className='w-full bg-black/70 text-white py-3 px-5 text-xs'>
+                    <p className='text-lg font-medium'>Vintage Kitchen Restoration</p>
+                    <div className='flex flex-row gap-3 mt-1'>
+                        <p>Cabinet Refacting/Restoration</p>
+                        <p><span className='pi pi-calendar text-xs'></span> 2023</p>
+                        <p><span className='pi pi-map-marker text-xs'></span> 60606</p>
+                    </div>
+                    <p className='text-[9px] mt-1'>In this project, we were asked to restore and refurnish a kitchen from the early 1940's. Older homes come with unique challenges, but we laid out a design plan and execute.</p>
+                </div>
+            </div>
+        </div>
+        <div className="w-[90%] lg:w-2/3 mx-auto mt-20 lg:mt-28 flex flex-row gap-10 lg:gap-20">
+            <div className='h-auto lg:h-[400px]'>
+                <img src="https://pro.angi.com/app/static/fdbb98fab4cc333329cf4a9dbd61e520.png" className='object-contain h-full' alt="phone1" />
+            </div>
+            <div className='flex flex-col justify-center'>
+                <p className='text-base lg:text-[25px] font-bold'>Manage your business like a pro</p>
+                <p className='text-sm lg:text-xl font-medium mt-1 lg:mt-4'>Build and Send Quotes</p>
+                <p className='mt-1 text-xs lg:text-sm'>We make it easy to build and send job quotes to potential customers.</p>
+                <p className='text-sm lg:text-xl font-medium mt-1 lg:mt-4'>Request Payment On the Go</p>
+                <p className='mt-1 text-xs lg:text-sm'>Send invoices and take payments, all while you're on the job.</p>
+                <p className='text-sm lg:text-xl font-medium mt-1 lg:mt-4'>Integrate with Your QuickBooks Account</p>
+                <p className='mt-1 text-xs lg:text-sm'>Integrate Quickbooks with your Angi Ads account to track and manage all quotes and payments.</p>
+            </div>
+        </div>
+        <div className="w-[90%] lg:w-2/3 mx-auto mt-20 lg:mt-28 flex flex-row gap-10 lg:gap-20">
+            <div className='flex flex-col justify-center'>
+                <p className='text-base lg:text-[25px] font-bold'>Respond to homeowners using our exclusive tools</p>
+                <p className='text-sm lg:text-xl font-medium mt-1 lg:mt-4'>Manage Your Leads</p>
+                <p className='mt-1 text-xs lg:text-sm'>Use the Boatmate Ads Lead Board to manage quote requests and claimed deals from start to finish.</p>
+                <p className='text-sm lg:text-xl font-medium mt-1 lg:mt-4'>Communicate with Customers</p>
+                <p className='mt-1 text-xs lg:text-sm'>Use our convenient Message Center to communicate with Angi homeowners.</p>
+                <p className='text-sm lg:text-xl font-medium mt-1 lg:mt-4'>Get notified when you have a lead</p>
+                <p className='mt-1 text-xs lg:text-sm'>Set up PUSH or SMS notifications on your phone, so you're always notified as soon as a new lead comes through.</p>
+            </div>
+            <div className='h-auto lg:h-[400px]'>
+                <img src="https://pro.angi.com/app/static/e201725bf4e996556daee1e0e3321890.png" className='object-contain h-full' alt="phone1" />
+            </div>
         </div>
 
-        <div className="w-full lg:h-[500px] p-10 lg:p-40 text-white flex flex-row gap-5 lg:gap-10 items-center overflow-hidden" style={{'backgroundColor': '#373A85'}}>
-            <div className="">
-                <p className="text-base w-full lg:text-4xl font-bold tracking-wide">Grow your business with us. Become a BoatMate Pro today.</p>
-                <button type="button" className="py-2 px-3 mt-8 bg-white text-[#373A85] text-xs lg:text-base font-bold rounded-lg hover:bg-gray-200">Learn more</button>
-            </div>
-            <div className="hidden lg:block p-10">
-                <img src="https://i.postimg.cc/44L02jb0/beth-macdonald-t-JMX4k-Id-UV4-unsplash.jpg" className="rounded-md w-full" alt="obreros" />
-            </div>
+        <div className="w-full mt-5 lg:mt-20 py-10 text-white bg-[#373A85] flex flex-col items-center">
+                <p className="text-lg text-center lg:text-3xl font-bold tracking-tight">Opportunity is waiting for you at BoatMate Ads</p>
+                <p className='mt-5 text-sm lg:text-base'>Join today to revolutionize the way you do business.</p>
+                <button type="button" className="py-2 px-3 mt-8 bg-white text-[#373A85] text-xs lg:text-base font-bold rounded-lg hover:bg-gray-200">Get Started</button>
         </div>
 
-        <FooterComponent />
+        <FooterProComponent />
     </Layout>
     </>
   )

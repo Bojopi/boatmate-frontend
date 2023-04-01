@@ -19,6 +19,7 @@ import FooterComponent from "../components/footer"
 import SectionTitle from "../components/sectionTitle"
 import { RaitingComponent } from '../components/rating';
 import { reduceRating } from '../functions/reduce';
+import MenuBar from '@/components/menuBar'
 
 
 
@@ -103,6 +104,7 @@ const Principal = () => {
 
   return (
     <>
+        <MenuBar linkMenu='Join Our Pro Network' urlMenu='/pro'/>
         <SectionTitle
             title1="Maximizing connectivity"
             title2="in the boating industry"

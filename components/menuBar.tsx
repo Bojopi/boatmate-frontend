@@ -5,7 +5,13 @@ import { Menubar } from 'primereact/menubar';
 import { Toast } from 'primereact/toast';
 import Link from 'next/link';
 
-export default function MenuBar() {
+export type MenuProps = {
+    linkMenu: string;
+    urlMenu: string;
+    menuItem?: boolean;
+}
+
+const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
 
     const menu = useRef<any>(null);
     const toast = useRef<any>(null);
@@ -29,19 +35,19 @@ export default function MenuBar() {
         </img>
     </Link>
     const end = <>
-        <Link href={'/pro'} className='mr-5 font-bold cursor-pointer tracking-tighter hover:underline' >Join Our Pro Network</Link>
-        <Toast ref={toast}></Toast>
-        <Menu
+        <Link href={urlMenu} className='mr-5 font-bold cursor-pointer tracking-tighter hover:underline' >{linkMenu}</Link>
+        {menuItem ? <Toast ref={toast}></Toast> : null}
+        {menuItem ? <Menu
             model={itemsMenu}
             popup
-            ref={menu} />
-        <a className='pi pi-ellipsis-h font-bold cursor-pointer bg-gray-200 p-2 rounded-full' onClick={(e) => menu.current.toggle(e)}></a>
+            ref={menu} /> : null}
+        {menuItem ? <a className='pi pi-ellipsis-h font-bold cursor-pointer bg-gray-200 p-2 rounded-full' onClick={(e) => menu.current.toggle(e)}></a> : null}
         </>;
 
     return (
         <div className="fixed w-full z-10">
             <Menubar start={start} end={end} className="bg-white shadow-md z-10 lg:px-[10%]" style={{'borderRadius': 0}} />
-            <div className='w-full bg-gray-200 shadow-sm lg:pl-[9%]'>
+            {menuItem ? <div className='w-full bg-gray-200 shadow-sm lg:pl-[9%]'>
                 <ul className='flex flex-row justify-between md:justify-start md:px-0 py-3 text-xs md:text-base text-gray-600 font-medium'>
                     <li className='px-3 md:px-5 border-r-2 border-gray-500 hover:text-black'><Link href={'/boats'}>Boats</Link></li>
                     <li className='px-3 md:px-5 border-r-2 border-gray-500 hover:text-black'><Link href={'/jetskis'}>Jetskis</Link></li>
@@ -49,7 +55,9 @@ export default function MenuBar() {
                     <li className='px-3 md:px-5 border-r-2 border-gray-500 hover:text-black'><Link href={'/'}>Insurance</Link></li>
                     <li className='px-3 md:px-5 hover:text-black'><Link href={'/'}>More</Link></li>
                 </ul>
-            </div>
+            </div> : null}
         </div>
     )
 };
+
+export default MenuBar;
