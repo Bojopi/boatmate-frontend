@@ -1,9 +1,11 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { Menu } from 'primereact/menu';
 import { Menubar } from 'primereact/menubar';
 import { Toast } from 'primereact/toast';
 import Link from 'next/link';
+
+const menuItems = require('../sql/menu.json')
 
 export type MenuProps = {
     linkMenu: string;
@@ -12,6 +14,10 @@ export type MenuProps = {
 }
 
 const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
+
+    const handleOpen = (e: any) => {
+        document.getElementById(`sub-${e.target.id}`)!.hidden = !document.getElementById(`sub-${e.target.id}`)!.hidden;
+    }
 
     const menu = useRef<any>(null);
     const toast = useRef<any>(null);
@@ -48,13 +54,19 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
     return (
         <div className="fixed w-full z-10">
             <Menubar start={start} end={end} className="bg-white shadow-md z-10 lg:px-[10%]" style={{'borderRadius': 0}} />
-            {menuItem ? <div className='w-full bg-gray-200 shadow-sm lg:pl-[9%]'>
+            {menuItem ? <div className=' w-full bg-gray-200 shadow-sm lg:pl-[9%]'>
                 <ul className='flex flex-row justify-between md:justify-start md:px-0 py-3 text-xs md:text-base text-gray-600 font-medium'>
-                    <li className='px-3 md:px-5 border-r-2 border-gray-500 hover:text-black'><Link href={'/boats'}>Boats</Link></li>
-                    <li className='px-3 md:px-5 border-r-2 border-gray-500 hover:text-black'><Link href={'/jetskis'}>Jetskis</Link></li>
-                    <li className='px-3 md:px-5 border-r-2 border-gray-500 hover:text-black'><Link href={'/'}>Dock & Storage</Link></li>
-                    <li className='px-3 md:px-5 border-r-2 border-gray-500 hover:text-black'><Link href={'/'}>Insurance</Link></li>
-                    <li className='px-3 md:px-5 hover:text-black'><Link href={'/'}>More</Link></li>
+                {menuItems.map((menu: any, i: number) => (
+                    <div className='flex flex-col'>
+                        <li key={i} className={i == (menuItems.length - 1) ? 'px-3 md:px-5 hover:text-black' : 'px-3 md:px-5 border-r-2 border-gray-500 hover:text-black'}><Link id={`${i}`} href={`/${menu.label}`} onMouseOver={handleOpen} onMouseLeave={handleOpen}>{menu.label}</Link></li>
+
+                        <ul id={`sub-${i}`} hidden={true} className='absolute top-[132px] z-20 bg-white font-normal border-t-4 border-b-8 border-[#00CBA4]'>
+                            {menu.items.map((item: any, i: number) => (
+                                <li key={i} className='w-full py-3 px-5 hover:bg-gray-100'>{item.label}</li>
+                            ))}
+                        </ul>
+                    </div>
+                ))}
                 </ul>
             </div> : null}
         </div>

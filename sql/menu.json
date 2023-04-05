@@ -1,0 +1,57 @@
+[
+    {
+        "label": "Boats",
+        "items": [
+            { "label": "Detailing"},
+            { "label": "Hull Cleaning"},
+            { "label": "Fiberglass Repair"},
+            { "label": "Electronics"},
+            { "label": "Upholstery"},
+            { "label": "Bottom Paint"},
+            { "label": "Propellers"},
+            { "label": "Engine service"},
+            { "label": "Survey & Inspection"},
+            { "label": "Boat Transport"},
+            { "label": "Trailer Repair"},
+            { "label": "View All Services"}
+        ]
+    },
+    {
+        "label": "Jetskis",
+        "items": [
+            { "label": "Fiberglass Repair"},
+            { "label": "Engine Service"},
+            { "label": "Seat Repair"},
+            { "label": "Electronics"},
+            { "label": "Tune Up"},
+            { "label": "Trailer Repair"},
+            { "label": "Paint Job"},
+            { "label": "View All Services"}
+        ]
+    },
+    {
+        "label": "Dock & Storage",
+        "items": [
+            { "label": "Dock Builder" },
+            { "label": "Boat Lift" },
+            { "label": "Marina" },
+            { "label": "Storage" },
+            { "label": "Winterización" },
+            { "label": "View All Services" }
+        ]
+    },
+    {
+        "label": "Insurance",
+        "items": [
+            { "label": "Personal Insurance" },
+            { "label": "Commercial Insurance" }
+        ]
+    },
+    {
+        "label": "More",
+        "items": [
+            { "label": "Articles" },
+            { "label": "Cost Guides" }
+        ]
+    }
+]

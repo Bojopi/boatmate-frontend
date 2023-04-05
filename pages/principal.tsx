@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -20,7 +21,6 @@ import SectionTitle from "../components/sectionTitle"
 import { RaitingComponent } from '../components/rating';
 import { reduceRating } from '../functions/reduce';
 import MenuBar from '@/components/menuBar'
-
 
 
 const Principal = () => {
