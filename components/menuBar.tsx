@@ -57,8 +57,8 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
             {menuItem ? <div className=' w-full bg-gray-200 shadow-sm lg:pl-[9%]'>
                 <ul className='flex flex-row justify-between md:justify-start md:px-0 py-3 text-xs md:text-base text-gray-600 font-medium'>
                 {menuItems.map((menu: any, i: number) => (
-                    <div className='flex flex-col'>
-                        <li key={i} className={i == (menuItems.length - 1) ? 'px-3 md:px-5 hover:text-black' : 'px-3 md:px-5 border-r-2 border-gray-500 hover:text-black'}><Link id={`${i}`} href={`/${menu.label}`} onMouseOver={handleOpen} onMouseLeave={handleOpen}>{menu.label}</Link></li>
+                    <div key={i} className='flex flex-col'>
+                        <li className={i == (menuItems.length - 1) ? 'px-3 md:px-5 hover:text-black' : 'px-3 md:px-5 border-r-2 border-gray-500 hover:text-black'}><Link id={`${i}`} href={`/${menu.label}`} onMouseOver={handleOpen} onMouseLeave={handleOpen}>{menu.label}</Link></li>
 
                         <ul id={`sub-${i}`} hidden={true} className='absolute top-[132px] z-20 bg-white font-normal border-t-4 border-b-8 border-[#00CBA4]'>
                             {menu.items.map((item: any, i: number) => (
