@@ -1,8 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React from 'react'
 
-import { Menu } from 'primereact/menu';
 import { Menubar } from 'primereact/menubar';
-import { Toast } from 'primereact/toast';
 import Link from 'next/link';
 
 const menuItems = require('../sql/menu.json')
@@ -16,22 +14,21 @@ export type MenuProps = {
 const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
 
     const handleOpen = (e: any) => {
-        document.getElementById(`sub-${e.target.id}`)!.hidden = !document.getElementById(`sub-${e.target.id}`)!.hidden;
+        for(let i = 0; i < document.getElementsByTagName('ul').length; i++) {
+            document.getElementsByTagName('ul').item(i)?.setAttribute('hidden', 'true')
+        }
+        document.getElementById(`sub-${e.target.id}`)!.hidden = false;
     }
 
-    const menu = useRef<any>(null);
-    const toast = useRef<any>(null);
-
-    const itemsMenu = [
-        {
-            label: 'Sign up now',
-            url: '/register',
-        },
-        {
-            label: 'Sign in',
-            url: '/login',
-        },
-    ];
+    const handleClose = () => {
+        document.addEventListener('mouseover', (event: any) => {
+            if(event.target.nodeName !== 'LI' && event.target.nodeName !== 'UL' ) {
+                for(let i = 0; i < document.getElementsByTagName('ul').length; i++) {
+                    document.getElementsByTagName('ul').item(i)?.setAttribute('hidden', 'true')
+                }
+            }
+        })
+    }
 
     const start = <Link href={'/'} className='flex flex-row items-end'>
         <img
@@ -43,12 +40,14 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
     </Link>
     const end = <>
         <Link href={urlMenu} className='mr-5 font-bold cursor-pointer tracking-tighter hover:underline' >{linkMenu}</Link>
-        {menuItem ? <Toast ref={toast}></Toast> : null}
-        {menuItem ? <Menu
-            model={itemsMenu}
-            popup
-            ref={menu} /> : null}
-        {menuItem ? <a className='pi pi-ellipsis-h font-bold cursor-pointer bg-gray-200 p-2 rounded-full' onClick={(e) => menu.current.toggle(e)}></a> : null}
+        {
+            menuItem ? 
+            <>
+                <Link href={'/register'} className='mr-5 cursor-pointer tracking-tighter hover:underline' >Sign up now</Link>
+                <Link href={'/login'} className='mr-5 cursor-pointer tracking-tighter hover:underline' >Sign in</Link>
+            </>
+            : null
+        }
         </>;
 
     return (
@@ -58,11 +57,11 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
                 <ul className='flex flex-row justify-between md:justify-start md:px-0 py-3 text-xs md:text-base text-gray-600 font-medium'>
                 {menuItems.map((menu: any, i: number) => (
                     <div key={i} className='flex flex-col'>
-                        <li className={i == (menuItems.length - 1) ? 'px-3 md:px-5 hover:text-black' : 'px-3 md:px-5 border-r-2 border-gray-500 hover:text-black'}><Link id={`${i}`} href={`/${menu.label}`} onMouseOver={handleOpen} onMouseLeave={handleOpen}>{menu.label}</Link></li>
+                        <li id={`${i}`} onMouseOver={handleOpen} onMouseOut={handleClose} className={i == (menuItems.length - 1) ? 'px-3 md:px-5 hover:text-black' : 'px-3 md:px-5 border-r-2 border-gray-500 hover:text-black cursor-pointer'}>{menu.label}</li>
 
-                        <ul id={`sub-${i}`} hidden={true} className='absolute top-[132px] z-20 bg-white font-normal border-t-4 border-b-8 border-[#00CBA4]'>
+                        <ul id={`sub-${i}`} hidden={true} className='absolute top-[140px] z-20 bg-white font-normal border-t-4 border-b-8 border-[#00CBA4] item-menu'>
                             {menu.items.map((item: any, i: number) => (
-                                <li key={i} className='w-full py-3 px-5 hover:bg-gray-100'>{item.label}</li>
+                                <li key={i} className='w-full py-3 px-5 cursor-pointer hover:bg-gray-100'>{item.label}</li>
                             ))}
                         </ul>
                     </div>
