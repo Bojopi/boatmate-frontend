@@ -25,9 +25,9 @@ const SearchComponent:React.FC<Service> = ({searchList, selectedElement, setSele
             }
             else {
                 _filteredElements = searchList.filter((searchItem) => {
-                    const result = searchItem.description.toLowerCase().startsWith(event.query.toLowerCase());
+                    const result = searchItem.name.toLowerCase().startsWith(event.query.toLowerCase());
                     console.log(result);
-                    return searchItem.description.toLowerCase().startsWith(event.query.toLowerCase());
+                    return searchItem.name.toLowerCase().startsWith(event.query.toLowerCase());
                 });
             }
 
@@ -37,7 +37,7 @@ const SearchComponent:React.FC<Service> = ({searchList, selectedElement, setSele
 
     return (
         <div className="flex justify-content-center">
-            <AutoComplete className='w-full' field="description" value={selectedElement} suggestions={filteredElements} completeMethod={search} dropdown onChange={(e: AutoCompleteChangeEvent) => setSelectedElement(e.value)} />
+            <AutoComplete className='w-full' field="name" value={selectedElement} suggestions={filteredElements} completeMethod={search} dropdown onChange={(e: AutoCompleteChangeEvent) => setSelectedElement(e.value)} />
         </div>
     )
 }

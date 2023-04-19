@@ -1,22 +1,42 @@
 [
     {
         "id": 1,
-        "description": "Hire a Handyman"
+        "name": "Hire a Handyman"
     },
     {
         "id": 2,
-        "description": "Clean House Interior (Maid Service)"
+        "name": "Clean House Interior (Maid Service)"
     },
     {
         "id": 3,
-        "description": "Mow Grass and Maintain Landscaping"
+        "name": "Mow Grass and Maintain Landscaping"
     },
     {
         "id": 4,
-        "description": "Remodel a Bathroom"
+        "name": "Remodel a Bathroom"
     },
     {
         "id": 5,
-        "description": "Install or Replace an Asphalt Shingle Roof"
+        "name": "Install or Replace an Asphalt Shingle Roof"
+    },
+    {
+        "id": 6,
+        "name": "Hire a Handyman"
+    },
+    {
+        "id": 7,
+        "name": "Clean House Interior (Maid Service)"
+    },
+    {
+        "id": 8,
+        "name": "Mow Grass and Maintain Landscaping"
+    },
+    {
+        "id": 9,
+        "name": "Remodel a Bathroom"
+    },
+    {
+        "id": 10,
+        "name": "Install or Replace an Asphalt Shingle Roof"
     }
 ]

@@ -18,8 +18,10 @@ const ProPage = () => {
                 <p className='text-xl lg:text-3xl font-semibold'>Grow Your Business</p>
                 <p className='text-sm lg:text-base font-medium leading-tight mt-5 lg:mt-3'>Increase your exposure to millions of homeowners looking to find local contractors just like you.</p>
                 <p className='text-sm lg:text-base font-medium mt-5 lg:mt-3'>Signing up is free and easy. Start today!</p>
-                <Button label='List my business' className='mt-10 lg:mt-5 bg-white border-white text-black rounded-lg text-sm font-medium shadow-sm hover:bg-gray-200' />
-                <div className='flex flex-row gap-2 items-center mt-5 lg:mt-3 text-sm lg:text-base font-medium'>
+                <div className='mt-6'>
+                    <Link href={'/pro/list'} className='px-4 py-[10px] bg-white border-white text-black rounded-lg text-sm font-medium shadow-sm hover:bg-gray-200' >List my business</Link>
+                </div>
+                <div className='flex flex-row gap-2 items-center mt-5 text-sm lg:text-base font-medium'>
                     <p>Already have an account? </p>
                     <div className='border-b border-b-white flex flex-row items-center gap-2 transform-none hover:gap-4 transition-all'>
                         <Link href={''} >Sign in here</Link>

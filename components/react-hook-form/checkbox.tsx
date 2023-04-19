@@ -28,7 +28,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         />
       </div>
       <div className="text-sm space-y-1">
-        <div className="shrink-0 block font-medium text-gray-700 dark:text-white whitespace-nowrap">
+        <div className="shrink-0 block font-medium text-gray-700 whitespace-nowrap">
           {label}
         </div>
       </div>

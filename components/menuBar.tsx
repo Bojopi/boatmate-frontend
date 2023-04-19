@@ -30,7 +30,7 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
         })
     }
 
-    const start = <Link href={'/'} className='flex flex-row items-end'>
+    const start = <Link href={menuItem ? '/' : '/pro'} className='flex flex-row items-end'>
         <img
         alt="logo"
         src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"

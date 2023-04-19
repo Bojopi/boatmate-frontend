@@ -42,20 +42,20 @@ const Login: React.FC = () => {
     const onSubmit = (formData: FormProps) => {
         console.log(formData);
         setLoading(true);
-        login(formData, toast, setLoading)
-        // if(formData.username == 'bojopi' && formData.password == '123456') {
-        //     setTimeout(() => {
-        //         setLoading(false);
-        //         // navigate('/user')
-        //         // window.location.href = '/user';
-        //     }, 1000);
-        // }
-        // else {
-        //     setTimeout(() => {
-        //         setLoading(false);
-        //         toast.current!.show({severity:'error', summary:'Error', detail: 'User and/or password are not correct', life: 4000});
-        //     }, 1000);
-        // }
+        // login(formData, toast, setLoading)
+        if(formData.username == 'bojopi' && formData.password == '123456') {
+            setTimeout(() => {
+                setLoading(false);
+                // navigate('/user')
+                // window.location.href = '/user';
+            }, 1000);
+        }
+        else {
+            setTimeout(() => {
+                setLoading(false);
+                toast.current!.show({severity:'error', summary:'Error', detail: 'User and/or password are not correct', life: 4000});
+            }, 1000);
+        }
     };
 
     const onErrors = () => {
