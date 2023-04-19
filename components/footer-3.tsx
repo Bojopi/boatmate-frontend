@@ -10,7 +10,7 @@ export default function FooterComponentThree() {
                 <div className="border-b-2 border-b-gray-400">
                     <div className="flex flex-col items-end">
                         <div className="mr-16 mb-10">
-                            <p className="text-sm lg:text-base font-bold mb-5">We're here to help</p>
+                            <p className="text-sm lg:text-base font-bold mb-5">We&apos;re here to help</p>
                             <p className="text-xs lg:text-sm mb-1 font-medium">Call 1-813-766-7565</p>
                             <p className="text-xs lg:text-sm mb-1 font-medium">support@boatmate.com</p>
                         </div>

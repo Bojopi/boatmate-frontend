@@ -302,8 +302,8 @@ const HomePage = () => {
                                 <div className='border-2 rounded-md mt-5 p-3 flex flex-row justify-between items-center gap-5'>
                                     <img src="https://i.postimg.cc/SxJz8VPb/chat.png" alt="reviews" height={70} width={70} />
                                     <div>
-                                        <p className='text-sm text-gray-60 font-bold'>Get reviews from past customers, even if they're not on BoatMate.</p>
-                                        <p className='text-xs text-gray-600' >Tell us which customers to ask for a review, and we'll send the request for you.</p>
+                                        <p className='text-sm text-gray-60 font-bold'>Get reviews from past customers, even if they&apos;re not on BoatMate.</p>
+                                        <p className='text-xs text-gray-600' >Tell us which customers to ask for a review, and we&apos;ll send the request for you.</p>
 
                                     </div>
                                     <Link href={''} className='bg-[#109EDA] border-2 border-[#109EDA] rounded-md text-white font-bold text-center px-5 py-2 hover:bg-[#149ad3] hover:border-[#149ad3] shrink-0' >Ask for reviews</Link>

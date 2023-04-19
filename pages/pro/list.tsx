@@ -51,7 +51,7 @@ const ListPage = () => {
                     <img src="https://i.postimg.cc/50FZYCRn/Credit-card-bro.png" width={100} alt="coins" />
                     <div>
                         <p className='font-bold'>No subscription fees</p>
-                        <p className='text-sm'>There's no charge to join, no annual fees, and no membership fees.</p>
+                        <p className='text-sm'>There&apos;s no charge to join, no annual fees, and no membership fees.</p>
                     </div>
                 </div>
             </div>
@@ -69,7 +69,7 @@ const ListPage = () => {
                     <img src="https://i.postimg.cc/bvznw7mv/Contact-us-bro.png" width={100} alt="coins" />
                     <div>
                         <p className='font-bold'>Outstanding support</p>
-                        <p className='text-sm'>1:1 help that's easily accessible, and a simple, flexible refund policy.</p>
+                        <p className='text-sm'>1:1 help that&apos;s easily accessible, and a simple, flexible refund policy.</p>
                     </div>
                 </div>
             </div>

@@ -62,7 +62,7 @@ const CreateAccount = () => {
                             <ul className='list-disc list-inside'>
                                 <li>be 8 to 72 characters long</li>
                                 <li>not contain your name or email</li>
-                                <li>not be commonly used, easily guessed or contain any variation of the word "BoatMate"</li>
+                                <li>not be commonly used, easily guessed or contain any variation of the word &quot;BoatMate&quot;</li>
                             </ul>
                             <p>By clicking Create Account, you agree to the <Link href={''} className='text-[#109EDA] underline font-medium' >Terms of Use</Link> and <Link href={''} className='text-[#109EDA] underline font-medium' >Privacy Policy</Link>.</p>
                         </div>

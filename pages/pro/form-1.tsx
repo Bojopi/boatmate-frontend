@@ -73,7 +73,7 @@ const FormService: React.FC = () => {
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit, onErrors)} className="w-11/12 lg:w-1/3 shadow-lg py-5 px-5 lg:px-10 rounded-md border">
                         <p className="font-bold mb-3 lg:mb-5 text-sm lg:text-base">Select any other services you do.</p>
-                        <p className="text-xs lg:text-sm mb-3 lg:mb-5">You'll show up in search results and get jobs for all services you select:</p>
+                        <p className="text-xs lg:text-sm mb-3 lg:mb-5">You&apos;ll show up in search results and get jobs for all services you select:</p>
                         <div className="flex justify-start mb-3 lg:mb-5">
                             <p onClick={selectAll} className="text-xs lg:text-sm font-medium text-[#109EDA] cursor-pointer hover:text-[#27aee8]">Select all</p>
                         </div>
