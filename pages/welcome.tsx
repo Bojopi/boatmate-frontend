@@ -1,15 +1,49 @@
-import React from 'react'
-import CarouselComponent from '../components/carousel'
+import React, { useEffect, useState } from 'react'
 import FooterComponent from '../components/footer'
-import MenuBar from '../components/menuBar'
 import SectionTitle from '../components/sectionTitle'
 import CardComponent from '@/components/card'
 import Layout from '../components/layout';
+import MenuBarSupAdmin from '@/components/menuBarSupAdmin';
+import Spinner from '@/components/spinner';
+import { Auth } from '@/hooks/auth'
+import { Profile } from '@/interfaces/profile.interface';
+import { googleLogout } from '@react-oauth/google'
 
 const Welcome = () => {
+    const {getUserAuthenticated, logout} = Auth();
+
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const [index, setIndex] = useState<number>(0);
+    const [user, setUser] = useState<Profile>(
+        {
+            uid:      0,
+            email:    '',
+            state:    false,
+            name:     '',
+            lastname: '',
+            phone:    '',
+            image:    '',
+            role:     '',
+            iat:      0,
+            exp:      0,
+        }
+    )
+
+    useEffect(() => {
+        getUserAuthenticated(setUser)
+    }, [])
+
+    const logoutSession = async () => {
+        googleLogout()
+        logout(setLoading)
+    }
+
+
   return (
     <Layout>
-        <MenuBar linkMenu='Join Our Pro Network' urlMenu='/pro'/>
+        <Spinner loading={loading} />
+        <MenuBarSupAdmin user={user} setIndex={setIndex} logout={logoutSession} setLoading={setLoading} />
         <SectionTitle
             title1="Maximizing connectivity"
             title2="in the boating industry"
@@ -21,6 +55,7 @@ const Welcome = () => {
             <p className="w-full pt-5 lg:w-2/3 tracking-wide">Mariners and novelty boat owners alike understand it’s all about who you know in the boating and marine industry. Let us make boating hassle-free for you!</p>
         </div>
         <div className="p-10 lg:pl-28 lg:pr-28 grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <button onClick={(e) => {console.log(user)}}>Get Profile</button>
             <CardComponent
             footerVisibility={true}
             btnLabel={'Learn more'}
