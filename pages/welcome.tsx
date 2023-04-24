@@ -55,7 +55,7 @@ const Welcome = () => {
             <p className="w-full pt-5 lg:w-2/3 tracking-wide">Mariners and novelty boat owners alike understand it’s all about who you know in the boating and marine industry. Let us make boating hassle-free for you!</p>
         </div>
         <div className="p-10 lg:pl-28 lg:pr-28 grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <button onClick={(e) => {console.log(user)}}>Get Profile</button>
+            <button>Get Profile</button>
             <CardComponent
             footerVisibility={true}
             btnLabel={'Learn more'}

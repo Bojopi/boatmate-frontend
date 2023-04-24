@@ -2,11 +2,11 @@ import Axios from 'axios';
 import { useRouter } from 'next/router';
 
 const axios = Axios.create({
-    // baseURL: 'http://localhost:8080',
-    baseURL: 'https://boatmate-backend-production.up.railway.app',
-    headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-    },
+    baseURL: 'http://localhost:8080',
+    // baseURL: 'https://boatmate-backend-production.up.railway.app',
+    // headers: {
+    //     'X-Requested-With': 'XMLHttpRequest',
+    // },
     withCredentials: true,
 });
 
@@ -16,7 +16,7 @@ export const Auth = () => {
 
     const login = (data: any, toast: any, setLoading: any) => {
         axios
-            .post('/auth', data, {withCredentials: true})
+            .post('/auth', data)
             .then((res) => {
                 // console.log('logueado')
                 // console.log(res)
@@ -35,7 +35,7 @@ export const Auth = () => {
     };
 
     const getUserAuthenticated = (setUser: any) => {
-        axios.get('/profile', {withCredentials: true})
+        axios.get('/profile')
         .then((res) => {
             setUser(res.data);
             return
@@ -47,7 +47,7 @@ export const Auth = () => {
     }
 
     const logout = (setLoading: any) => {
-        axios.post('/logout', {}, {withCredentials: true})
+        axios.post('/logout', {})
         .then((res) => {
             setLoading(false)
             router.push('/login')
@@ -59,7 +59,7 @@ export const Auth = () => {
     }
 
     const googleLogin = (data: any, toast: any) => {
-        axios.post('/google', data, {withCredentials: true})
+        axios.post('/google', data)
         .then((res) => {
             console.log(res)
             toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
