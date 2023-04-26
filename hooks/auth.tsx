@@ -2,11 +2,11 @@ import Axios from 'axios';
 import { useRouter } from 'next/router';
 
 const axios = Axios.create({
-    baseURL: 'http://localhost:8080',
-    // baseURL: 'https://boatmate-backend-production.up.railway.app',
-    // headers: {
-    //     'X-Requested-With': 'XMLHttpRequest',
-    // },
+    // baseURL: 'http://localhost:8080',
+    baseURL: 'https://boatmate-backend-production.up.railway.app',
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+    },
     withCredentials: true,
 });
 

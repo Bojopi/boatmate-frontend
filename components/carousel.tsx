@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import { Carousel, CarouselResponsiveOption } from "primereact/carousel";
+import Image from 'next/image';
 // import { BoatMateService } from '../services/BoatMateService';
 
 interface Service {
@@ -40,7 +41,7 @@ const CarouselComponent = () => {
     return (
         <div className="border-1 surface-border border-round m-2 text-center py-5 px-3">
             <div className="mb-3 h-52 w-full flex justify-center">
-                <img src={`${service.image}`} alt={service.name} className="h-full shadow-lg" />
+                <Image src={`${service.image}`} alt={service.name} fill className="h-full shadow-lg" />
             </div>
             <div>
                 <h4 className="mb-1">{service.name}</h4>

@@ -23,6 +23,7 @@ import DirectLeads from './direct-leads';
 import Messages from './messages';
 import SentQuotes from './sent-quotes';
 import Opportunities from './opportunities';
+import Image from 'next/image';
 
 export type DataProps = {
     phone: string;
@@ -300,7 +301,7 @@ const HomePage = () => {
                                     </div>
                                 </div>
                                 <div className='border-2 rounded-md mt-5 p-3 flex flex-row justify-between items-center gap-5'>
-                                    <img src="https://i.postimg.cc/SxJz8VPb/chat.png" alt="reviews" height={70} width={70} />
+                                    <Image src="https://i.postimg.cc/SxJz8VPb/chat.png" alt="reviews" height={70} width={70} />
                                     <div>
                                         <p className='text-sm text-gray-60 font-bold'>Get reviews from past customers, even if they&apos;re not on BoatMate.</p>
                                         <p className='text-xs text-gray-600' >Tell us which customers to ask for a review, and we&apos;ll send the request for you.</p>

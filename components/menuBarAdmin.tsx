@@ -7,6 +7,7 @@ import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { TieredMenu } from 'primereact/tieredmenu';
 import { Rating } from "primereact/rating";
+import Image from 'next/image';
 
 export type MenuProps = {
     user: any;
@@ -26,11 +27,12 @@ const MenuBarAdmin: React.FC<MenuProps> = ({user, index, setIndex}) => {
     ]
 
     const start = <Link href={'/admin'} className='flex flex-row items-end'>
-        <img
+        <Image
         alt="logo"
         src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
+        fill
         className="mr-2 h-14 lg:h-20">
-        </img>
+        </Image>
         <p className='text-[#373A85] text-lg font-bold -mb-1'>Ads</p>
     </Link>
 

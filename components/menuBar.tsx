@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Menubar } from 'primereact/menubar';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const menuItems = require('../sql/menu.json')
 
@@ -31,11 +32,12 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
     }
 
     const start = <Link href={menuItem ? '/' : '/pro'} className='flex flex-row items-end'>
-        <img
+        <Image
         alt="logo"
         src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
+        fill
         className="mr-2 h-14 lg:h-20">
-        </img>
+        </Image>
         {menuItem ? null : <p className='text-[#373A85] text-lg font-bold -mb-1'>Ads</p>}
     </Link>
     const end = <>

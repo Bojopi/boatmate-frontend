@@ -29,6 +29,11 @@
   color: #108abf;
 }
 
+.active-side-item {
+  background-color: rgba(220, 220, 220, 0.548);
+  color: black !important;
+}
+
 
 /* :root {
   --max-width: 1100px;

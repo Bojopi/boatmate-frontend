@@ -9,12 +9,13 @@ const axios = Axios.create({
     withCredentials: true,
 });
 
-export const Roles = () => {
+export const Providers = () => {
 
-    const getAllRoles = (setRoles: any, setLoading: any) => {
-        axios.get('/roles')
+    const getAllProviders = (setProviders: any, setLoading: any) => {
+        axios.get('/providers')
         .then((res) => {
-            setRoles(res.data.roles);
+            console.log(res.data.providers)
+            setProviders(res.data.providers);
             setLoading(false);
         })
         .catch(error => {
@@ -25,7 +26,7 @@ export const Roles = () => {
 
 
     return {
-        getAllRoles,
+        getAllProviders,
     }
 }
 

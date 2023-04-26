@@ -14,8 +14,21 @@ export const Users = () => {
 
     const router = useRouter();
 
+    const getAllUsers = (setUsers: any, setLoading: any) => {
+        axios.post('/users')
+        .then((res) => {
+            console.log(res.data.users)
+            setUsers(res.data.users);
+            setLoading(false)
+        })
+        .catch(error => {
+            console.log('Error:', error)
+            return error.response.data.msg
+        })
+    }
+
     const setRoleUser = (idProfile: number, data: any, toast: any, setLoading: any) => {
-        axios.post(`/user/${idProfile}`, data, {withCredentials: true})
+        axios.post(`/user/${idProfile}`, data)
         .then((res) => {
             console.log(res)
             // if(res.data.role == 4) {
@@ -32,6 +45,7 @@ export const Users = () => {
 
 
     return {
+        getAllUsers,
         setRoleUser,
     }
 }

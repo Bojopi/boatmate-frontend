@@ -9,12 +9,12 @@ const axios = Axios.create({
     withCredentials: true,
 });
 
-export const Roles = () => {
+export const Boats = () => {
 
-    const getAllRoles = (setRoles: any, setLoading: any) => {
-        axios.get('/roles')
+    const getAllBoats = (setBoats: any, getBoats: any, setLoading: any) => {
+        axios.get('/boats')
         .then((res) => {
-            setRoles(res.data.roles);
+            setBoats(getBoats(res.data.boats));
             setLoading(false);
         })
         .catch(error => {
@@ -25,7 +25,7 @@ export const Roles = () => {
 
 
     return {
-        getAllRoles,
+        getAllBoats,
     }
 }
 
