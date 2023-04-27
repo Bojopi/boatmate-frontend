@@ -4,7 +4,6 @@
  const services = require('../sql/services.json');
 
 import SearchComponent from './search';
-import Image from 'next/image';
 
 
  export type SectionProps = {
@@ -36,7 +35,7 @@ import Image from 'next/image';
                     </section>
                 </div>
                 <div className="overflow-hidden h-[506px] lg:block hidden">
-                    <Image src={img} alt="hero-1" fill className="lg:ml-auto object-cover object-bottom w-full h-full" style={{ clipPath: 'polygon(8% 0, 100% 0%, 100% 100%, 0 100%)' }} />
+                    <img src={img} alt="hero-1" className="lg:ml-auto object-cover object-bottom w-full h-full" style={{ clipPath: 'polygon(8% 0, 100% 0%, 100% 100%, 0 100%)' }} />
                 </div>
             </div>
         </div>

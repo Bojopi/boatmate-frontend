@@ -20,8 +20,8 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/:path*',
-        destination: 'https://boatmate-backend-production.up.railway.app/:path*',
+        source: '/api/:path*',
+        destination: 'https://boatmate-backend-production.up.railway.app/api/:path*',
       },
     ]
   },

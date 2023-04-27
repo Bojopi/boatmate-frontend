@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Layout from '@/components/layout'
 import MenuBar from '@/components/menuBar'
 import FooterProComponent from '@/components/footer_pro'
-import Image from 'next/image'
 
 
 
@@ -29,7 +28,7 @@ const ProPage = () => {
                     </div>
                 </div>
             </div>
-            <Image src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/54c3355d-4b60-4ed9-a168-e45abec1ea61/nicol-JrMzz7jUD5s-unsplash.png" fill className='w-full hidden lg:block' alt="head" />
+            <img src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/54c3355d-4b60-4ed9-a168-e45abec1ea61/nicol-JrMzz7jUD5s-unsplash.png" className='w-full hidden lg:block' alt="head" />
         </div>
         <div className="w-full py-2 lg:py-14 flex flex-col items-center gap-2 text-sm lg:text-lg">
             <p className="tracking-wide">Use these tools to take your business to a new level.</p>
@@ -62,7 +61,7 @@ const ProPage = () => {
         </div>
         <div className="w-[90%] lg:w-2/3 mx-auto mt-20 lg:mt-28 flex flex-row gap-10 lg:gap-20">
             <div className='h-auto lg:h-[400px]'>
-                <Image src="https://pro.angi.com/app/static/fdbb98fab4cc333329cf4a9dbd61e520.png" fill className='object-contain h-full' alt="phone1" />
+                <img src="https://pro.angi.com/app/static/fdbb98fab4cc333329cf4a9dbd61e520.png" className='object-contain h-full' alt="phone1" />
             </div>
             <div className='flex flex-col justify-center'>
                 <p className='text-base lg:text-[25px] font-bold'>Manage your business like a pro</p>
@@ -85,7 +84,7 @@ const ProPage = () => {
                 <p className='mt-1 text-xs lg:text-sm'>Set up PUSH or SMS notifications on your phone, so you&apos;re always notified as soon as a new lead comes through.</p>
             </div>
             <div className='h-auto lg:h-[400px]'>
-                <Image src="https://pro.angi.com/app/static/e201725bf4e996556daee1e0e3321890.png" fill className='object-contain h-full' alt="phone1" />
+                <img src="https://pro.angi.com/app/static/e201725bf4e996556daee1e0e3321890.png" className='object-contain h-full' alt="phone1" />
             </div>
         </div>
 

@@ -2,7 +2,6 @@ import React from 'react';
 
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
-import Image from 'next/image';
 
 type CardProps = {
     title?:             string;
@@ -32,7 +31,7 @@ const CardComponent: React.FC<CardProps> = (
     return(
         <div className="card flex flex-col lg:flex-row">
             <div className={image ? 'w-full h-40 lg:h-full lg:w-2/4 overflow-hidden shadow-sm shadow-gray-500 rounded-t-md lg:rounded-l-md' : 'hidden'}>
-                <Image src={image!} alt='' fill className={'w-full h-full object-cover'} />
+                <img src={image!} alt='' className={'w-full h-full object-cover'} />
             </div>
             <Card title={title} footer={footerVisibility ? footer : ''} className={image ? `${width} lg:h-full lg:flex lg:items-center rounded-t-none lg:rounded-l-none` : `${width} h-full flex items-center`}>
                 {children}

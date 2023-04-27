@@ -13,7 +13,6 @@ import { ErrorMessage } from '../components/react-hook-form/error-message';
 import Spinner from '../components/spinner';
 import { RESTCountriesInterface } from '../interfaces/restCountries.interface';
 import { Countries } from '../hooks/countries';
-import Image from 'next/image';
 
 
 export type FormProps = {
@@ -174,11 +173,9 @@ const Register: React.FC = () => {
         <div className="container h-screen mx-auto flex justify-center items-center mt-10 md:mt-0">
             <div className='bg-white z-10 w-11/12 md:w-1/2 rounded-lg shadow-2xl py-4 md:py-5 px-5 md:px-10 flex flex-col items-center'>
                 <div className='w-full flex justify-between'>
-                    <Image
+                    <img
                         src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
                         alt="logo"
-                        width={80}
-                        height={80}
                         className='w-16 md:w-20'
                     />
                     <h1 className='mt-2 md:mt-5 text-xl md:text-3xl font-semibold mr-5' style={{'color': '#373A85'}}>SIGN UP</h1>
@@ -262,7 +259,7 @@ const Register: React.FC = () => {
                                                                     resultCountry(country.name.common);
                                                                 }}
                                                             >
-                                                                <Image src={country.flags.svg} alt={country.name.common} width={20} height={20} className='w-5' />
+                                                                <img src={country.flags.svg} alt={country.name.common} className='w-5' />
                                                                 <p className='pl-5'>{country.name.common}</p>
                                                             </li>
                                                         ))}

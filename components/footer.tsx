@@ -6,7 +6,6 @@ import { InputText } from "primereact/inputtext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter, faFacebookF, faPinterestP, faYoutube, faInstagram } from "@fortawesome/free-brands-svg-icons"
 import Link from "next/link";
-import Image from "next/image";
 
 export default function FooterComponent() {
 
@@ -53,11 +52,10 @@ export default function FooterComponent() {
                 </div>
             </div>
             <div className="w-full grid grid-cols-4 items-center px-10 lg:px-28 gap-5">
-                <Image
+                <img
                     alt="logo"
                     src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
-                    fill
-                    className="col-span-1 lg:col-span-1 w-full lg:w-[50%]"></Image>
+                    className="col-span-1 lg:col-span-1 w-full lg:w-[50%]"></img>
                 <p className="col-span-3 lg:col-span-2 text-left text-xs lg:text-sm font-normal lg:font-medium p-1 lg:p-5 tracking-wide w-full">Tampa, FL | (813) 766-7565 | support@boatmate.com | Copyright &copy; 2021-2023 BoatMate, Inc. All rights reserved</p>
                 <div className="col-span-4 lg:col-span-1 flex flex-row justify-between">
                     <Link href={'/'} className='w-8 h-8 bg-gray-600 flex justify-center items-center p-2 rounded-full' ><FontAwesomeIcon className="text-white" icon={faTwitter} /></Link>

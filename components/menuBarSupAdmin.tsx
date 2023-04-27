@@ -6,11 +6,9 @@ import { Menubar } from 'primereact/menubar';
 import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { TieredMenu } from 'primereact/tieredmenu';
-import { Rating } from "primereact/rating";
 import { Profile } from '@/interfaces/profile.interface';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import Image from 'next/image';
 
 export type MenuProps = {
     user: Profile;
@@ -40,12 +38,11 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({user, setIndex, logout, setLoadin
     ]
 
     const start = <Link href={'/admin'} className='flex flex-row items-end'>
-        <Image
+        <img
         alt="logo"
         src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
-        fill
         className="mr-2 h-14 lg:h-20">
-        </Image>
+        </img>
         <p className='text-[#373A85] text-lg font-bold -mb-1'>Ads</p>
     </Link>
 

@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Layout from '@/components/layout'
 import MenuBar from '@/components/menuBar'
 import FooterComponentThree from '@/components/footer-3'
-import Image from 'next/image'
 
 
 
@@ -40,7 +39,7 @@ const ListPage = () => {
                     <p className='w-full text-center mt-1'>Contact us at <Link href={''} className='text-[#109EDA] font-bold' >(813) 766-7565</Link></p>
                 </div>
             </div>
-            <Image src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/54c3355d-4b60-4ed9-a168-e45abec1ea61/nicol-JrMzz7jUD5s-unsplash.png" fill className='w-full hidden lg:block' alt="head" />
+            <img src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/54c3355d-4b60-4ed9-a168-e45abec1ea61/nicol-JrMzz7jUD5s-unsplash.png" className='w-full hidden lg:block' alt="head" />
         </div>
         
         <div className="w-5/6 lg:w-2/3 h-auto lg:h-[350px] overflow-hidden mx-auto mt-20 grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -49,7 +48,7 @@ const ListPage = () => {
             </div>
             <div className='col-span-1'>
                 <div className='flex flex-row gap-5'>
-                    <Image src="https://i.postimg.cc/50FZYCRn/Credit-card-bro.png" width={100} height={100} alt="coins" />
+                    <img src="https://i.postimg.cc/50FZYCRn/Credit-card-bro.png" width={100} height={100} alt="coins" />
                     <div>
                         <p className='font-bold'>No subscription fees</p>
                         <p className='text-sm'>There&apos;s no charge to join, no annual fees, and no membership fees.</p>
@@ -58,7 +57,7 @@ const ListPage = () => {
             </div>
             <div className='col-span-1'>
                 <div className='flex flex-row gap-5'>
-                    <Image src="https://i.postimg.cc/9M1nKYK8/Customer-feedback-rafiki.png" width={100} height={100} alt="coins" />
+                    <img src="https://i.postimg.cc/9M1nKYK8/Customer-feedback-rafiki.png" width={100} height={100} alt="coins" />
                     <div>
                         <p className='font-bold'>Great customers</p>
                         <p className='text-sm'>Hear from customers who choose you, with high intent to hire.</p>
@@ -67,7 +66,7 @@ const ListPage = () => {
             </div>
             <div className='col-span-1'>
                 <div className='flex flex-row gap-5'>
-                    <Image src="https://i.postimg.cc/bvznw7mv/Contact-us-bro.png" width={100} height={100} alt="coins" />
+                    <img src="https://i.postimg.cc/bvznw7mv/Contact-us-bro.png" width={100} height={100} alt="coins" />
                     <div>
                         <p className='font-bold'>Outstanding support</p>
                         <p className='text-sm'>1:1 help that&apos;s easily accessible, and a simple, flexible refund policy.</p>

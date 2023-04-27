@@ -1,16 +1,17 @@
 import Axios from 'axios';
-import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
 
 const axios = Axios.create({
-    // baseURL: 'http://localhost:8080',
-    baseURL: 'https://boatmate-backend-production.up.railway.app',
-    headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-    },
+    // baseURL: 'http://localhost:8080/api',
+    baseURL: 'https://boatmate-backend-production.up.railway.app/api',
+    // headers: {
+    //     'X-Requested-With': 'XMLHttpRequest',
+    // },
     withCredentials: true,
 });
+
 
 export const Auth = () => {
 
@@ -21,13 +22,10 @@ export const Auth = () => {
             .post('/auth', data)
             .then((res) => {
                 // console.log('logueado')
-                Cookies.set('token', res.data.token, {
-                    expires: new Date(Date.now() + 3600000),
-                    sameSite: 'none',
-                    secure: true,
-                    domain: 'boatmate-frontend.vercel.app',
-                    path: '/'
-                });
+                // const token = Cookies.get('token');
+                console.log(res.data)
+                // Cookies.set('token', token, { sameSite: 'none', secure: true, expires: 1/24 });
+                // console.log('Token guardado en la cookie:', token);
                 setLoading(false);
                 toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
                 router.push('/welcome')
