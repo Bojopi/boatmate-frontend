@@ -23,7 +23,7 @@ export const Auth = () => {
                 // console.log('logueado')
                 Cookies.set('token', res.data.token, {
                     expires: new Date(Date.now() + 3600000),
-                    sameSite: 'lax',
+                    sameSite: 'none',
                     secure: true,
                     domain: 'boatmate-frontend.vercel.app',
                     path: '/'
