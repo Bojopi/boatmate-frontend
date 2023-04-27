@@ -1,5 +1,7 @@
 import Axios from 'axios';
 import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
+
 
 const axios = Axios.create({
     // baseURL: 'http://localhost:8080',
@@ -19,7 +21,7 @@ export const Auth = () => {
             .post('/auth', data)
             .then((res) => {
                 // console.log('logueado')
-                console.log(res.headers)
+                console.log(res.headers.authorization)
                 setLoading(false);
                 toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
                 router.push('/welcome')
