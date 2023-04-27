@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
 
 
 const axios = Axios.create({
@@ -20,7 +21,13 @@ export const Auth = () => {
             .post('/auth', data)
             .then((res) => {
                 // console.log('logueado')
-                console.log(res.headers["set-cookie"])
+                Cookies.set('tokenUser', res.data.tokenUser, {
+                    expires: new Date(Date.now() + 3600000),
+                    sameSite: 'lax',
+                    secure: true,
+                    domain: 'boatmate-frontend.vercel.app',
+                    path: '/'
+                });
                 setLoading(false);
                 toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
                 router.push('/welcome')
