@@ -2,7 +2,7 @@
   "name": "boatmatefront",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8080",
+  "proxy": "https://boatmate-backend-production.up.railway.app",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
