@@ -20,7 +20,7 @@ export const Auth = () => {
             .post('/auth', data)
             .then((res) => {
                 // console.log('logueado')
-                console.log(res.headers)
+                console.log(document.cookie)
                 setLoading(false);
                 toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
                 router.push('/welcome')
