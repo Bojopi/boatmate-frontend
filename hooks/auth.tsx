@@ -21,7 +21,7 @@ export const Auth = () => {
             .post('/auth', data)
             .then((res) => {
                 // console.log('logueado')
-                Cookies.set('tokenUser', res.data.tokenUser, {
+                Cookies.set('token', res.data.token, {
                     expires: new Date(Date.now() + 3600000),
                     sameSite: 'lax',
                     secure: true,
