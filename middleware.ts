@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { jwtVerify } from 'jose';
 
-const secret: string = process.env.SECRET!;
+const secret: string = process.env.JWT_SECRET!;
 
 export async function middleware(request: NextRequest) {
     console.log(request.cookies)
