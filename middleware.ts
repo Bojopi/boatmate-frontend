@@ -5,6 +5,7 @@ import { jwtVerify } from 'jose';
 const secret: string = process.env.SECRET!;
 
 export async function middleware(request: NextRequest) {
+    console.log(request.cookies)
 
     let token = request.cookies.get("token")?.value;
 

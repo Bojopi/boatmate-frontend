@@ -21,11 +21,6 @@ export const Auth = () => {
         axios
             .post('/auth', data)
             .then((res) => {
-                // console.log('logueado')
-                // const token = Cookies.get('token');
-                console.log(res.data)
-                // Cookies.set('token', token, { sameSite: 'none', secure: true, expires: 1/24 });
-                // console.log('Token guardado en la cookie:', token);
                 setLoading(false);
                 toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
                 router.push('/welcome')

@@ -2,11 +2,10 @@
   "name": "boatmatefront",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://boatmate-backend-production.up.railway.app",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 80",
     "lint": "next lint"
   },
   "dependencies": {
