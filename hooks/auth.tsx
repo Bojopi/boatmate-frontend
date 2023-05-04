@@ -1,17 +1,6 @@
-import Axios from 'axios';
-import Cookies from 'js-cookie';
+import { axios } from '@/config/axios';
 import { useRouter } from 'next/router';
 
-
-const axios = Axios.create({
-    // baseURL: 'http://localhost:8080/api',
-    // baseURL: 'https://boatmate-backend-production.up.railway.app/api',
-    baseURL: 'http://ec2-3-131-141-161.us-east-2.compute.amazonaws.com:8080/api',
-    // headers: {
-    //     'X-Requested-With': 'XMLHttpRequest',
-    // },
-    withCredentials: true,
-});
 
 
 export const Auth = () => {
@@ -36,17 +25,7 @@ export const Auth = () => {
             })
     };
 
-    const getUserAuthenticated = (setUser: any) => {
-        axios.get('/profile')
-        .then((res) => {
-            setUser(res.data);
-            return
-        })
-        .catch(error => {
-            console.log('Error:', error)
-            return error.response.data.msg
-        })
-    }
+    const getUserAuthenticated = () => axios.get('/profile')
 
     const logout = (setLoading: any) => {
         axios.post('/logout', {})
@@ -63,7 +42,6 @@ export const Auth = () => {
     const googleLogin = (data: any, toast: any) => {
         axios.post('/google', data)
         .then((res) => {
-            console.log(res)
             toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
             if(!res.data.newUser) {
                 router.push('/welcome')

@@ -1,15 +1,5 @@
-import Axios from 'axios';
+import { axios } from '@/config/axios';
 import { useRouter } from 'next/router';
-
-const axios = Axios.create({
-    // baseURL: 'http://localhost:8080/api',
-    // baseURL: 'https://boatmate-backend-production.up.railway.app/api',
-    baseURL: 'http://ec2-3-131-141-161.us-east-2.compute.amazonaws.com:8080/api',
-    // headers: {
-    //     'X-Requested-With': 'XMLHttpRequest',
-    // },
-    withCredentials: true,
-});
 
 export const Users = () => {
 
@@ -44,10 +34,29 @@ export const Users = () => {
         })
     }
 
+    const setUser = (id: number, data: any, setLoading: any, toast: any, setDataUser: any, setPersonalActive: any, setDetailActive: any) => {
+        axios.post(`/profile/${id}`, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then((res) => {
+            setLoading(false);
+            toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
+            setDataUser();
+            setPersonalActive(true);
+            setDetailActive(true);
+        }).catch(error => {
+            console.log(error)
+            setLoading(false)
+            toast.current!.show({severity:'error', summary:'Error', detail: error.msg, life: 4000});
+        })
+    }
+
 
     return {
         getAllUsers,
         setRoleUser,
+        setUser
     }
 }
 

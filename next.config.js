@@ -14,6 +14,12 @@ const nextConfig = {
         hostname: 'i.postimg.cc',
         port: '',
         pathname: '/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '/**'
       }
     ]
   },

@@ -6,6 +6,7 @@ export type TextareaProps = {
   rows?: number;
   placeholder?: string;
   width?: string;
+  readonly?: boolean;
 };
 
 export const Textarea: React.FC<TextareaProps> = ({
@@ -15,6 +16,7 @@ export const Textarea: React.FC<TextareaProps> = ({
   rows = 2,
   placeholder = "",
   width = "w-full",
+  readonly = false,
 }) => {
   const {register} = useFormContext();
   return (
@@ -24,7 +26,8 @@ export const Textarea: React.FC<TextareaProps> = ({
       name={name}
       rows={rows}
       placeholder={placeholder}
-      className={`block ${width} border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-700 form-textarea focus:ring-blue-500 focus:border-blue-500 focus:ring-0 sm:text-sm rounded-md`}
+      className={`p-inputtext p-inputtextarea w-full read-only:border-none read-only:focus:shadow-none`}
+      readOnly={readonly}
     />
   );
 };
