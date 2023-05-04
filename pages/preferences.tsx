@@ -16,22 +16,40 @@ const Preferences = () => {
 
     const [user, setUser] = useState<Profile>(
         {
-            uid:      0,
-            email:    '',
-            state:    false,
-            name:     '',
-            lastname: '',
-            phone:    '',
-            image:    '',
-            role:     '',
-            iat:      0,
-            exp:      0,
+            uid:                 0,
+            email:               '',
+            state:               false,
+            google:               false,
+            idPerson:            0,
+            name:                '',
+            lastname:            '',
+            phone:               '',
+            image:               '',
+            idRole:              0,
+            role:                '',
+            idProvider:          0,
+            providerName:        '',
+            providerImage:       '',
+            zip:                 '',
+            providerDescription: '',
+            providerLat:         '',
+            providerLng:         '',
+            idCustomer:          '',
+            customerLat:         '',
+            customerLng:         '',
+            iat:                 0,
+            exp:                 0,
         }
     );
 
     useEffect(() => {
-        getUserAuthenticated(setUser);
+        setDataUser();
     }, [])
+
+    const setDataUser = async () => {
+        const response = await getUserAuthenticated();
+        setUser(response.data);
+    }
 
     const setRole = async (e: any) => {
         setLoading(true);
