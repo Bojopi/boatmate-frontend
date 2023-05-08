@@ -17,7 +17,7 @@ export const Auth = () => {
                 // localStorage.setItem('token', res.data.token);
             })
             .catch(error => {
-                console.log(error.response)
+                console.log(error)
                 toast.current.show({severity:'error', summary:'Error', detail: `${error.response.data.msg}`, life: 4000});
                 setLoading(false);
                 // if (error.response.status !== 422) throw error
