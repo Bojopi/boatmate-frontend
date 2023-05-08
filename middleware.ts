@@ -2,12 +2,12 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { jwtVerify } from 'jose';
 
-const secret: string = process.env.NEXT_PUBLIC_JWT_SECRET as string;
+const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string;
 
 export async function middleware(request: NextRequest) {
 
     let token = request.cookies.get("tokenUser")?.value;
-    console.log(request.cookies)
+    console.log(secret)
 
     if(!token) {
         return NextResponse.redirect(new URL('/login', request.url));
