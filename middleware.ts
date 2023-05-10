@@ -7,7 +7,6 @@ const secret = process.env.NEXT_PUBLIC_JWT_SECRET ? process.env.NEXT_PUBLIC_JWT_
 export async function middleware(request: NextRequest) {
 
     let token = request.cookies.get("tokenUser")?.value;
-    console.log(secret)
 
     if(!token) {
         return NextResponse.redirect(new URL('/login', request.url));
