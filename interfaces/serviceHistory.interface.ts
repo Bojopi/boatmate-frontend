@@ -3,13 +3,19 @@ export interface ServiceHistory {
 }
 
 export interface ServiceHistoryElement {
-    id_service_provider:  number;
-    price:                number;
-    service_name:         string;
-    provider_name:        string;
-    person_name:          string;
-    lastname:             string;
+    id_contract:          number;
     date:                 Date;
     contract_state:       string;
     contract_description: string;
+    id_service_provider:  number;
+    price:                number;
+    id_provider:          number;
+    provider_name:        string;
+    id_service:           number;
+    service_name:         string;
+    id_customer:          number;
+    email:                string;
+    person_name:          string;
+    lastname:             string;
+    phone:                string;
 }

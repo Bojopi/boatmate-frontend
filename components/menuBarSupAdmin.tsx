@@ -55,7 +55,6 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({user, setIndex, logout, setLoadin
                     :
                     <FontAwesomeIcon icon={faCircleUser} className='w-8 h-8' style={{color: "#c2c2c2"}} />
             }
-            {/* <Avatar image="https://primefaces.org/cdn/primereact/images/avatar/asiyajavayant.png" shape="circle" /> */}
             <TieredMenu model={items} popup ref={menu} className='mt-1' />
             <Button rounded text icon="pi pi-angle-down" className='text-[#109EDA] shrink-0' onClick={(e) => menu.current.toggle(e)} />
         </div>

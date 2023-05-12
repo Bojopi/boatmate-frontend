@@ -13,86 +13,76 @@ import { ErrorMessage } from '../components/react-hook-form/error-message';
 import Spinner from '../components/spinner';
 import { RESTCountriesInterface } from '../interfaces/restCountries.interface';
 import { Countries } from '../hooks/countries';
+import MapComponent from '@/components/map';
+import { Maps } from '@/hooks/maps';
 
 
 export type FormProps = {
-    fullname:       string;
     email:          string;
-    phone:          string;
-    country:        string;
-    city:           string;
-    address:        string;
-    username:       string;
     password:       string;
     c_password:     string;
-    select_country: string;
+    idRole:         number;
+    personName:     string;
+    lastname:       string;
+    phone:          string;
+    lat:            string;
+    lng:            string;
+    providerName:   string;
 }
 
 const Register: React.FC = () => {
-    const toast = useRef<Toast>(null);
 
-    const { getAllCountries } = Countries()
+    const {getAddress} = Maps();
+
+    const toast = useRef<Toast>(null);
 
     const [activeIndex, setActiveIndex] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const [searchCountryIsOpen, setSearchCountryIsOpen] = useState<boolean>(false)
-    const [searchCountries, setSearchCountries] = useState<any>([])
+    const [selectedPlace, setSelectedPlace] = useState<any>('');
+    const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
-    const [countries, setCountries] = useState<RESTCountriesInterface[]>([])
+    const [password, setPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
+    
+    const [isSelected, setIsSelected] = useState<string>('')
+
+    const [togglePass, setTogglePass] = useState<boolean>(false);
+    const [toggleConfirmPass, setToggleConfirmPass] = useState<boolean>(false);
+    const [errorMatch, setErrorMatch] = useState<boolean>(false);
 
     useEffect(() => {
-        try {
-            resetAsyncForm();
-            document.addEventListener("click", handleClickOutside);
-            return () => {
-                document.removeEventListener("click", handleClickOutside);
-            };
-        } catch (error) {
-            console.log(error)
+        if (selectedLocation) {
+            methods.setValue('lat', selectedLocation.lat);
+            methods.setValue('lng', selectedLocation.lng);
         }
-    }, []);
-
-    const resetAsyncForm = async () => {
-        const result = await getAllCountries();
-        (result.data).sort((a: any, b: any) => {
-            if(a.name.common > b.name.common) {
-                return 1;
-            } else if(a.name.common < b.name.common) {
-                return -1;
-            } else {
-                return 0;
-            }
-        })
-        setCountries(result.data);
-    };
+    }, [selectedLocation])
 
     const items = [
         {
             label: 'Personal Data',
         },
         {
-            label: 'Address'
+            label: 'User Data'
         },
         {
-            label: 'User Data'
+            label: 'Role'
         }
     ];
 
     const methods = useForm<FormProps>({
         defaultValues: {
-            fullname:       '',
             email:          '',
-            phone:          '',
-            country:        '',
-            city:           '',
-            address:        '',
-            username:       '',
             password:       '',
             c_password:     '',
-            select_country: '',
-        },
-        mode: 'all'
+            idRole:         0,
+            personName:     '',
+            lastname:       '',
+            phone:          '',
+            lat:            '',
+            lng:            '',
+            providerName:   '',
+        }
     });
 
     const {
@@ -104,7 +94,7 @@ const Register: React.FC = () => {
     } = methods;
 
     const onSubmit = (formData: FormProps) => {
-        console.log(formData, errors);
+        console.log(formData);
         if(formData.password !== formData.c_password) {
             toast.current?.show({severity:'error', summary:'Error', detail: 'The passwords must be the same.', life: 4000});
         }
@@ -118,27 +108,74 @@ const Register: React.FC = () => {
         toast.current?.show({severity:'error', summary:'Error', detail: 'User and/or password are not correct', life: 4000});
     };
 
-    const filterCountries = (value: string) => {
-        setSearchCountryIsOpen(true);
-        setSearchCountries([...countries.filter((item: RESTCountriesInterface) => item.name.common.toLowerCase().indexOf(value.toLowerCase()) > -1 )]);
-    };
+    const nextStep = () => {
+        setActiveIndex(cur => cur + 1);
+    }
 
-    const resultCountry = (value: string) => {
-        setValue('select_country', value);
-        setSearchCountryIsOpen(false);
-    };
+    const backStep = () => {
+        setActiveIndex(cur => cur - 1);
+    }
 
-    const handleClickOutside = (event: any) => {
-        if(document.getElementById('select_country')) {
-            const element: any = document.getElementById('select_country');
-            if(!element.contains(event.target)){
-                setSearchCountryIsOpen(false);
+    const changePass = (e: any) => {
+        if(e.target.id === 'password') setPassword(e.target.value);
+        else if(e.target.id === 'confirmPassword') {
+            setConfirmPassword(e.target.value);
+
+            if(e.target.value != password) {
+                setErrorMatch(true);
+            } else {
+                setErrorMatch(false);
             }
         }
     }
 
-    const nextStep = () => {
-        setActiveIndex(cur => cur + 1);
+    const showPass = (e: any) => {
+        if(e.target.id == 'pass') setTogglePass(!togglePass);
+        else if(e.target.id == 'confpass') setToggleConfirmPass(!toggleConfirmPass)
+    }
+
+    const validForm = () => {
+        if(activeIndex === 1) {
+            if(
+                isValid == false &&
+                errorMatch == true &&
+                password.length < 1 &&
+                confirmPassword.length < 1
+            ) {
+                return true;
+            }
+            else if(
+                isValid == true &&
+                errorMatch == false &&
+                password.length > 9 &&
+                confirmPassword.length > 9
+                ) {
+                return false;
+            }
+            else if(isSelected != '') {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+        if(activeIndex === 0) {
+            if(isValid) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    const selectedRole = (e: any) => {
+        if(e.currentTarget.id == 'customer') {
+            setIsSelected('customer')
+        }
+        else if(e.currentTarget.id == 'provider') {
+            setIsSelected('provider')
+        }
     }
 
     const renderButton = () => {
@@ -146,19 +183,51 @@ const Register: React.FC = () => {
             return undefined;
         } else if(activeIndex === 2) {
             return (
-                <button
-                    type='submit' 
-                    className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-400'
-                    disabled={!isValid}>SIGN UP</button>
+                <div className='w-full flex justify-between'>
+                    <button
+                        type='button'
+                        className='p-3 text-xs md:text-base bg-gray-400 hover:bg-gray-600 text-white rounded-md hover:transition disabled:bg-gray-400'
+                        onClick={backStep}>
+                            Back Step
+                    </button>
+                    <button
+                        type='submit'
+                        className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-400'
+                        disabled={validForm()}>
+                            SING UP
+                    </button>
+                </div>
+            )
+        } else if(activeIndex === 0) {
+            return (
+                <div className='w-full flex justify-end'>
+                    <button
+                        type='button'
+                        className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-400'
+                        onClick={nextStep}
+                        disabled={validForm()}>
+                            Next Step
+                    </button>
+                </div>
             )
         } else {
-            return (
-                <button
-                    type='button'
-                    className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-400'
-                    onClick={nextStep}
-                    disabled={!isValid}>Next Step</button>
-            )
+           return (
+                <div className='w-full flex justify-between'>
+                    <button
+                        type='button'
+                        className='p-3 text-xs md:text-base bg-gray-400 hover:bg-gray-600 text-white rounded-md hover:transition disabled:bg-gray-400'
+                        onClick={backStep}>
+                            Back Step
+                    </button>
+                    <button
+                        type='button'
+                        className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-400'
+                        onClick={nextStep}
+                        disabled={validForm()}>
+                            Next Step
+                    </button>
+                </div>
+           )
         }
     }
 
@@ -178,41 +247,39 @@ const Register: React.FC = () => {
                         alt="logo"
                         className='w-16 md:w-20'
                     />
-                    <h1 className='mt-2 md:mt-5 text-xl md:text-3xl font-semibold mr-5' style={{'color': '#373A85'}}>SIGN UP</h1>
+                    <h1 className='mt-2 md:mt-5 text-xl md:text-2xl font-semibold mr-5' style={{'color': '#373A85'}}>SIGN UP</h1>
                 </div>
                 <div className='w-full mt-4'>
                     <Steps model={items} activeIndex={activeIndex} readOnly={true} />
                 </div>
-                <FormProvider {...methods}>
+                <div className='w-full'>
+                    <FormProvider {...methods}>
                         <form onSubmit={handleSubmit(onSubmit, onErrors)} className="w-full">
                             {
                                 activeIndex === 0 ?
-                                <div className="grid grid-cols-1 gap-y-3 p-5">
-                                    <InputWrapper outerClassName="col-span-12">
-                                            <Label id='fullname'>Full Name *</Label>
+                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+                                    <InputWrapper outerClassName="col-span-6">
+                                            <Label id='personName'>Name *</Label>
                                             <Input
-                                                id='fullname'
-                                                name='fullname'
+                                                id='personName'
+                                                name='personName'
                                                 type='text'
-                                                rules={{required: "Fullname is required"}}
+                                                rules={{required: "Name is required"}}
                                             />
-                                        {errors?.fullname?.message && (
-                                            <ErrorMessage>{errors.fullname.message}</ErrorMessage>
+                                        {errors?.personName?.message && (
+                                            <ErrorMessage>{errors.personName.message}</ErrorMessage>
                                         )}
                                     </InputWrapper>
-                                    <InputWrapper outerClassName="col-span-12">
-                                            <Label id='email'>Email *</Label>
+                                    <InputWrapper outerClassName="col-span-6">
+                                            <Label id='lastname'>Lastname *</Label>
                                             <Input
-                                                id='email'
-                                                name='email'
-                                                type='email'
-                                                rules={{
-                                                    required: "Email is required",
-                                                    pattern: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]{3}$/g
-                                                }}
+                                                id='lastname'
+                                                name='lastname'
+                                                type='text'
+                                                rules={{required: "Lastname is required"}}
                                             />
-                                        {errors?.email?.message && (
-                                            <ErrorMessage>{errors.email.message}</ErrorMessage>
+                                        {errors?.lastname?.message && (
+                                            <ErrorMessage>{errors.lastname.message}</ErrorMessage>
                                         )}
                                     </InputWrapper>
                                     <InputWrapper outerClassName="col-span-12">
@@ -230,137 +297,92 @@ const Register: React.FC = () => {
                                             <ErrorMessage>{errors.phone.message}</ErrorMessage>
                                         )}
                                     </InputWrapper>
+                                    <div className='col-span-12'>
+                                        <Label>Address</Label>
+                                        <MapComponent height='250px' getAddress={getAddress} selectedLocation={selectedLocation} selectedPlace={selectedPlace} setSelectedLocation={setSelectedLocation} setSelectedPlace={setSelectedPlace} />
+                                    </div>
                                 </div>
                                 : activeIndex == 1 ?
-                                <div className="grid grid-cols-1 gap-y-3 p-5">
+                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-3 p-5">
                                     <InputWrapper outerClassName="col-span-12">
-                                        <Label id='country'>Country *</Label>
-                                        <div className="relative pb-14">
-                                            <div className="absolute w-full">
-                                                <input
-                                                    id="select_country"
-                                                    name="select_country"
-                                                    type="text"
-                                                    autoComplete="off"
-                                                    value={getValues('select_country')}
-                                                    className="p-inputtext w-full"
-                                                    onChange={(e) => {
-                                                        setValue('select_country', e.target.value);
-                                                        filterCountries(e.target.value);
-                                                    }}
-                                                />
-                                                { searchCountryIsOpen && (
-                                                    <ul className="absolute mt-1 w-full h-auto max-h-60 overflow-y-auto rounded-md bg-white border border-gray-300 shadow-md">
-                                                        {searchCountries.map((country: RESTCountriesInterface, i: number) => (
-                                                            <li
-                                                                key={i}
-                                                                className="flex flex-row cursor-pointer py-3 px-3 hover:bg-gray-200 text-sm font-medium text-gray-600 border-b border-b-gray-300"
-                                                                onClick={() => {
-                                                                    resultCountry(country.name.common);
-                                                                }}
-                                                            >
-                                                                <img src={country.flags.svg} alt={country.name.common} className='w-5' />
-                                                                <p className='pl-5'>{country.name.common}</p>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                )}
-
-                                            </div>
-                                        </div>
-                                        {errors?.select_country?.message && (
-                                            <ErrorMessage>{errors.select_country.message}</ErrorMessage>
-                                        )}
-                                    </InputWrapper>
-                                    <InputWrapper outerClassName="col-span-12">
-                                            <Label id='city'>City *</Label>
+                                            <Label id='email'>Email *</Label>
                                             <Input
-                                                id='city'
-                                                name='city'
-                                                type='text'
-                                                rules={{required: "City is required"}}
-                                            />
-                                        {errors?.city?.message && (
-                                            <ErrorMessage>{errors.city.message}</ErrorMessage>
-                                        )}
-                                    </InputWrapper>
-                                    <InputWrapper outerClassName="col-span-12">
-                                            <Label id='address'>Address *</Label>
-                                            <Input
-                                                id='address'
-                                                name='address'
-                                                type='text'
-                                                rules={{required: "Address is required"}}
-                                            />
-                                        {errors?.address?.message && (
-                                            <ErrorMessage>{errors.address.message}</ErrorMessage>
-                                        )}
-                                    </InputWrapper>
-                                </div>
-                                : activeIndex == 2 ?
-                                <div className="grid grid-cols-1 gap-y-3 p-5">
-                                    <InputWrapper outerClassName="col-span-12">
-                                            <Label id='username'>Username *</Label>
-                                            <Input
-                                                id='username'
-                                                name='username'
-                                                type='text'
+                                                id='email'
+                                                name='email'
+                                                type='email'
                                                 rules={{
-                                                    required: "Username is required",
-                                                    pattern: /(?!.*[\.\-\_]{2,})^[a-zA-Z0-9\.\-\_]{6,24}$/gm
+                                                    required: "Email is required",
+                                                    pattern: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]{3}$/g
                                                 }}
                                             />
-                                        {errors?.username?.message && (
-                                            <ErrorMessage>{errors.username.message}</ErrorMessage>
+                                        {errors?.email?.message && (
+                                            <ErrorMessage>{errors.email.message}</ErrorMessage>
                                         )}
                                     </InputWrapper>
                                     <InputWrapper outerClassName="col-span-12">
                                             <Label id='password'>Password *</Label>
-                                            <Input
-                                                id='password'
-                                                name='password'
-                                                type='password'
-                                                rules={{
-                                                    required: "Password is required",
-                                                    pattern: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{10,}$/g,
-                                                }}
-                                            />
-                                        {errors?.password?.message && (
-                                            <ErrorMessage>{errors.password.message}</ErrorMessage>
-                                        )}
+                                            <div className="p-password p-component p-inputwrapper p-input-icon-right">
+                                                <input
+                                                    type={togglePass ? 'text' : 'password'}
+                                                    name="password"
+                                                    id="password"
+                                                    value={password}
+                                                    onChange={changePass}
+                                                    pattern='/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{10,}$/g'
+                                                    required
+                                                    className='p-inputtext p-component p-password-input w-full'
+                                                    />
+                                                <i id='pass' className={togglePass ? 'pi pi-eye-slash cursor-pointer': 'pi pi-eye cursor-pointer'} onClick={showPass}></i>
+                                            </div>
                                         <ul className='w-full grid grid-cols-1 md:grid-cols-2 md:gap-x-5 md:gap-y-2 text-xs'>
-                                            <li><i className={methods.getValues('password').match(/[a-zA-Z]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One letter (a-z)</li>
-                                            <li><i className={methods.getValues('password').match(/.{10,}/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> 10 characters minimum</li>
-                                            <li><i className={methods.getValues('password').match(/\d/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One number (0-9)</li>
-                                            <li><i className={methods.getValues('password').match(/[@$\-_]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One special character</li>
+                                            <li><i className={password.match(/[a-z]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One letter (a-z)</li>
+                                            <li><i className={password.match(/[A-Z]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One letter (A-Z)</li>
+                                            <li><i className={password.match(/.{10,}/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> 10 characters minimum</li>
+                                            <li><i className={password.match(/\d/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One number (0-9)</li>
+                                            <li><i className={password.match(/[@$\-_]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One special character</li>
                                         </ul>
                                     </InputWrapper>
                                     <InputWrapper outerClassName="col-span-12">
                                             <Label id='c_password'>Confirm Password *</Label>
-                                            <Input
-                                                id='c_password'
-                                                name='c_password'
-                                                type='password'
-                                                rules={{
-                                                    required: "Confirm Password is required",
-                                                    pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm,
-                                                    validate: (value: string) => 
-                                                        value === methods.getValues('password') || 'The passwords do not match'
-                                                }}
-                                            />
-                                        {errors?.c_password?.message && (
-                                            <ErrorMessage>{errors.c_password.message}</ErrorMessage>
-                                        )}
+                                            <div className="p-password p-component p-inputwrapper p-input-icon-right">
+                                                <input
+                                                    type={toggleConfirmPass ? 'text' : 'password'}
+                                                    name="confirmPassword"
+                                                    id="confirmPassword"
+                                                    value={confirmPassword}
+                                                    onChange={changePass}
+                                                    pattern='/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{10,}$/g'
+                                                    required
+                                                    className='p-inputtext p-component p-password-input w-full'
+                                                    />
+                                                <i id='confpass' className={toggleConfirmPass ? 'pi pi-eye-slash cursor-pointer': 'pi pi-eye cursor-pointer'} onClick={showPass}></i>
+                                            </div>
+                                            <p className={errorMatch && confirmPassword != '' ? 'w-full text-sm text-red-500' : 'hidden'}>The passwords do not match</p>
                                     </InputWrapper>
+                                </div>
+                                : activeIndex == 2 ?
+                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-3 p-5">
+                                    <h1 className='col-span-12 mt-5 text-xl md:text-2xl font-semibold text-center' style={{'color': '#373A85'}}>Which best describes your role?</h1>
+                                    <div className='col-span-12 w-full flex flex-row items-center justify-center gap-20'>
+                                        <div id='customer' className={`flex flex-col items-center gap-5 p-5 rounded-md shadow-md border hover:bg-green-100 cursor-pointer ${isSelected == 'customer' ? 'bg-green-100' : 'bg-white'}`} onClick={selectedRole}>
+                                            <img id='customer' src="https://i.postimg.cc/Zn2fvXhV/sailor.png" width={100} height={100} alt="sailor" />
+                                            <p id='customer' className='font-extrabold text-[#373A85]'>BOAT OWNER</p>
+                                        </div>
+                                        <div id='provider' className={`flex flex-col items-center gap-5 p-5 rounded-md shadow-md border hover:bg-green-100 cursor-pointer ${isSelected == 'provider' ? 'bg-green-100' : 'bg-white'}`} onClick={selectedRole}>
+                                            <img id='provider' src="https://i.postimg.cc/L8h5v7Lm/cargo-ship.png" width={100} height={100} alt="provider" />
+                                            <p id='provider' className='font-extrabold text-[#373A85]'>PROVIDER</p>
+                                        </div>
+                                    </div>
                                 </div>
                                 : null
                             }
                             <p className='w-full text-center text-xs md:text-sm font-medium text-[#373A85]'>Already have an account? <Link href={'/login'} className='text-[#00CBA4] hover:underline'>Sign in now</Link></p>
-                            <div className="mt-4 flex items-center justify-end">
+                            <div className="mt-4">
                                 {renderButton()}
                             </div>
                         </form>
                     </FormProvider>
+                </div>
             </div>
         </div>
     </>

@@ -30,7 +30,6 @@ const BoatsIndex: React.FC = () => {
         return [...(data || [])].map((d) => {
             let newDate = new Date();
             newDate.setFullYear(d.year);
-            console.log(newDate)
             d.year = newDate;
 
             return d;

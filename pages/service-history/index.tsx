@@ -144,7 +144,7 @@ const ServiceHistoryIndex: React.FC = () => {
 
   return (
     <div className='w-full '>
-        <DataTable value={serviceHistory!} paginator showGridlines rows={10} loading={loading} dataKey="id_service_provider" 
+        <DataTable value={serviceHistory!} paginator showGridlines rows={10} loading={loading} dataKey="id_contract" 
                 filters={filters!} globalFilterFields={['service_name', 'provider_name', 'person_name', 'lastname', 'price', 'date', 'contract_state', 'contract_description']} header={header}
                 emptyMessage="No Service History found.">
             <Column field="service_name" header="Service Name" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />

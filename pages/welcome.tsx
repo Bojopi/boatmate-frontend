@@ -33,6 +33,7 @@ import MapComponent from '@/components/map';
 import { Maps } from '@/hooks/maps';
 import { Tag } from 'primereact/tag';
 import { Textarea } from '@/components/react-hook-form/textarea';
+import CustomersIndex from './customers';
 
 export type FormProps = {
     name: string;
@@ -281,8 +282,9 @@ const Welcome = () => {
                             <li className='w-full px-5 py-3 border-b cursor-pointer text-gray-500 font-medium hover:text-black hover:underline hover:underline-offset-4 side-item' onClick={activeSideItem} id='service_history'>Service History</li>
                         </ul>
                     : index === 3 ?
-                        <ul>
+                    <ul>
                             <li className={`w-full px-5 py-3 border-b cursor-pointer text-gray-500 font-medium hover:text-black hover:underline hover:underline-offset-4 side-item ${sideItem === 0 || sideItem === 'boats' ? 'active-side-item' : null}`} onClick={activeSideItem} id='boats'>Boats</li>
+                            <li className='w-full px-5 py-3 border-b cursor-pointer text-gray-500 font-medium hover:text-black hover:underline hover:underline-offset-4 side-item' onClick={activeSideItem} id='customers'>Customers</li>
                         </ul>
                     : null
                 }
@@ -645,6 +647,8 @@ const Welcome = () => {
                         {
                             sideItem === 0 || sideItem === 'boats' ?
                             <BoatsIndex />
+                            : sideItem === 'customers' ?
+                            <CustomersIndex />
                             : null
                         }
                     </div>

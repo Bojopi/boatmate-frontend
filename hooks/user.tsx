@@ -6,7 +6,7 @@ export const Users = () => {
     const router = useRouter();
 
     const getAllUsers = (setUsers: any, setLoading: any) => {
-        axios.post('/users')
+        axios.get('/profiles')
         .then((res) => {
             console.log(res.data.users)
             setUsers(res.data.users);

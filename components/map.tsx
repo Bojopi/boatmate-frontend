@@ -4,18 +4,14 @@ import { GoogleMap, Autocomplete, Marker, useLoadScript } from '@react-google-ma
 import { useJsApiLoader } from '@react-google-maps/api';
 
 export type InputProps = {
-  readonly: boolean;
+  readonly?: boolean;
   selectedLocation: any;
   setSelectedLocation: any;
   getAddress: any;
   selectedPlace: string;
   setSelectedPlace: any;
+  height?: string;
 }
-
-const mapContainerStyle = {
-  width: '100%',
-  height: '400px',
-};
 
 let center = {
   lat: 37.7749,
@@ -26,11 +22,16 @@ let zoom = 15
 
 const libraries: any = ['places'];
 
-const MapComponent: React.FC<InputProps> = ({readonly = true, selectedLocation, setSelectedLocation, getAddress, selectedPlace, setSelectedPlace}) => {
+const MapComponent: React.FC<InputProps> = ({readonly = false, height='400px', selectedLocation, setSelectedLocation, getAddress, selectedPlace, setSelectedPlace}) => {
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_APIKEY as string,
     libraries
   });
+
+  let mapContainerStyle = {
+    width: '100%',
+    height: height,
+  };
 
   const [autocomplete, setAutocomplete] = useState<any>(null);
 
@@ -68,7 +69,7 @@ const MapComponent: React.FC<InputProps> = ({readonly = true, selectedLocation, 
   }
 
   return (
-    <div>
+    <div className='w-full flex flex-col gap-2'>
       <Autocomplete
         onLoad={autocomplete => setAutocomplete(autocomplete)}
         onPlaceChanged={onPlaceChanged}
