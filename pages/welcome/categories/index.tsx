@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Categories } from '@/hooks/categories';
 import { Category } from '@/interfaces/serviceCategories.interface';
+import LayoutAdmin from '@/components/layoutAdmin';
 
 const CategoriesIndex: React.FC = () => {
     const { getAllCategories } = Categories();
@@ -60,13 +61,15 @@ const CategoriesIndex: React.FC = () => {
 
 
   return (
-    <div className='w-full '>
-        <DataTable value={categories!} paginator showGridlines rows={10} loading={loading} dataKey="id_category" 
-                filters={filters!} globalFilterFields={['category_name']} header={header}
-                emptyMessage="No categories found.">
-            <Column field="category_name" header="Category Name" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-        </DataTable>
-    </div>
+    <LayoutAdmin index={2} sideItem={2}>
+        <div className='w-full '>
+            <DataTable value={categories!} paginator showGridlines rows={10} loading={loading} dataKey="id_category" 
+                    filters={filters!} globalFilterFields={['category_name']} header={header}
+                    emptyMessage="No categories found.">
+                <Column field="category_name" header="Category Name" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+            </DataTable>
+        </div>
+    </LayoutAdmin>
   )
 }
 

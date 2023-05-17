@@ -42,6 +42,7 @@ const PortofolioIndex: React.FC = () => {
                     <img className="w-[85px] shadow-md block mx-auto rounded-md" src={`${portofolio.portofolio_image}`} alt='photo' />
                     <div className="flex justify-between items-center flex-1 gap-4">
                         <div className="w-full">
+                            
                             <div className="text-base font-medium">{portofolio.portofolio_description}</div>
                         </div>
                         <div className="flex flex-row justify-end gap-1">

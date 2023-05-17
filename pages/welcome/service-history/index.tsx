@@ -10,6 +10,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Tag } from 'primereact/tag';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
+import LayoutAdmin from '@/components/layoutAdmin';
 
 const ServiceHistoryIndex: React.FC = () => {
     const { getServiceHistory } = Customers();
@@ -143,19 +144,21 @@ const ServiceHistoryIndex: React.FC = () => {
 
 
   return (
-    <div className='w-full '>
-        <DataTable value={serviceHistory!} paginator showGridlines rows={10} loading={loading} dataKey="id_contract" 
-                filters={filters!} globalFilterFields={['service_name', 'provider_name', 'person_name', 'lastname', 'price', 'date', 'contract_state', 'contract_description']} header={header}
-                emptyMessage="No Service History found.">
-            <Column field="service_name" header="Service Name" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-            <Column field="provider_name" header="Provider Name" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-            <Column field="person_name" header="Customer Name" body={customerBodyTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-            <Column header="Price" filterField="price" dataType="numeric" style={{ minWidth: '10rem' }} body={priceBodyTemplate} filter filterElement={priceFilterTemplate} />
-            <Column header="Date" filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
-            <Column field="contract_state" header="Contract State" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={stateBodyTemplate} filter filterElement={stateFilterTemplate} />
-            <Column field="contract_description" header="Detail Service" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-        </DataTable>
-    </div>
+    <LayoutAdmin index={2} sideItem={3}>
+        <div className='w-full '>
+            <DataTable value={serviceHistory!} paginator showGridlines rows={10} loading={loading} dataKey="id_contract" 
+                    filters={filters!} globalFilterFields={['service_name', 'provider_name', 'person_name', 'lastname', 'price', 'date', 'contract_state', 'contract_description']} header={header}
+                    emptyMessage="No Service History found.">
+                <Column field="service_name" header="Service Name" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+                <Column field="provider_name" header="Provider Name" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+                <Column field="person_name" header="Customer Name" body={customerBodyTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+                <Column header="Price" filterField="price" dataType="numeric" style={{ minWidth: '10rem' }} body={priceBodyTemplate} filter filterElement={priceFilterTemplate} />
+                <Column header="Date" filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                <Column field="contract_state" header="Contract State" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={stateBodyTemplate} filter filterElement={stateFilterTemplate} />
+                <Column field="contract_description" header="Detail Service" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+            </DataTable>
+        </div>
+    </LayoutAdmin>
   )
 }
 

@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { Customers } from '@/hooks/customers';
 import { Customer } from '@/interfaces/customer.interface';
+import LayoutAdmin from '@/components/layoutAdmin';
 
 const CustomersIndex: React.FC = () => {
     const { getAllCustomers } = Customers();
@@ -74,15 +75,17 @@ const CustomersIndex: React.FC = () => {
 
 
   return (
-    <div className='w-full '>
-        <DataTable value={customers!} paginator showGridlines rows={10} loading={loading} dataKey="id_customer" 
-                filters={filters!} globalFilterFields={['person_name', 'email', 'phone']} header={header}
-                emptyMessage="No customers found.">
-            <Column field="person_name" header="Customer Name" body={customerBodyTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-            <Column field="email" header="Email" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-            <Column field="phone" header="Phone Number" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-        </DataTable>
-    </div>
+    <LayoutAdmin index={3} sideItem={0}>
+        <div className='w-full '>
+            <DataTable value={customers!} paginator showGridlines rows={10} loading={loading} dataKey="id_customer" 
+                    filters={filters!} globalFilterFields={['person_name', 'email', 'phone']} header={header}
+                    emptyMessage="No customers found.">
+                <Column field="person_name" header="Customer Name" body={customerBodyTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+                <Column field="email" header="Email" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+                <Column field="phone" header="Phone Number" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+            </DataTable>
+        </div>
+    </LayoutAdmin>
   )
 }
 

@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Services } from '@/hooks/services';
 import { Service } from '@/interfaces/serviceCategories.interface';
+import LayoutAdmin from '@/components/layoutAdmin';
 
 const ServicesIndex: React.FC = () => {
     const { getAllServices } = Services();
@@ -61,14 +62,16 @@ const ServicesIndex: React.FC = () => {
 
 
   return (
-    <div className='w-full '>
-        <DataTable value={services!} paginator showGridlines rows={10} loading={loading} dataKey="id_service" 
-                filters={filters!} globalFilterFields={['service_name', 'service_description']} header={header}
-                emptyMessage="No services found.">
-            <Column field="service_name" header="Service Name" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-            <Column field="service_description" header="Description" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-        </DataTable>
-    </div>
+    <LayoutAdmin index={2} sideItem={1}>
+        <div className='w-full '>
+            <DataTable value={services!} paginator showGridlines rows={10} loading={loading} dataKey="id_service" 
+                    filters={filters!} globalFilterFields={['service_name', 'service_description']} header={header}
+                    emptyMessage="No services found.">
+                <Column field="service_name" header="Service Name" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+                <Column field="service_description" header="Description" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+            </DataTable>
+        </div>
+    </LayoutAdmin>
   )
 }
 
