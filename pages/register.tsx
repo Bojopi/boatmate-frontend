@@ -11,17 +11,15 @@ import { Input } from '../components/react-hook-form/input';
 import { ErrorMessage } from '../components/react-hook-form/error-message';
 
 import Spinner from '../components/spinner';
-import { RESTCountriesInterface } from '../interfaces/restCountries.interface';
-import { Countries } from '../hooks/countries';
 import MapComponent from '@/components/map';
 import { Maps } from '@/hooks/maps';
+import { Auth } from '@/hooks/auth';
 
 
 export type FormProps = {
     email:          string;
     password:       string;
-    c_password:     string;
-    idRole:         number;
+    idRole:         string;
     personName:     string;
     lastname:       string;
     phone:          string;
@@ -31,6 +29,8 @@ export type FormProps = {
 }
 
 const Register: React.FC = () => {
+
+    const { createUSer } = Auth()
 
     const {getAddress} = Maps();
 
@@ -44,7 +44,7 @@ const Register: React.FC = () => {
 
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-    
+
     const [isSelected, setIsSelected] = useState<string>('')
 
     const [togglePass, setTogglePass] = useState<boolean>(false);
@@ -74,8 +74,7 @@ const Register: React.FC = () => {
         defaultValues: {
             email:          '',
             password:       '',
-            c_password:     '',
-            idRole:         0,
+            idRole:         '',
             personName:     '',
             lastname:       '',
             phone:          '',
@@ -94,10 +93,12 @@ const Register: React.FC = () => {
     } = methods;
 
     const onSubmit = (formData: FormProps) => {
+        formData.idRole = isSelected;
+        formData.password = password;
+
         console.log(formData);
-        if(formData.password !== formData.c_password) {
-            toast.current?.show({severity:'error', summary:'Error', detail: 'The passwords must be the same.', life: 4000});
-        }
+        setLoading(true);
+        createUSer(formData, toast, setLoading)
         // if(isValid && methods.getValues('password') === methods.getValues('c_password')) {
         //     setLoading(true);
         //     console.log(formData);
@@ -135,6 +136,14 @@ const Register: React.FC = () => {
     }
 
     const validForm = () => {
+        if(activeIndex == 2) {
+            if(isSelected != '') {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
         if(activeIndex === 1) {
             if(
                 isValid == false &&
@@ -152,16 +161,13 @@ const Register: React.FC = () => {
                 ) {
                 return false;
             }
-            else if(isSelected != '') {
-                return false;
-            }
             else {
                 return true;
             }
         }
 
         if(activeIndex === 0) {
-            if(isValid) {
+            if(isValid && selectedLocation != null) {
                 return false;
             } else {
                 return true;
@@ -171,10 +177,10 @@ const Register: React.FC = () => {
 
     const selectedRole = (e: any) => {
         if(e.currentTarget.id == 'customer') {
-            setIsSelected('customer')
+            setIsSelected('4')
         }
         else if(e.currentTarget.id == 'provider') {
-            setIsSelected('provider')
+            setIsSelected('3')
         }
     }
 
@@ -191,9 +197,10 @@ const Register: React.FC = () => {
                             Back Step
                     </button>
                     <button
-                        type='submit'
+                        type='button'
                         className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-400'
-                        disabled={validForm()}>
+                        disabled={validForm()}
+                        onClick={handleOnSubmit}>
                             SING UP
                     </button>
                 </div>
@@ -231,6 +238,10 @@ const Register: React.FC = () => {
         }
     }
 
+    const handleOnSubmit = () => {
+        handleSubmit(onSubmit, onErrors)();
+    }
+
   return (
     <>
         <Spinner loading={loading} />
@@ -254,7 +265,7 @@ const Register: React.FC = () => {
                 </div>
                 <div className='w-full'>
                     <FormProvider {...methods}>
-                        <form onSubmit={handleSubmit(onSubmit, onErrors)} className="w-full">
+                        <form className="w-full">
                             {
                                 activeIndex === 0 ?
                                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
@@ -298,12 +309,12 @@ const Register: React.FC = () => {
                                         )}
                                     </InputWrapper>
                                     <div className='col-span-12'>
-                                        <Label>Address</Label>
+                                        <Label>Address *</Label>
                                         <MapComponent height='250px' getAddress={getAddress} selectedLocation={selectedLocation} selectedPlace={selectedPlace} setSelectedLocation={setSelectedLocation} setSelectedPlace={setSelectedPlace} />
                                     </div>
                                 </div>
                                 : activeIndex == 1 ?
-                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-3 p-5">
+                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
                                     <InputWrapper outerClassName="col-span-12">
                                             <Label id='email'>Email *</Label>
                                             <Input
@@ -361,14 +372,14 @@ const Register: React.FC = () => {
                                     </InputWrapper>
                                 </div>
                                 : activeIndex == 2 ?
-                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-3 p-5">
+                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
                                     <h1 className='col-span-12 mt-5 text-xl md:text-2xl font-semibold text-center' style={{'color': '#373A85'}}>Which best describes your role?</h1>
                                     <div className='col-span-12 w-full flex flex-row items-center justify-center gap-20'>
-                                        <div id='customer' className={`flex flex-col items-center gap-5 p-5 rounded-md shadow-md border hover:bg-green-100 cursor-pointer ${isSelected == 'customer' ? 'bg-green-100' : 'bg-white'}`} onClick={selectedRole}>
+                                        <div id='customer' className={`flex flex-col items-center gap-5 p-5 rounded-md shadow-md border hover:bg-green-100 cursor-pointer ${isSelected == '4' ? 'bg-green-100' : 'bg-white'}`} onClick={selectedRole}>
                                             <img id='customer' src="https://i.postimg.cc/Zn2fvXhV/sailor.png" width={100} height={100} alt="sailor" />
                                             <p id='customer' className='font-extrabold text-[#373A85]'>BOAT OWNER</p>
                                         </div>
-                                        <div id='provider' className={`flex flex-col items-center gap-5 p-5 rounded-md shadow-md border hover:bg-green-100 cursor-pointer ${isSelected == 'provider' ? 'bg-green-100' : 'bg-white'}`} onClick={selectedRole}>
+                                        <div id='provider' className={`flex flex-col items-center gap-5 p-5 rounded-md shadow-md border hover:bg-green-100 cursor-pointer ${isSelected == '3' ? 'bg-green-100' : 'bg-white'}`} onClick={selectedRole}>
                                             <img id='provider' src="https://i.postimg.cc/L8h5v7Lm/cargo-ship.png" width={100} height={100} alt="provider" />
                                             <p id='provider' className='font-extrabold text-[#373A85]'>PROVIDER</p>
                                         </div>
@@ -376,7 +387,7 @@ const Register: React.FC = () => {
                                 </div>
                                 : null
                             }
-                            <p className='w-full text-center text-xs md:text-sm font-medium text-[#373A85]'>Already have an account? <Link href={'/login'} className='text-[#00CBA4] hover:underline'>Sign in now</Link></p>
+                            <p className='w-full text-center text-xs md:text-sm font-medium text-[#373A85] mt-3'>Already have an account? <Link href={'/login'} className='text-[#00CBA4] hover:underline'>Sign in now</Link></p>
                             <div className="mt-4">
                                 {renderButton()}
                             </div>

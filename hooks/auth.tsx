@@ -14,14 +14,11 @@ export const Auth = () => {
                 setLoading(false);
                 toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
                 router.push('/welcome')
-                // localStorage.setItem('token', res.data.token);
             })
             .catch(error => {
                 console.log(error)
                 toast.current.show({severity:'error', summary:'Error', detail: `${error.response.data.msg}`, life: 4000});
                 setLoading(false);
-                // if (error.response.status !== 422) throw error
-                // setErrorsBackend(Object.values(error.response.data.errors).flat());
             })
     };
 
@@ -54,11 +51,26 @@ export const Auth = () => {
         });
     }
 
+    const createUSer = (data: any, toast: any, setLoading: any) => {
+        axios.post('/create-profile', data)
+        .then((res) => {
+            toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
+            router.push('/welcome');
+            setLoading(false);
+        })
+        .catch((err) => {
+            console.log(err);
+            toast.current.show({severity:'error', summary:'Error', detail: `${err.response.data.msg}`, life: 4000});
+            setLoading(false);
+        })
+    }
+
     return {
         login,
         getUserAuthenticated,
         logout,
-        googleLogin
+        googleLogin,
+        createUSer
     }
 }
 

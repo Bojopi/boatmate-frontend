@@ -12,13 +12,20 @@ import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 
 export type MenuProps = {
     user: Profile;
-    setIndex: any;
+    index: any;
+    // setIndex: any;
     logout: any;
     setLoading: any;
     activeSetSideItem: any;
 }
 
-const MenuBarSupAdmin: React.FC<MenuProps> = ({user, setIndex, logout, setLoading, activeSetSideItem}) => {
+const MenuBarSupAdmin: React.FC<MenuProps> = ({
+    user, 
+    index = 0,
+    // setIndex, 
+    logout, 
+    setLoading, 
+    activeSetSideItem}) => {
 
     const menu = useRef<any>(null);
     const items: any[] = [
@@ -66,14 +73,14 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({user, setIndex, logout, setLoadin
             document.getElementsByClassName('item-list').item(i)?.classList.remove('active-item-list')
         }
 
-        activeSetSideItem()
+        // activeSetSideItem()
 
         if(e.target.nodeName === 'I' || e.target.nodeName === 'P') {
-            setIndex(Number(e.target.parentNode.id))
+            // setIndex(Number(e.target.parentNode.id))
             document.getElementsByClassName('item-list').item(e.target.parentNode.id)?.classList.add('active-item-list')
             
         } else {
-            setIndex(Number(e.target.id))
+            // setIndex(Number(e.target.id))
             document.getElementsByClassName('item-list').item(e.target.id)?.classList.add('active-item-list')
         }
     }
@@ -82,24 +89,71 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({user, setIndex, logout, setLoadin
     <div className="fixed w-full z-10">
         <Menubar start={start} end={end} className="bg-white shadow-md z-10 lg:px-[10%] rounded-none" />
         <div className='flex flex-row justify-between items-center bg-gray-200 shadow-sm lg:px-[10%] py-2'>
-            <div className='flex flex-row gap-10 items-center'>
-                <div id='0' className='flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list active-item-list' onClick={activeIndex}>
-                    <i className='pi pi-cog text-xl'></i>
-                    <p className='text-sm'>Settings</p>
+            {
+                user.role == 'ADMIN' || user.role == 'SUPERADMIN' ?
+                <div className='flex flex-row gap-10 items-center'>
+                    <div id='0' className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 0 ? 'active-item-list' : null}`} onClick={activeIndex}>
+                        <Link href={'/welcome'} className='flex flex-col items-center'>
+                            <i className='pi pi-cog text-xl'></i>
+                            <p className='text-sm'>Settings</p>
+                        </Link>
+                    </div>
+                    <div id='1' className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 1 ? 'active-item-list' : null}`} onClick={activeIndex}>
+                        <Link href={'/welcome/users'} className='flex flex-col items-center'>
+                            <i className='pi pi-user text-xl'></i>
+                            <p className='text-sm'>Users</p>
+                        </Link>
+                    </div>
+                    <div id='2' className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 2 ? 'active-item-list' : null}`} onClick={activeIndex}>
+                        <Link href={'/welcome/providers'} className='flex flex-col items-center'>
+                            <i className='pi pi-shopping-bag text-xl'></i>
+                            <p className='text-sm'>Providers & Services</p>
+                        </Link>
+                    </div>
+                    <div id='3' className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 3 ? 'active-item-list' : null}`} onClick={activeIndex}>
+                        <Link href={'/welcome/customers'} className='flex flex-col items-center'>
+                            <i className='pi pi-star text-xl'></i>
+                            <p className='text-sm'>Customers</p>
+                        </Link>
+                    </div>
+                    {/* <div id='0' className='flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list active-item-list' onClick={activeIndex}>
+                        <i className='pi pi-cog text-xl'></i>
+                        <p className='text-sm'>Settings</p>
+                    </div>
+                    <div id='1' className='flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list' onClick={activeIndex}>
+                        <i className='pi pi-user text-xl'></i>
+                        <p className='text-sm'>Users</p>
+                    </div>
+                    <div id='2' className='flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list' onClick={activeIndex}>
+                        <i className='pi pi-shopping-bag text-xl'></i>
+                        <p className='text-sm'>Providers & Services</p>
+                    </div>
+                    <div id='3' className='flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list' onClick={activeIndex}>
+                        <i className='pi pi-star text-xl'></i>
+                        <p className='text-sm'>Customers</p>
+                    </div> */}
                 </div>
-                <div id='1' className='flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list' onClick={activeIndex}>
-                    <i className='pi pi-user text-xl'></i>
-                    <p className='text-sm'>Users</p>
+                : user.role == 'PROVIDER' ?
+                <div className='flex flex-row gap-10 items-center'>
+                    <div id='0' className={`flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 0 ? 'active-item-list' : null}`} onClick={activeIndex}>
+                        <i className='pi pi-user text-2xl'></i>
+                        <p className='text-sm'>Profile</p>
+                    </div>
+                    <div id='1' className={`flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 1 ? 'active-item-list' : null}`} onClick={activeIndex}>
+                        <i className='pi pi-inbox text-2xl'></i>
+                        <p className='text-sm'>Leads</p>
+                    </div>
+                    <div id='2' className={`flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 2 ? 'active-item-list' : null}`} onClick={activeIndex}>
+                        <i className='pi pi-star text-2xl'></i>
+                        <p className='text-sm'>Reviews</p>
+                    </div>
+                    <div id='3' className={`flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 3 ? 'active-item-list' : null}`} onClick={activeIndex}>
+                        <i className='pi pi-building text-2xl'></i>
+                        <p className='text-sm'>My Business</p>
+                    </div>
                 </div>
-                <div id='2' className='flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list' onClick={activeIndex}>
-                    <i className='pi pi-shopping-bag text-xl'></i>
-                    <p className='text-sm'>Providers & Services</p>
-                </div>
-                <div id='3' className='flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list' onClick={activeIndex}>
-                    <i className='pi pi-star text-xl'></i>
-                    <p className='text-sm'>Customers</p>
-                </div>
-            </div>
+                : null
+            }
         </div>
     </div>
   )

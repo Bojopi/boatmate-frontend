@@ -5,7 +5,6 @@ export interface Users {
 export interface User {
     id_profile:    number;
     email:         string;
-    password:      string;
     profile_state: boolean;
     google:        boolean;
     roleId:        number;

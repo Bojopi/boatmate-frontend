@@ -4,10 +4,13 @@ export interface Providers {
 
 export interface Provider {
     id_provider:          number;
+    id_profile:           number;
     provider_name:        string;
     provider_description: string;
-    zip:                  string;
+    provider_lat:         string;
+    provider_lng:         string;
     provider_image:       string;
     email:                string;
+    profile_state:        boolean;
     phone:                string;
 }
