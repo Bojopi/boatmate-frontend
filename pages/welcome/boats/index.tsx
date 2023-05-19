@@ -10,6 +10,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { Boats } from '@/hooks/boats';
 import { Boat } from '@/interfaces/boat.interface';
+import LayoutAdmin from '@/components/layoutAdmin';
 
 const BoatsIndex: React.FC = () => {
     const { getAllBoats } = Boats();
@@ -123,19 +124,21 @@ const BoatsIndex: React.FC = () => {
 
 
   return (
-    <div className='w-full '>
-        <DataTable value={boats!} paginator showGridlines rows={10} loading={loading} dataKey="id_boat"
-                filters={filters!} globalFilterFields={['person_name', 'lastname', 'type', 'model', 'brand', 'year', 'length', 'boat_position']} header={header}
-                emptyMessage="No boats found.">
-            <Column field="person_name" header="Customer Name" body={customerBodyTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-            <Column field="type" header="Type Boat" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-            <Column field="model" header="Model Boat" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-            <Column field="brand" header="Brand Boat" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-            <Column header="Year" filterField='year' dataType='date' style={{ minWidth: '10rem' }} body={dateBodyTemplate} filterElement={dateFilterTemplate} />
-            <Column header="Length" filterField="length" dataType="numeric" style={{ minWidth: '10rem' }} body={lengthBodyTemplate} filter filterElement={lengthFilterTemplate} />
-            <Column field="boat_position" header="Boat Position" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-        </DataTable>
-    </div>
+    <LayoutAdmin index={3} sideItem={1}>
+        <div className='w-full '>
+            <DataTable value={boats!} paginator showGridlines rows={10} loading={loading} dataKey="id_boat"
+                    filters={filters!} globalFilterFields={['person_name', 'lastname', 'type', 'model', 'brand', 'year', 'length', 'boat_position']} header={header}
+                    emptyMessage="No boats found.">
+                <Column field="person_name" header="Customer Name" body={customerBodyTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+                <Column field="type" header="Type Boat" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+                <Column field="model" header="Model Boat" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+                <Column field="brand" header="Brand Boat" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+                <Column header="Year" filterField='year' dataType='date' style={{ minWidth: '10rem' }} body={dateBodyTemplate} filterElement={dateFilterTemplate} />
+                <Column header="Length" filterField="length" dataType="numeric" style={{ minWidth: '10rem' }} body={lengthBodyTemplate} filter filterElement={lengthFilterTemplate} />
+                <Column field="boat_position" header="Boat Position" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+            </DataTable>
+        </div>
+    </LayoutAdmin>
   )
 }
 

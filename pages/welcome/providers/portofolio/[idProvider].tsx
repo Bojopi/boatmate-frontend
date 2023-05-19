@@ -10,6 +10,11 @@ import Spinner from '@/components/spinner';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import Create from './create';
+import Edit from './edit';
+import Link from 'next/link';
+import { BackAnimated } from '@/components/buttons/animated';
+import { Tooltip } from 'primereact/tooltip';
+import { Slider } from 'primereact/slider';
 
 const PortofolioIndex: React.FC = () => {
     const {getPortofolioProvider, deleteImagePortofolio} = Portofolios();
@@ -18,21 +23,32 @@ const PortofolioIndex: React.FC = () => {
     const router = useRouter();
     
     const [portofolio, setPortofolio] = useState<Portofolio[]>([]);
+    const [portofolioList, setPortofolioList] = useState<any>(null);
     const [provider, setProvider] = useState<any>('');
 
     const [loading, setLoading] = useState<boolean>(false);
     const toast = useRef<Toast>(null);
     
     useEffect(() => {
-        if(router.query.id) {
-            getProvider(Number(router.query.id));
-            getPortofolioProvider(Number(router.query.id), setPortofolio);
+        if(router.query.idProvider) {
+            getProvider(Number(router.query.idProvider));
+            getPortofolio(Number(router.query.idProvider), setPortofolio);
         }
-    }, [router.query.id]);
+    }, [router.query.idProvider]);
+
+    useEffect(() => {
+        setPortofolio(portofolioList)
+    }, [portofolioList])
 
     const getProvider = async (idProvider: number) => {
         const response = await show(idProvider)
         setProvider(response.data.provider)
+    }
+
+    const getPortofolio = async (idProvider: number, setPortofolio: any) => {
+        const response = await getPortofolioProvider(idProvider);
+        setPortofolio(response.data.portofolio);
+        setPortofolioList(response.data.portofolio);
     }
 
     const itemTemplate = (portofolio: Portofolio) => {
@@ -42,15 +58,10 @@ const PortofolioIndex: React.FC = () => {
                     <img className="w-[85px] shadow-md block mx-auto rounded-md" src={`${portofolio.portofolio_image}`} alt='photo' />
                     <div className="flex justify-between items-center flex-1 gap-4">
                         <div className="w-full">
-                            
-                            <div className="text-base font-medium">{portofolio.portofolio_description}</div>
+                            <div className="text-base">{portofolio.portofolio_description}</div>
                         </div>
-                        <div className="flex flex-row justify-end gap-1">
-                            <Button 
-                            icon="pi pi-pencil" 
-                            className="p-button-rounded" 
-                            text tooltip='Edit' 
-                            tooltipOptions={{ position: 'top' }}></Button>
+                        <div className="flex flex-row items-center justify-end gap-1">
+                            <Edit idPortofolio={Number(portofolio.id_portofolio)} portofolio={portofolioList} setPortofolio={setPortofolioList} toast={toast} setLoading={setLoading} />
                             <Button 
                             icon="pi pi-trash" 
                             className="p-button-rounded p-button-danger" 
@@ -79,7 +90,7 @@ const PortofolioIndex: React.FC = () => {
             const response = await deleteImagePortofolio(idPortofolio)
             if(response.status == 200) {
                 setLoading(false)
-                getPortofolioProvider(provider.id_provider, setPortofolio);
+                getPortofolio(provider.id_provider, setPortofolio);
                 toast.current!.show({severity:'success', summary:'Success', detail: `${response.data.msg}`, life: 4000});
             } else {
                 setLoading(false)
@@ -96,6 +107,26 @@ const PortofolioIndex: React.FC = () => {
             reject
         });
     };
+    
+    const paginator = {
+        layout: 'RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
+        RowsPerPageDropdown: () => {
+            return (
+                <div className="flex">
+                    <Link href={'/welcome/providers'} >
+                        <BackAnimated></BackAnimated>
+                    </Link>
+                </div>
+            );
+        },
+        CurrentPageReport: (options: any) => {
+            return (
+                <span style={{ color: 'var(--text-color)', userSelect: 'none', width: '120px', textAlign: 'center' }}>
+                    {options.first} - {options.last} of {options.totalRecords}
+                </span>
+            );
+        }
+    };
 
   return (
     <LayoutAdmin index={2} sideItem={0}>
@@ -103,7 +134,7 @@ const PortofolioIndex: React.FC = () => {
         <Toast ref={toast} />
         <ConfirmDialog />
         <div className='w-full'>
-            <DataView value={portofolio} itemTemplate={itemTemplate} paginator rows={4} header={header()} />
+            <DataView value={portofolio} itemTemplate={itemTemplate} paginator paginatorTemplate={paginator} rows={4} header={header()} emptyMessage={'No images found'} />
         </div>
     </LayoutAdmin>
   )

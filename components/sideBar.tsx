@@ -61,17 +61,17 @@ const SideBarComponent: React.FC<SideProps> = ({
                   </Link>
               </ul>
           : index === 3 ?
-          <ul>
-                  <Link href={'/welcome/boats'}>
-                    <li className={`w-full px-5 py-3 border-b cursor-pointer text-gray-500 font-medium hover:text-black hover:underline hover:underline-offset-4 side-item ${sideItem === 0 ? 'active-side-item' : null}`} onClick={activeSideItem}  id='boats'>
-                        Boats
-                    </li>
-                  </Link>
-                  <Link href={'/welcome/customers'}>
-                    <li className={`w-full px-5 py-3 border-b cursor-pointer text-gray-500 font-medium hover:text-black hover:underline hover:underline-offset-4 side-item ${sideItem === 1 ? 'active-side-item' : null}`} onClick={activeSideItem}  id='customers'>
-                        Customers
-                    </li>
-                  </Link>
+            <ul>
+                <Link href={'/welcome/customers'}>
+                  <li className={`w-full px-5 py-3 border-b cursor-pointer text-gray-500 font-medium hover:text-black hover:underline hover:underline-offset-4 side-item ${sideItem === 1 ? 'active-side-item' : null}`} onClick={activeSideItem}  id='customers'>
+                      Customers
+                  </li>
+                </Link>
+                <Link href={'/welcome/boats'}>
+                  <li className={`w-full px-5 py-3 border-b cursor-pointer text-gray-500 font-medium hover:text-black hover:underline hover:underline-offset-4 side-item ${sideItem === 0 ? 'active-side-item' : null}`} onClick={activeSideItem}  id='boats'>
+                      Boats
+                  </li>
+                </Link>
               </ul>
           : null
         }

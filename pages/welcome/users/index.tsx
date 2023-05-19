@@ -153,7 +153,7 @@ const UsersIndex: React.FC = () => {
 
     const actionsBodyTemplate = (rowData: User) => {
         return (
-          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
             {
                 rowData.profile_state ?
                 <>
@@ -178,11 +178,11 @@ const UsersIndex: React.FC = () => {
                 </>
                 : null
             }
-          </div>
+            </div>
         );
-      };
+    };
 
-      const confirmDelete = (idProfile: number) => {
+    const confirmDelete = (idProfile: number) => {
         const accept = async () => {
             setLoading(true)
             const response = await deleteUser(idProfile)

@@ -14,3 +14,11 @@ export interface Provider {
     profile_state:        boolean;
     phone:                string;
 }
+
+export interface ProviderServices {
+    id_service_provider: number;
+    price:               number;
+    id_service:          number;
+    service_name:        string;
+    service_description: string;
+}

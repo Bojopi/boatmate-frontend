@@ -122,7 +122,7 @@ const ProvidersIndex: React.FC = () => {
 
     const actionsBodyTemplate = (rowData: Provider) => {
         return (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center">
             <Link href={`/welcome/providers/edit/${rowData.id_provider}`}>
                 <Button
                 type="button"
@@ -130,6 +130,17 @@ const ProvidersIndex: React.FC = () => {
                 className="p-button-success"
                 text
                 tooltip='Edit'
+                tooltipOptions={{position: 'top'}}
+                />
+            </Link>
+            <Link href={`/welcome/providers/services/${rowData.id_provider}`}>
+                <Button
+                type="button"
+                icon="pi pi-th-large"
+                className="p-button-warning"
+                text
+                tooltip='Services'
+                tooltipOptions={{position: 'top'}}
                 />
             </Link>
             <Link href={`/welcome/providers/portofolio/${rowData.id_provider}`}>
@@ -139,6 +150,7 @@ const ProvidersIndex: React.FC = () => {
                 className="p-button-help"
                 text
                 tooltip='Portofolio'
+                tooltipOptions={{position: 'top'}}
                 />
             </Link>
           </div>
@@ -157,9 +169,9 @@ const ProvidersIndex: React.FC = () => {
                     emptyMessage="No providers found.">
                 <Column field="provider_name" header="Provider Name" body={providerBodyTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
                 <Column field="provider_description" header="Description" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-                <Column field="profile_state" header="State" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
+                <Column field="profile_state" header="State" filterMenuStyle={{ width: '6rem' }} style={{ minWidth: '6rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
                 <Column field="email" header="Email" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-                <Column field="phone" header="Phone Number" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+                <Column field="phone" header="Phone" filter filterMenuStyle={{ width: '10rem' }} style={{ minWidth: '10rem' }} />
                 <Column header='Actions' body={actionsBodyTemplate} style={{ width: '10rem', textAlign: 'center' }} />
             </DataTable>
         </div>

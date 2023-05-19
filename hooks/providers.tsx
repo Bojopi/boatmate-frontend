@@ -9,7 +9,6 @@ export const Providers = () => {
     const getAllProviders = (setProviders: any, setLoading: any) => {
         axios.get('/providers')
         .then((res) => {
-            console.log(res.data.providers)
             setProviders(res.data.providers);
             setLoading(false);
         })
@@ -37,13 +36,19 @@ export const Providers = () => {
             toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
             setLoading(false);
         })
-    }
+    };
+
+    const getServicesProvider = (idProvider: number) => axios.get(`/service-provider/${idProvider}`);
+
+    const deleteService = (idProvider: number, data: any) => axios.delete(`/service-provider/${idProvider}`, data);
 
 
     return {
         getAllProviders,
         show,
-        updateProvider
+        updateProvider,
+        getServicesProvider,
+        deleteService
     }
 }
 
