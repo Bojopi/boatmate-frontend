@@ -14,6 +14,7 @@ import { Divider } from 'primereact/divider';
 
 import { Auth } from '@/hooks/auth';
 import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from '@react-oauth/google'
+import { useRouter } from 'next/router';
 
 
 export type FormProps = {
@@ -27,6 +28,8 @@ const Login: React.FC = () => {
 
     const toast = useRef<Toast>(null);
     const [loading, setLoading] = useState<boolean>(false);
+
+    const router = useRouter();
 
     const methods = useForm<FormProps>({
         defaultValues: {
@@ -60,7 +63,17 @@ const Login: React.FC = () => {
     }
 
     const handleSuccess = async (credentialResponse: CredentialResponse) => {
-        await googleLogin(credentialResponse, toast)
+        setLoading(true);
+        const response = await googleLogin(credentialResponse);
+        if(response.status == 200) {
+            if(response.data.newUser) {
+                router.push('/preferences');
+            } else {
+                router.push('/welcome');
+            }
+
+            setLoading(false);
+        }
     }
 
   return (

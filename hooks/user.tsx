@@ -18,14 +18,11 @@ export const Users = () => {
     }
 
     const setRoleUser = (idProfile: number, data: any, toast: any, setLoading: any) => {
-        axios.post(`/user/${idProfile}`, data)
+        axios.post(`/profile-role/${idProfile}`, data)
         .then((res) => {
-            console.log(res)
-            // if(res.data.role == 4) {
-            // }
             toast.current.show({severity:'success', summary:'Successful', detail: 'Welcome!', life: 4000});
             setLoading(false);
-            router.push('/admin');
+            router.push('/welcome');
         })
         .catch(error => {
             console.log('Error:', error)

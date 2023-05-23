@@ -115,7 +115,9 @@ const Welcome = () => {
 
     const resetMap = async (lat: number, lng: number) => {
           const {data} = await getAddress(lat, lng);
-          setSelectedPlace(data.results[0].formatted_address);
+          if(data.results.length > 0) {
+              setSelectedPlace(data.results[0].formatted_address);
+          }
       }
 
     const onSubmit = (formData: FormProps) => {
@@ -138,6 +140,7 @@ const Welcome = () => {
 
     const setDataUser = async () => {
         const response = await getUserAuthenticated();
+        console.log(response.data)
         setUser(response.data);
         setChecked(response.data.state);
         if(response.data.role === 'PROVIDER') {
@@ -147,16 +150,16 @@ const Welcome = () => {
                 setRating(Number(avg));
             }
             setSelectedLocation({
-                lat: Number(response.data.providerLat),
-                lng: Number(response.data.providerLng),
+                lat: Number(response.data.providerLat || 0),
+                lng: Number(response.data.providerLng || 0),
             })
-            resetMap(response.data.providerLat, response.data.providerLng);
+            resetMap(response.data.providerLat || 0, response.data.providerLng || 0);
         } else if(response.data.role === 'CUSTOMER') {
             setSelectedLocation({
-                lat: Number(response.data.customerLat),
-                lng: Number(response.data.customerLng),
+                lat: Number(response.data.customerLat || 0),
+                lng: Number(response.data.customerLng || 0),
             })
-            resetMap(response.data.customerLat, response.data.customerLng);
+            resetMap(response.data.customerLat || 0, response.data.customerLng || 0);
         }
         reset(response.data)
     }
