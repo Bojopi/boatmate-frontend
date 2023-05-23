@@ -1,26 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react'
-import Layout from '../../components/layout';
-import MenuBarSupAdmin from '@/components/menuBarSupAdmin';
 import Spinner from '@/components/spinner';
 import { Auth } from '@/hooks/auth'
-import { Profile } from '@/interfaces/profile.interface';
-import { googleLogout } from '@react-oauth/google'
 import { Avatar } from 'primereact/avatar';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser, faMountainSun } from '@fortawesome/free-solid-svg-icons';
 import { faFacebookF, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { ProgressBar } from 'primereact/progressbar';
-import FooterComponentAdmin from '@/components/footerAdmin';
-import SideBarComponent from '@/components/sideBar';
-import UsersIndex from './users';
-import RolesIndex from './roles';
-import ProvidersIndex from './providers';
-import ServicesIndex from './services';
-import CategoriesIndex from './categories';
-import ServiceHistoryIndex from './service-history';
-import BoatsIndex from './boats';
-import { Rating as RatingHooks } from '@/hooks/rating';
 import { Rating } from 'primereact/rating';
 import { FormProvider, useForm } from 'react-hook-form';
 import { FileUpload } from 'primereact/fileupload';
@@ -32,8 +18,9 @@ import MapComponent from '@/components/map';
 import { Maps } from '@/hooks/maps';
 import { Tag } from 'primereact/tag';
 import { Textarea } from '@/components/react-hook-form/textarea';
-import CustomersIndex from './customers';
-import LayoutAdmin from '@/components/layoutAdmin';
+import { Profile } from '@/interfaces/interfaces';
+import { Ratings } from '@/hooks/rating';
+import { avgRating } from '@/functions/rating';
 
 export type FormProps = {
     name: string;
@@ -51,8 +38,8 @@ export type FormProps = {
 }
 
 const Welcome = () => {
-    const {getUserAuthenticated, logout} = Auth();
-    const {getRatingProvider} = RatingHooks();
+    const {getUserAuthenticated} = Auth();
+    const {getRatingProvider} = Ratings();
     const {updateProfile} = Users();
     const {getAddress} = Maps();
 
@@ -88,7 +75,6 @@ const Welcome = () => {
             idProvider:          0,
             providerName:        '',
             providerImage:       '',
-            zip:                 '',
             providerDescription: '',
             providerLat:         '',
             providerLng:         '',
@@ -155,8 +141,11 @@ const Welcome = () => {
         setUser(response.data);
         setChecked(response.data.state);
         if(response.data.role === 'PROVIDER') {
-            const rating = await getRatingProvider(response.data.idProvider);
-            setRating(parseInt(rating.data.rating[0].averageRating));
+            const res = await getRatingProvider(response.data.idProvider);
+            if(res.status === 200) {
+                const avg = avgRating(res.data.rating);
+                setRating(Number(avg));
+            }
             setSelectedLocation({
                 lat: Number(response.data.providerLat),
                 lng: Number(response.data.providerLng),
@@ -256,7 +245,7 @@ const Welcome = () => {
                                             user.role === 'PROVIDER' ?
                                             <div className='flex flex-row gap-2 justify-start'>
                                                 <Rating value={rating} readOnly cancel={false} onIconProps={{style: {color: '#109EDA', fontSize:'12px'}}} offIconProps={{style: {fontSize:'12px'}}} />
-                                                <Link href={''} className='text-[#109EDA] text-sm' >Ask for Reviews</Link>
+                                                <Link href={`/welcome/providers/ratings/${user.idProvider}`} className='text-[#109EDA] text-sm' >Ask for Reviews</Link>
                                             </div>
                                             : null
                                         }

@@ -1,29 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column';
-import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
-import { Tag } from 'primereact/tag';
-import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { Boats } from '@/hooks/boats';
-import { Boat } from '@/interfaces/boat.interface';
 import LayoutAdmin from '@/components/layoutAdmin';
+import { Boat } from '@/interfaces/interfaces';
+import { ButtonDelete, ButtonEdit } from '@/components/buttons/icons';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Toast } from 'primereact/toast';
+import { ButtonCreate } from '@/components/buttons/link';
 
 const BoatsIndex: React.FC = () => {
-    const { getAllBoats } = Boats();
+    const { getAllBoats, deleteBoat } = Boats();
     
-    const [boats, setBoat] = useState<Boat[] | null>(null);
+    const [boats, setBoats] = useState<Boat[] | null>(null);
     const [filters, setFilters] = useState<any | null>(null);
 
     const [globalFilterValue, setGlobalFilterValue] = useState<string>('');
 
     const [loading, setLoading] = useState<boolean>(false);
 
+    const toast = useRef<Toast>(null);
+
     useEffect(() => {
-        getAllBoats(setBoat, getBoats, setLoading);
+        setLoading(true);
+        getAllBoats(setBoats, getBoats, setLoading);
         initFilters();
     }, []);
 
@@ -39,14 +43,8 @@ const BoatsIndex: React.FC = () => {
 
     const formatDate = (value: Date) => {
         return value.toLocaleDateString('en-US', {
-            // day: '2-digit',
-            // month: '2-digit',
             year: 'numeric'
         });
-    };
-
-    const clearFilter = () => {
-        initFilters();
     };
 
     const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +67,6 @@ const BoatsIndex: React.FC = () => {
             brand: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             year: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
             length: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-            boat_position: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
 
         });
         setGlobalFilterValue('');
@@ -87,7 +84,7 @@ const BoatsIndex: React.FC = () => {
     const renderHeader = () => {
         return (
             <div className="flex justify-between">
-                <Button type="button" icon="pi pi-filter-slash" label="Clear" outlined onClick={clearFilter} />
+                <ButtonCreate href={'/welcome/boats/create'}>Create Boat</ButtonCreate>
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
@@ -121,21 +118,55 @@ const BoatsIndex: React.FC = () => {
     };
     const header = renderHeader();
 
+    const actionsBodyTemplate = (rowData: Boat) => {
+        return (
+            <div className="flex items-center gap-2">
+                <ButtonEdit href={`/welcome/boats/edit/${rowData.id_boat}`} />
+                <ButtonDelete onClick={() => confirmDelete(Number(rowData.id_boat))} />
+            </div>
+        );
+    };
 
+    const confirmDelete = (idBoat: number) => {
+        const accept = async () => {
+            setLoading(true)
+            const response = await deleteBoat(idBoat);
+            if(response.status == 200) {
+                const newList = boats!.filter((item: Boat) => item.id_boat !== idBoat);
+                setBoats(newList);
+                toast.current!.show({severity:'success', summary:'Success', detail: `${response.data.msg}`, life: 4000});
+                setLoading(false);
+            } else {
+                setLoading(false)
+                toast.current!.show({severity:'error', summary:'Error', detail: `${response.data.msg}`, life: 4000});
+            }
+        }
+        const reject = () => {toast.current!.show({severity:'info', summary:'Info', detail: 'Operation rejected', life: 4000});}
+        confirmDialog({
+            message: 'Do you want to delete this record?',
+            header: 'Delete Confirmation',
+            icon: 'pi pi-info-circle',
+            acceptClassName: 'p-button-danger',
+            accept,
+            reject
+        });
+    };
 
   return (
-    <LayoutAdmin index={3} sideItem={1}>
-        <div className='w-full '>
-            <DataTable value={boats!} paginator showGridlines rows={10} loading={loading} dataKey="id_boat"
+    <LayoutAdmin>
+        <Toast ref={toast} />
+        <ConfirmDialog />
+        <div className='w-full h-full'>
+            <DataTable value={boats!} paginator rows={10} loading={loading} dataKey="id_boat"
                     filters={filters!} globalFilterFields={['person_name', 'lastname', 'type', 'model', 'brand', 'year', 'length', 'boat_position']} header={header}
-                    emptyMessage="No boats found.">
+                    emptyMessage="No boats found." className='min-h-full'>
                 <Column field="person_name" header="Customer Name" body={customerBodyTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
                 <Column field="type" header="Type Boat" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
                 <Column field="model" header="Model Boat" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
                 <Column field="brand" header="Brand Boat" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
                 <Column header="Year" filterField='year' dataType='date' style={{ minWidth: '10rem' }} body={dateBodyTemplate} filterElement={dateFilterTemplate} />
                 <Column header="Length" filterField="length" dataType="numeric" style={{ minWidth: '10rem' }} body={lengthBodyTemplate} filter filterElement={lengthFilterTemplate} />
-                <Column field="boat_position" header="Boat Position" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+                <Column header='Actions' body={actionsBodyTemplate} style={{ width: '10rem', textAlign: 'center' }} />
             </DataTable>
         </div>
     </LayoutAdmin>

@@ -7,17 +7,15 @@ import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { Roles } from '@/hooks/roles';
-import { Role } from '@/interfaces/roles.interface';
 import LayoutAdmin from '@/components/layoutAdmin';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import Spinner from '@/components/spinner';
-import Link from 'next/link';
-import { ButtonCreate } from '@/components/buttons/link';
 import Create from './create';
+import { ButtonDelete } from '@/components/buttons/icons';
+import { Role } from '@/interfaces/interfaces';
 
 const Index: React.FC = () => {
-    const {getAllRoles, deleteRole} = Roles();
+    const {getAllRoles, deleteRole, activateRole} = Roles();
     
     const [roles, setRoles] = useState<Role[] | null>(null);
     const [filters, setFilters] = useState<any | null>(null);
@@ -32,6 +30,7 @@ const Index: React.FC = () => {
     const toast = useRef<Toast>(null);
 
     useEffect(() => {
+        setLoading(true);
         getAllRoles(setRoles, setLoading);
         initFilters();
     }, []);
@@ -99,15 +98,22 @@ const Index: React.FC = () => {
     const actionsBodyTemplate = (rowData: Role) => {
         return (
           <div className="flex items-center gap-2">
-            <Create idRole={rowData.id_role} roles={roles} setRoles={setRoles} toast={toast} setLoading={setLoading} />
-            <Button
-              type="button"
-              icon="pi pi-trash"
-              className="p-button-danger"
-              text
-              tooltip='Delete'
-              onClick={() => confirmDelete(Number(rowData.id_role))}
-            />
+            {
+                rowData.role_state ?
+                <>
+                    <Create idRole={rowData.id_role} roles={roles} setRoles={setRoles} toast={toast} setLoading={setLoading} />
+                    <ButtonDelete onClick={() => confirmDelete(Number(rowData.id_role))} />
+                </>
+                :
+                    <Button
+                    type="button"
+                    icon="pi pi-check-square"
+                    className="p-button-help"
+                    text
+                    tooltip='Activate role'
+                    onClick={() => confirmActivate(Number(rowData.id_role))}
+                    />
+            }
           </div>
         );
       };
@@ -115,15 +121,7 @@ const Index: React.FC = () => {
       const confirmDelete = (idRole: number) => {
         const accept = async () => {
             setLoading(true)
-            const response = await deleteRole(idRole)
-            if(response.status == 200) {
-                setLoading(false)
-                getAllRoles(setRoles, setLoading);
-                toast.current!.show({severity:'success', summary:'Success', detail: `${response.data.msg}`, life: 4000});
-            } else {
-                setLoading(false)
-                toast.current!.show({severity:'error', summary:'Error', detail: `${response.data.msg}`, life: 4000});
-            }
+            deleteRole(idRole, roles, setRoles, toast, setLoading);
         }
         const reject = () => {toast.current!.show({severity:'info', summary:'Info', detail: 'Operation rejected', life: 4000});}
         confirmDialog({
@@ -136,16 +134,32 @@ const Index: React.FC = () => {
         });
     };
 
+    const confirmActivate = (idRole: number) => {
+        const accept = async () => {
+            setLoading(true)
+            activateRole(idRole, roles, setRoles, toast, setLoading)
+        }
+        const reject = () => {toast.current!.show({severity:'info', summary:'Info', detail: 'Operation rejected', life: 4000});}
+        confirmDialog({
+            message: 'Do you want to activate this role?',
+            header: 'Activate Confirmation',
+            icon: 'pi pi-info-circle',
+            acceptClassName: 'p-button-danger',
+            accept,
+            reject
+        });
+    };
+
 
   return (
-    <LayoutAdmin index={1} sideItem={1}>
-        <Spinner loading={loading} />
+    <LayoutAdmin>
         <Toast ref={toast} />
         <ConfirmDialog />
-        <div className='w-full '>
-            <DataTable value={roles!} paginator showGridlines rows={10} loading={loading} dataKey="id_role" 
+        <div className='w-full h-full'>
+            <DataTable value={roles!} paginator rows={10} loading={loading} dataKey="id_role" 
                     filters={filters!} globalFilterFields={['role_description']} header={header}
-                    emptyMessage="No roles found.">
+                    emptyMessage="No roles found."
+                    className='min-h-full'>
                 <Column field="role_description" header="Role" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} filter filterElement={rolesFilterTemplate} />
                 <Column header='Actions' body={actionsBodyTemplate} style={{ width: '10rem', textAlign: 'center' }} />
             </DataTable>

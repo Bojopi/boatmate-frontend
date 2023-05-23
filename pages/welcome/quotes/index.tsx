@@ -2,10 +2,12 @@ import React from 'react'
 import { InputText } from "primereact/inputtext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faReply } from '@fortawesome/free-solid-svg-icons';
+import LayoutAdmin from '@/components/layoutAdmin';
 
-const SentQuotes = () => {
+const Index = () => {
   return (
     <>
+      <LayoutAdmin>
         <div className='w-full min-h-[300px] flex flex-col items-center justify-start'>
           <span className="w-full p-input-icon-left">
               <i className="pi pi-search" />
@@ -105,8 +107,9 @@ const SentQuotes = () => {
             </div>
           </div>
         </div>
+      </LayoutAdmin>
     </>
   )
 }
 
-export default SentQuotes
+export default Index

@@ -1,13 +1,101 @@
 import { axios } from "@/config/axios";
 
 
-export const Rating = () => {
+export const Ratings = () => {
 
-    const getRatingProvider = (id_provider: any) => axios.get(`/rating-provider/${id_provider}`)
+    const getAllRatigns = (setRatings: any, setFilterRating: any, setLoading: any) => {
+        axios.get('/ratings')
+        .then((res) => {
+            setRatings(res.data.ratings);
+            setFilterRating(res.data.ratings);
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.log(error);
+            setLoading(false);
+        })
+    };
+
+    const getRatingProvider = (id_provider: number) => axios.get(`/provider-rating/${id_provider}`);
+
+    const show = (idRating: number) => axios.get(`/rating/${idRating}`);
+
+    const createRating = (idCustomer: number, data: any, ratings: any, setRatings: any, toast: any, setLoading: any, setVisible: any) => {
+        axios.post(`/post- rating/${idCustomer}`, data)
+        .then((res) => {
+            const newRating = res.data.rating;
+            setVisible(false);
+            setRatings([...ratings, newRating]);
+            toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.log(error);
+            setVisible(false);
+            toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
+            setLoading(false);
+        })
+    }
+
+    const updateRating = (idRating: number, data: any, ratings: any, setRatings: any, toast: any, setLoading: any, setVisible: any) => {
+        axios.post(`/update-rating/${idRating}`, data)
+        .then((res) => {
+            const newRating = res.data.rating[1][0];
+            setVisible(false);
+            const newRatings = ratings.map((item: any) => {
+                if (item.id_rating === idRating) {
+                    return {
+                        ...item,
+                        review: newRating.review,
+                        rating: newRating.rating
+                    };
+                }
+                return item;
+            });
+            setRatings(newRatings);
+            toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.log(error);
+            setVisible(false);
+            toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
+            setLoading(false);
+        })
+    }
+
+    const changeVisible = (idRating: number, data: any, ratings: any, setRatings: any, toast: any, setLoading: any) => {
+        axios.post(`/visible-rating/${idRating}`, data)
+        .then((res) => {
+            const newStatus = res.data.rating[1][0];
+            const newRatings = ratings.map((item: any) => {
+                if (item.id_rating === idRating) {
+                    return {
+                        ...item,
+                        provider_visible: newStatus.provider_visible
+                    };
+                }
+                return item;
+            });
+            setRatings(newRatings);
+            toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.log(error);
+            toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
+            setLoading(false);
+        })
+    }
 
 
     return {
+        getAllRatigns,
         getRatingProvider,
+        show,
+        createRating,
+        updateRating,
+        changeVisible
     }
 }
 

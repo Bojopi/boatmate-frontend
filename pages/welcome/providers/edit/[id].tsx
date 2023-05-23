@@ -148,10 +148,11 @@ const Edit: React.FC<UserInfo> = ({providers, setProviders}) => {
     const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
 
   return (
-    <LayoutAdmin index={2} sideItem={0}>
+    <LayoutAdmin>
         <Spinner loading={loading} />
         <Toast ref={toast} />
         <FormProvider {...methods}>
+            <h2 className='text-lg font-medium p-5 border-b-2 shadow-sm'>Edit Provider</h2>
             <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-1 lg:grid-cols-12 p-5 gap-3'>
                 <InputWrapper outerClassName='col-span-12'>
                     <Label id='providerName'>Name Business</Label>

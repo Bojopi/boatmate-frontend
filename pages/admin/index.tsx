@@ -19,9 +19,9 @@ import { faMountainSun } from '@fortawesome/free-solid-svg-icons';
 import { faFacebookF, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faMessage } from '@fortawesome/free-regular-svg-icons';
 import LayoutAdmin from '@/components/layoutAdmin';
-import DirectLeads from './direct-leads';
+import DirectLeads from '../welcome/leads';
 import Messages from './messages';
-import SentQuotes from './sent-quotes';
+import SentQuotes from '../welcome/quotes';
 import Opportunities from './opportunities';
 
 export type DataProps = {

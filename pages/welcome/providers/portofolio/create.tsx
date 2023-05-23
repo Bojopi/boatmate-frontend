@@ -118,7 +118,7 @@ const Create: React.FC<PortofolioProps> = ({portofolio, setPortofolio, setLoadin
         <>
             <Button type="button" label="Update Files" outlined icon="pi pi-upload" onClick={openModal} />
 
-            <Dialog header="New Role" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
+            <Dialog header="New Portofolio" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-1 lg:grid-cols-12 p-5 gap-3'>
                         <InputWrapper outerClassName="col-span-12">

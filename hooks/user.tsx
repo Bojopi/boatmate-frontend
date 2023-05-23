@@ -91,7 +91,31 @@ export const Users = () => {
         })
     }
 
-    const deleteUser = (idProfile: number) => axios.post(`delete-profile/${idProfile}`)
+    const deleteUser = (idProfile: number) => axios.post(`delete-profile/${idProfile}`);
+
+    const activateUser = (idProfile: number, profiles: any,  setProfiles: any, toast: any, setLoading: any) => {
+        axios.post(`/activate-profile/${idProfile}`)
+        .then((res) => {
+            const state = res.data.profile[1][0].profile_state
+            const updateProfile = profiles.map((item: any) => {
+                if(item.id_profile === idProfile) {
+                    return {
+                        ...item,
+                        profile_state: state
+                    };
+                }
+                return item;
+            });
+            setProfiles(updateProfile);
+            toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.log(error);
+            toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
+            setLoading(false);
+        })
+    };
 
 
     return {
@@ -101,7 +125,8 @@ export const Users = () => {
         createNewUser,
         show,
         updateUser,
-        deleteUser
+        deleteUser,
+        activateUser
     }
 }
 

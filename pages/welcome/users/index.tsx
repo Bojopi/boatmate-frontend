@@ -3,7 +3,6 @@ import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column';
 import { Users } from '@/hooks/user';
-import { User } from '../../../interfaces/users.interface';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
@@ -11,16 +10,15 @@ import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { Avatar } from 'primereact/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import CreateUser from './create';
 import LayoutAdmin from '@/components/layoutAdmin';
 import { ButtonCreate } from '@/components/buttons/link';
-import Link from 'next/link';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import Spinner from '@/components/spinner';
+import { ButtonDelete, ButtonEdit } from '@/components/buttons/icons';
+import { User } from '../../../interfaces/interfaces';
 
 const UsersIndex: React.FC = () => {
-    const {getAllUsers, deleteUser} = Users();
+    const {getAllUsers, deleteUser, activateUser} = Users();
 
     const [users, setUsers] = useState<User[] | null>(null);
     const [filters, setFilters] = useState<any | null>(null);
@@ -35,6 +33,7 @@ const UsersIndex: React.FC = () => {
     const toast = useRef<Toast>(null);
 
     useEffect(() => {
+        setLoading(true);
         getAllUsers(setUsers, setLoading);
         initFilters();
     }, []);
@@ -157,26 +156,19 @@ const UsersIndex: React.FC = () => {
             {
                 rowData.profile_state ?
                 <>
-                <Link href={`/welcome/users/edit/${rowData.id_profile}`}>
-                    <Button
-                    type="button"
-                    icon="pi pi-pencil"
-                    className="p-button-success"
-                    text
-                    tooltip='Edit'
-                    />
-                </Link>
-
+                    <ButtonEdit href={`/welcome/users/edit/${rowData.id_profile}`} />
+                    <ButtonDelete onClick={() => confirmDelete(Number(rowData.id_profile))} />
+                    </>
+                :
                 <Button
                 type="button"
-                icon="pi pi-trash"
-                className="p-button-danger"
+                icon="pi pi-check-square"
+                className="p-button-help"
                 text
-                tooltip='Delete'
-                onClick={() => confirmDelete(Number(rowData.id_profile))}
+                tooltip='Activate user'
+                tooltipOptions={{position: 'top'}}
+                onClick={() => confirmActivate(Number(rowData.id_profile))}
                 />
-                </>
-                : null
             }
             </div>
         );
@@ -205,17 +197,33 @@ const UsersIndex: React.FC = () => {
             reject
         });
     };
+    
+    const confirmActivate = (idProfile: number) => {
+        const accept = async () => {
+            setLoading(true)
+            activateUser(idProfile, users, setUsers, toast, setLoading)
+        }
+        const reject = () => {toast.current!.show({severity:'info', summary:'Info', detail: 'Operation rejected', life: 4000});}
+        confirmDialog({
+            message: 'Do you want to activate this profile?',
+            header: 'Activate Confirmation',
+            icon: 'pi pi-info-circle',
+            acceptClassName: 'p-button-danger',
+            accept,
+            reject
+        });
+    };
 
 
   return (
-    <LayoutAdmin index={1} sideItem={0}>
-    <Spinner loading={loading} />
+    <LayoutAdmin>
     <Toast ref={toast} />
     <ConfirmDialog />
-    <div className='w-full '>
-        <DataTable value={users!} paginator showGridlines rows={10} loading={loading} dataKey="id_profile"
+    <div className='w-full h-full'>
+        <DataTable value={users!} paginator rows={10} loading={loading} dataKey="id_profile"
                 filters={filters!} globalFilterFields={['person.person_name', 'person.lastname', 'role.description_role', 'email', 'state']} header={header}
-                emptyMessage="No users found.">
+                emptyMessage="No users found."
+                className='min-h-full'>
             <Column field="person.person_name" header="Name" body={userBodyTemplate} filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} />
             <Column field="person.lastname" header="Lastname" filter filterPlaceholder="Search by lastname" style={{ minWidth: '12rem' }} />
             <Column field="role.description_role" header="Role" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={rolesBodyTemplate} filter filterElement={rolesFilterTemplate} />

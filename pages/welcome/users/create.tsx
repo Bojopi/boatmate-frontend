@@ -4,7 +4,7 @@ import { InputWrapper } from '@/components/react-hook-form/input-wrapper';
 import { Label } from '@/components/react-hook-form/label';
 import { Dropdown } from 'primereact/dropdown';
 import { FileUpload } from 'primereact/fileupload';
-import React, { useRef, useState, useEffect, useCallback } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Tooltip } from 'primereact/tooltip';
 import { Tag } from 'primereact/tag';
@@ -175,10 +175,11 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
     const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
 
   return (
-    <LayoutAdmin index={1} sideItem={0}>
+    <LayoutAdmin>
         <Spinner loading={loading} />
         <Toast ref={toast} />
         <FormProvider {...methods}>
+            <h2 className='w-full text-lg font-medium border-b-2 p-5 shadow-sm'>{router.query.id ? 'Edit User' : 'Create User'}</h2>
             <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-1 lg:grid-cols-12 p-5 gap-3'>
                 <div className='col-span-2'>
                     <Label id='perImage'>Profile Image</Label>

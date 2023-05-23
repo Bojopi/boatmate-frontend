@@ -38,9 +38,64 @@ export const Providers = () => {
         })
     };
 
+    //Services
+
     const getServicesProvider = (idProvider: number) => axios.get(`/service-provider/${idProvider}`);
 
-    const deleteService = (idProvider: number, data: any) => axios.delete(`/service-provider/${idProvider}`, data);
+    const showServiceProvider = (idProvider: number, idService: number) => axios.get(`service-provider/${idProvider}/${idService}`);
+
+    const addService = (idProvider: number, data: any, toast: any, setLoading: any, closeModal: any, serviceList: any, setServiceList: any) => {
+        axios.post(`/service-provider/${idProvider}`, data)
+        .then((res) => {
+            const newService = res.data.service;
+            setServiceList([...serviceList, newService]);
+            closeModal();
+            toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.log(error);
+            closeModal();
+            toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
+            setLoading(false);
+        })
+    };
+
+    const updateServiceProvider = (
+        idProvider: number, 
+        idService: number, 
+        data: any,
+        toast: any,
+        setLoading: any,
+        setVisible: any,
+        serviceList: any, 
+        setServiceList: any) => {
+        axios.post(`/service-provider-edit/${idProvider}/${idService}`, data)
+        .then((res) => {
+            const newDescription = res.data.service_description[1][0].service_provider_description
+            const newService = serviceList.map((item: any) => {
+                if(item.id_service === idService) {
+                    return {
+                        ...item,
+                        service_provider_description: newDescription
+                    };
+                }
+                return item;
+            })
+            setServiceList(newService);
+            setVisible(false);
+            toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.log(error);
+            setVisible(false);
+            toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
+            setLoading(false);
+        })
+    };
+
+    const deleteService = (idProvider: number, idService: number) => axios.delete(`/service-provider/${idProvider}/${idService}`);
 
 
     return {
@@ -48,7 +103,10 @@ export const Providers = () => {
         show,
         updateProvider,
         getServicesProvider,
-        deleteService
+        deleteService,
+        updateServiceProvider,
+        showServiceProvider,
+        addService
     }
 }
 

@@ -1,36 +1,34 @@
 import LayoutAdmin from '@/components/layoutAdmin'
 import React, {useState, useEffect, useRef} from 'react'
-import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
-import { Portofolio } from '@/interfaces/portofolio.interface';
+import { DataView } from 'primereact/dataview';
 import { Portofolios } from '@/hooks/portofolio';
 import { useRouter } from 'next/router';
-import { Button } from 'primereact/button';
 import { Providers } from '@/hooks/providers';
-import Spinner from '@/components/spinner';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import Create from './create';
 import Edit from './edit';
 import Link from 'next/link';
 import { BackAnimated } from '@/components/buttons/animated';
-import { Tooltip } from 'primereact/tooltip';
-import { Slider } from 'primereact/slider';
+import { ButtonDelete } from '@/components/buttons/icons';
+import { Portofolio } from '@/interfaces/interfaces';
 
 const PortofolioIndex: React.FC = () => {
     const {getPortofolioProvider, deleteImagePortofolio} = Portofolios();
     const {show} = Providers()
 
     const router = useRouter();
-    
+
     const [portofolio, setPortofolio] = useState<Portofolio[]>([]);
     const [portofolioList, setPortofolioList] = useState<any>(null);
     const [provider, setProvider] = useState<any>('');
 
     const [loading, setLoading] = useState<boolean>(false);
     const toast = useRef<Toast>(null);
-    
+
     useEffect(() => {
         if(router.query.idProvider) {
+            setLoading(true);
             getProvider(Number(router.query.idProvider));
             getPortofolio(Number(router.query.idProvider), setPortofolio);
         }
@@ -49,6 +47,7 @@ const PortofolioIndex: React.FC = () => {
         const response = await getPortofolioProvider(idProvider);
         setPortofolio(response.data.portofolio);
         setPortofolioList(response.data.portofolio);
+        setLoading(false);
     }
 
     const itemTemplate = (portofolio: Portofolio) => {
@@ -62,12 +61,7 @@ const PortofolioIndex: React.FC = () => {
                         </div>
                         <div className="flex flex-row items-center justify-end gap-1">
                             <Edit idPortofolio={Number(portofolio.id_portofolio)} portofolio={portofolioList} setPortofolio={setPortofolioList} toast={toast} setLoading={setLoading} />
-                            <Button 
-                            icon="pi pi-trash" 
-                            className="p-button-rounded p-button-danger" 
-                            text tooltip='Delete' 
-                            tooltipOptions={{ position: 'top' }}
-                            onClick={() => confirmDelete(portofolio.id_portofolio)}></Button>
+                            <ButtonDelete onClick={() => confirmDelete(Number(portofolio.id_portofolio))} />
                         </div>
                     </div>
                 </div>
@@ -107,7 +101,7 @@ const PortofolioIndex: React.FC = () => {
             reject
         });
     };
-    
+
     const paginator = {
         layout: 'RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
         RowsPerPageDropdown: () => {
@@ -129,12 +123,21 @@ const PortofolioIndex: React.FC = () => {
     };
 
   return (
-    <LayoutAdmin index={2} sideItem={0}>
-        <Spinner loading={loading} />
+    <LayoutAdmin>
         <Toast ref={toast} />
         <ConfirmDialog />
-        <div className='w-full'>
-            <DataView value={portofolio} itemTemplate={itemTemplate} paginator paginatorTemplate={paginator} rows={4} header={header()} emptyMessage={'No images found'} />
+        <div className='w-full h-full'>
+            <DataView
+            value={portofolio}
+            loading={loading}
+            itemTemplate={itemTemplate}
+            paginator
+            paginatorTemplate={paginator}
+            rows={4}
+            layout={'list'}
+            header={header()}
+            emptyMessage={'No images found'}
+            className='min-h-full' />
         </div>
     </LayoutAdmin>
   )

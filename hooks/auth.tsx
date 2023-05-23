@@ -39,6 +39,7 @@ export const Auth = () => {
     const googleLogin = (data: any, toast: any) => {
         axios.post('/google', data)
         .then((res) => {
+            console.log(res.data)
             toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
             if(!res.data.newUser) {
                 router.push('/welcome')

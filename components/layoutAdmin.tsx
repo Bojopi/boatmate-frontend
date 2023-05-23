@@ -2,14 +2,18 @@ import { Auth } from '@/hooks/auth';
 import { googleLogout } from '@react-oauth/google'
 import React, {useState, useEffect} from 'react'
 import MenuBarSupAdmin from './menuBarSupAdmin';
-import { Profile } from '@/interfaces/profile.interface';
 import Head from 'next/head';
 import SideBarComponent from './sideBar';
-import Link from 'next/link';
 import FooterComponentAdmin from './footerAdmin';
+import { Profile } from '@/interfaces/interfaces';
+import {useContext} from 'react';
+import { MenuContext } from '@/context/MenuContext';
 
-const LayoutAdmin = ({children, index, sideItem}: any) => {
+const LayoutAdmin = ({children}: any) => {
    const {getUserAuthenticated, logout} = Auth();
+
+   const {activeOption = 'welcome', setActiveOption} = useContext(MenuContext);
+   const [activeSideOption, setActiveSideOption] = useState<any>('');
 
    const [loading, setLoading] = useState<boolean>(false);
 
@@ -29,7 +33,6 @@ const LayoutAdmin = ({children, index, sideItem}: any) => {
           idProvider:          0,
           providerName:        '',
           providerImage:       '',
-          zip:                 '',
           providerDescription: '',
           providerLat:         '',
           providerLng:         '',
@@ -51,23 +54,13 @@ const LayoutAdmin = ({children, index, sideItem}: any) => {
 }
 
    const logoutSession = async () => {
-      googleLogout()
-      logout(setLoading)
+      googleLogout();
+      logout(setLoading);
   };
 
-  const activeSideItem = (e: any) => {
-      for (let i = 0; i < document.getElementsByClassName('side-item').length; i++) {
-         document.getElementsByClassName('side-item').item(i)?.classList.remove('active-side-item')
-      }
-      document.getElementById(e.target.id)?.classList.add('active-side-item')
-   };
-
-   const activeSetSideItem = () => {
-      for (let i = 0; i < document.getElementsByClassName('side-item').length; i++) {
-          document.getElementsByClassName('side-item').item(i)?.classList.remove('active-side-item')
-      }
-      document.getElementsByClassName('side-item').item(0)?.classList.add('active-side-item')
-   };
+   const handleSideOptionClick = (option: string) => {
+      setActiveSideOption(option)
+   }
 
     return (
         <>
@@ -77,15 +70,11 @@ const LayoutAdmin = ({children, index, sideItem}: any) => {
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" type="image/png" href="/Biggest_BoatMate-removebg-preview.ico" />
         </Head>
-        <MenuBarSupAdmin 
-        user={user} 
-        index={index}
-        logout={logoutSession} 
-        setLoading={setLoading} 
-        activeSetSideItem={activeSetSideItem} 
+        <MenuBarSupAdmin
+         user={user} setLoading={setLoading} logout={logoutSession}
         />
         <div className='w-full h-screen flex flex-row items-start justify-between gap-5 px-5 pb-5 pt-36 lg:pt-44 bg-neutral-100'>
-            <SideBarComponent index={index} sideItem={sideItem} activeSideItem={activeSideItem} />
+            <SideBarComponent activeOption={activeOption} activeSideOption={activeSideOption} onSideOptionClick={handleSideOptionClick} />
             <main className='w-full min-h-[360px] max-h-full h-full overflow-auto bg-white rounded-md shadow-md'>
                {children}
             </main>

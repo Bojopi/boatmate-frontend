@@ -1,72 +1,66 @@
 import React, { useState } from "react";
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { Roles } from "@/hooks/roles";
 import { FormProvider, useForm } from "react-hook-form";
-import { useRouter } from "next/router";
 import { InputWrapper } from '../../../components/react-hook-form/input-wrapper';
 import { Label } from "@/components/react-hook-form/label";
 import { Input } from "@/components/react-hook-form/input";
 import { ErrorMessage } from "@/components/react-hook-form/error-message";
+import { Categories } from "@/hooks/categories";
 
 export type FormProps = {
-    roleDescription: string;
+    categoryName: string;
 }
 
-export type RoleProps = {
-    roles: any;
-    setRoles: any;
+export type CategoryProps = {
+    categories: any;
+    setCategories: any;
     toast: any;
     setLoading: any;
-    idRole: number;
+    idCategory: number;
 }
 
-const Create: React.FC<RoleProps> = ({idRole = 0, roles, setRoles, setLoading, toast}) => {
-    const {createRole, show, updateRole} = Roles();
+const Create: React.FC<CategoryProps> = ({idCategory = 0, categories, setCategories, setLoading, toast}) => {
+    const { show, createCategory, updateCategory } = Categories();
 
     const [visible, setVisible] = useState(false);
 
-    const router = useRouter();
-
     const methods = useForm<FormProps>({
         defaultValues: {
-            roleDescription: ''
+            categoryName: '',
         }
     });
 
     const {
         handleSubmit,
-        setError,
         reset,
         formState: {errors},
     } = methods;
 
-    const resetAsyncForm = async (idRole: any) => {
-        const response = await show(idRole);
+    const resetAsyncForm = async (idCategory: number) => {
+        const response = await show(idCategory);
         if(response.status === 200) {
-            response.data.role.roleDescription = response.data.role.role_description;
-
-            reset(response.data.role)
+            response.data.category.categoryName = response.data.category.category_name;
+            reset(response.data.category);
         }
     }
 
     const onSubmit = (formData: FormProps) => {
-        setLoading(true)
-        if(idRole == 0) {
-            createRole(formData, roles, setRoles, setLoading, toast);
-            setVisible(false);
+        setLoading(true);
+        if(idCategory == 0) {
+            createCategory(formData, categories, setCategories, setLoading, toast, setVisible);
         } else {
-            updateRole(Number(idRole), formData, roles, setRoles, setLoading, toast);
-            setVisible(false);
+            updateCategory(idCategory, formData, categories, setCategories, setLoading, toast, setVisible);
         }
     };
 
     const onErrors = () => {};
 
     const openModal = async () => {
+        reset();
         setVisible(true);
-        if (idRole != 0) {
-            resetAsyncForm(Number(idRole));
+        if (idCategory != 0) {
+            resetAsyncForm(Number(idCategory));
         }
     };
 
@@ -85,26 +79,29 @@ const Create: React.FC<RoleProps> = ({idRole = 0, roles, setRoles, setLoading, t
     return (
         <>
             {
-                idRole === 0 ?
-                <Button type="button" label="Create Role" outlined icon="pi pi-plus" onClick={openModal} />
+                idCategory === 0 ?
+                <Button type="button" label="Create Category"  className="p-button-success" outlined icon="pi pi-plus" onClick={openModal} />
                 : 
-                <Button type="button" icon="pi pi-pencil" className="p-button-success" text tooltip='Edit' onClick={openModal}
+                <Button type="button" icon="pi pi-pencil" text tooltip='Edit' tooltipOptions={{position: 'top'}} onClick={openModal}
                 />
             }
 
-            <Dialog header={idRole === 0 ? 'New Role' : 'Edit Role'} visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
+            <Dialog header={idCategory === 0 ? "New Category" : "Edit Category"} visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-1 lg:grid-cols-12 p-5 gap-3'>
                         <InputWrapper outerClassName="col-span-12">
-                            <Label id="roleDescription">Role name</Label>
+                            <Label id="categoryName">Category name</Label>
                             <Input 
-                            id="roleDescription"
-                            name="roleDescription"
+                            id="categoryName"
+                            name="categoryName"
                             type="text"
-                            placeholder="Administrator"
+                            placeholder="Category name..."
+                            rules={{
+                                required: 'Category name is required'
+                            }}
                             />
-                            {errors.roleDescription?.message && (
-                                <ErrorMessage>{errors.roleDescription.message}</ErrorMessage>
+                            {errors.categoryName?.message && (
+                                <ErrorMessage>{errors.categoryName.message}</ErrorMessage>
                             )}
                         </InputWrapper>
                     </form>

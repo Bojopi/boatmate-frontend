@@ -27,7 +27,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://boatmate.com:8080/:path*',
+        destination: 'https://boatmate.com/:path*',
         // destination: 'https://boatmate-backend-production.up.railway.app/api/:path*',
       },
     ]

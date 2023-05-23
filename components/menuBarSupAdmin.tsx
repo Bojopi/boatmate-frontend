@@ -1,31 +1,36 @@
-
-
-import React, {useRef} from 'react'
+import React, { useState, useRef, useContext, useEffect } from 'react'
 import Link from 'next/link';
 import { Menubar } from 'primereact/menubar';
 import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { TieredMenu } from 'primereact/tieredmenu';
-import { Profile } from '@/interfaces/profile.interface';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { Profile } from '@/interfaces/interfaces';
+import { Rating } from 'primereact/rating';
+import { Ratings } from '@/hooks/rating';
+import { avgRating } from '@/functions/rating';
+import { Maps } from '@/hooks/maps';
+import { MenuContext } from '@/context/MenuContext';
 
 export type MenuProps = {
     user: Profile;
-    index: any;
-    // setIndex: any;
     logout: any;
     setLoading: any;
-    activeSetSideItem: any;
 }
 
 const MenuBarSupAdmin: React.FC<MenuProps> = ({
-    user, 
-    index = 0,
-    // setIndex, 
-    logout, 
-    setLoading, 
-    activeSetSideItem}) => {
+    user,
+    logout,
+    setLoading
+}) => {
+    const {activeOption, setActiveOption} = useContext(MenuContext);
+
+    const { getRatingProvider } = Ratings();
+    const { getAddress } = Maps();
+
+    const [rating, setRating] = useState<number>(0);
+    const [address, setAddress] = useState<string>('');
 
     const menu = useRef<any>(null);
     const items: any[] = [
@@ -33,8 +38,8 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
             template: (item: any, options: any) => {
                 return (
                     <button onClick={() => {
-                        setLoading(true)
-                        logout(setLoading)
+                        setLoading(true);
+                        logout(setLoading);
                     }} className='w-full px-3 py-1 flex flex-row items-center gap-3 hover:bg-gray-100'>
                         <i className='pi pi-sign-out'></i>
                         <p>Sign out</p>
@@ -43,6 +48,13 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
             }
         }
     ]
+
+    useEffect(() => {
+        if(user.role === 'PROVIDER') {
+            calcRating();
+            getAddressMap();
+        }
+    }, [user])
 
     const start = <Link href={'/admin'} className='flex flex-row items-end'>
         <img
@@ -68,88 +80,109 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
         <p className='text-[#109EDA] text-sm font-semibold cursor-default w-full text-right' >{user.name} {user.lastname}</p>
     </div>
 
-    const activeIndex = (e: any) => {
-        for (let i = 0; i < document.getElementsByClassName('item-list').length; i++) {
-            document.getElementsByClassName('item-list').item(i)?.classList.remove('active-item-list')
+    const calcRating = async () => {
+        const response = await getRatingProvider(Number(user.idProvider));
+        if(response.status == 200) {
+            const avg = avgRating(response.data.rating);
+            setRating(Number(avg))
         }
+    };
 
-        // activeSetSideItem()
-
-        if(e.target.nodeName === 'I' || e.target.nodeName === 'P') {
-            // setIndex(Number(e.target.parentNode.id))
-            document.getElementsByClassName('item-list').item(e.target.parentNode.id)?.classList.add('active-item-list')
-            
-        } else {
-            // setIndex(Number(e.target.id))
-            document.getElementsByClassName('item-list').item(e.target.id)?.classList.add('active-item-list')
+    const getAddressMap = async () => {
+        const response = await getAddress(Number(user.providerLat), Number(user.providerLng));
+        if(response.status == 200) {
+            setAddress(response.data.results[0].formatted_address);
         }
+    }
+
+    const handleOptionClick = (option: string) => {
+        setActiveOption(option);
     }
 
   return (
     <div className="fixed w-full z-10">
         <Menubar start={start} end={end} className="bg-white shadow-md z-10 lg:px-[10%] rounded-none" />
-        <div className='flex flex-row justify-between items-center bg-gray-200 shadow-sm lg:px-[10%] py-2'>
+        <div className='bg-gray-200 shadow-sm lg:px-[10%] py-2'>
             {
                 user.role == 'ADMIN' || user.role == 'SUPERADMIN' ?
                 <div className='flex flex-row gap-10 items-center'>
-                    <div id='0' className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 0 ? 'active-item-list' : null}`} onClick={activeIndex}>
-                        <Link href={'/welcome'} className='flex flex-col items-center'>
-                            <i className='pi pi-cog text-xl'></i>
-                            <p className='text-sm'>Settings</p>
+                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'welcome' ? 'active-item-list' : null}`}>
+                        <Link href="/welcome" legacyBehavior>
+                            <a className='flex flex-col items-center' onClick={() => handleOptionClick('welcome')}>
+                                <i className='pi pi-cog text-xl'></i>
+                                <p className='text-sm'>Settings</p>
+                            </a>
                         </Link>
                     </div>
-                    <div id='1' className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 1 ? 'active-item-list' : null}`} onClick={activeIndex}>
-                        <Link href={'/welcome/users'} className='flex flex-col items-center'>
-                            <i className='pi pi-user text-xl'></i>
-                            <p className='text-sm'>Users</p>
+                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'users' ? 'active-item-list' : null}`} >
+                        <Link href="/welcome/users" legacyBehavior>
+                            <a className='flex flex-col items-center' onClick={() => handleOptionClick('users')}>
+                                <i className='pi pi-users text-xl'></i>
+                                <p className='text-sm'>Users</p>
+                            </a>
                         </Link>
                     </div>
-                    <div id='2' className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 2 ? 'active-item-list' : null}`} onClick={activeIndex}>
-                        <Link href={'/welcome/providers'} className='flex flex-col items-center'>
-                            <i className='pi pi-shopping-bag text-xl'></i>
-                            <p className='text-sm'>Providers & Services</p>
+                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'providers' ? 'active-item-list' : null}`} >
+                        <Link href="/welcome/providers" legacyBehavior>
+                            <a className='flex flex-col items-center' onClick={() => handleOptionClick('providers')}>
+                                <i className='pi pi-th-large text-xl'></i>
+                                <p className='text-sm'>Providers & Services</p>
+                            </a>
                         </Link>
                     </div>
-                    <div id='3' className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 3 ? 'active-item-list' : null}`} onClick={activeIndex}>
-                        <Link href={'/welcome/customers'} className='flex flex-col items-center'>
-                            <i className='pi pi-star text-xl'></i>
-                            <p className='text-sm'>Customers</p>
+                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'customers' ? 'active-item-list' : null}`} >
+                        <Link href="/welcome/customers" legacyBehavior>
+                            <a className='flex flex-col items-center' onClick={() => handleOptionClick('customers')}>
+                                <i className='pi pi-star text-xl'></i>
+                                <p className='text-sm'>Customers</p>
+                            </a>
                         </Link>
                     </div>
-                    {/* <div id='0' className='flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list active-item-list' onClick={activeIndex}>
-                        <i className='pi pi-cog text-xl'></i>
-                        <p className='text-sm'>Settings</p>
-                    </div>
-                    <div id='1' className='flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list' onClick={activeIndex}>
-                        <i className='pi pi-user text-xl'></i>
-                        <p className='text-sm'>Users</p>
-                    </div>
-                    <div id='2' className='flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list' onClick={activeIndex}>
-                        <i className='pi pi-shopping-bag text-xl'></i>
-                        <p className='text-sm'>Providers & Services</p>
-                    </div>
-                    <div id='3' className='flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list' onClick={activeIndex}>
-                        <i className='pi pi-star text-xl'></i>
-                        <p className='text-sm'>Customers</p>
-                    </div> */}
                 </div>
+
                 : user.role == 'PROVIDER' ?
-                <div className='flex flex-row gap-10 items-center'>
-                    <div id='0' className={`flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 0 ? 'active-item-list' : null}`} onClick={activeIndex}>
-                        <i className='pi pi-user text-2xl'></i>
-                        <p className='text-sm'>Profile</p>
+                <div className='flex justify-between items-center'>
+                    <div className='flex flex-row gap-10 items-center'>
+                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'welcome' ? 'active-item-list' : null}`}>
+                            <Link href="/welcome" legacyBehavior>
+                                <a className='flex flex-col items-center' onClick={() => handleOptionClick('welcome')}>
+                                    <i className='pi pi-user text-xl'></i>
+                                    <p className='text-sm'>Profile</p>
+                                </a>
+                            </Link>
+                        </div>
+                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'leads' ? 'active-item-list' : null}`}>
+                            <Link href="/welcome/leads" legacyBehavior>
+                                <a className='flex flex-col items-center' onClick={() => handleOptionClick('leads')}>
+                                    <i className='pi pi-inbox text-xl'></i>
+                                    <p className='text-sm'>Leads</p>
+                                </a>
+                            </Link>
+                        </div>
+                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'reviews' ? 'active-item-list' : null}`}>
+                            <Link href="/welcome/users" legacyBehavior>
+                                <a className='flex flex-col items-center' onClick={() => handleOptionClick('reviews')}>
+                                    <i className='pi pi-star text-xl'></i>
+                                    <p className='text-sm'>Reviews</p>
+                                </a>
+                            </Link>
+                        </div>
+                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'business' ? 'active-item-list' : null}`}>
+                            <Link href="/welcome/users" legacyBehavior>
+                                <a className='flex flex-col items-center' onClick={() => handleOptionClick('business')}>
+                                    <i className='pi pi-building text-xl'></i>
+                                    <p className='text-sm'>My Business</p>
+                                </a>
+                            </Link>
+                        </div>
                     </div>
-                    <div id='1' className={`flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 1 ? 'active-item-list' : null}`} onClick={activeIndex}>
-                        <i className='pi pi-inbox text-2xl'></i>
-                        <p className='text-sm'>Leads</p>
-                    </div>
-                    <div id='2' className={`flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 2 ? 'active-item-list' : null}`} onClick={activeIndex}>
-                        <i className='pi pi-star text-2xl'></i>
-                        <p className='text-sm'>Reviews</p>
-                    </div>
-                    <div id='3' className={`flex flex-col items-center text-gray-500 hover:text-gray-800 cursor-pointer item-list ${index == 3 ? 'active-item-list' : null}`} onClick={activeIndex}>
-                        <i className='pi pi-building text-2xl'></i>
-                        <p className='text-sm'>My Business</p>
+                    <div>
+                        <p className='text-xs'>{user.providerName}</p>
+                        <div className='flex flex-row gap-2 justify-start'>
+                            <Rating value={rating} readOnly cancel={false} onIconProps={{style: {color: 'rgb(107, 114, 128)'}}} />
+                            <p className='text-sm'>{rating == 0 ? 'N/A' : rating}</p>
+                        </div>
+                        <p className='text-xs font-medium'>{address}</p>
                     </div>
                 </div>
                 : null
