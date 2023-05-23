@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Users } from '@/hooks/user'
 import { Auth } from '@/hooks/auth';
 import Head from 'next/head';
-import { Profile } from '@/interfaces/profile.interface';
 import { Toast } from 'primereact/toast';
 import Spinner from '../components/spinner';
+import { Profile } from '@/interfaces/interfaces';
 
 
 const Preferences = () => {
@@ -30,7 +30,6 @@ const Preferences = () => {
             idProvider:          0,
             providerName:        '',
             providerImage:       '',
-            zip:                 '',
             providerDescription: '',
             providerLat:         '',
             providerLng:         '',
@@ -63,7 +62,7 @@ const Preferences = () => {
             data.role = 4;
         }
 
-        await setRoleUser(user.uid, data, toast, setLoading);
+        setRoleUser(user.uid, data, toast, setLoading);
     }
 
   return (

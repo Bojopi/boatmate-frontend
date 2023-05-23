@@ -44,7 +44,7 @@ export const Auth = () => {
             if(!res.data.newUser) {
                 router.push('/welcome')
             } else {
-                router.push('/admin/preferences');
+                router.push('/preferences');
             }
         }).catch((err) => {
             console.log(err)
