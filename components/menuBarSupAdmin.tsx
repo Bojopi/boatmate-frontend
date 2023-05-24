@@ -106,7 +106,7 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
             {
                 user.role == 'ADMIN' || user.role == 'SUPERADMIN' ?
                 <div className='flex flex-row gap-10 items-center'>
-                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'welcome' ? 'active-item-list' : null}`}>
+                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'welcome' || activeOption == '/welcome' ? 'active-item-list' : null}`}>
                         <Link href="/welcome" legacyBehavior>
                             <a className='flex flex-col items-center' onClick={() => handleOptionClick('welcome')}>
                                 <i className='pi pi-cog text-xl'></i>
@@ -114,7 +114,7 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
                             </a>
                         </Link>
                     </div>
-                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'users' ? 'active-item-list' : null}`} >
+                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'users' || activeOption == '/welcome/users' ? 'active-item-list' : null}`} >
                         <Link href="/welcome/users" legacyBehavior>
                             <a className='flex flex-col items-center' onClick={() => handleOptionClick('users')}>
                                 <i className='pi pi-users text-xl'></i>
@@ -122,7 +122,7 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
                             </a>
                         </Link>
                     </div>
-                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'providers' ? 'active-item-list' : null}`} >
+                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'providers' || activeOption == '/welcome/providers' ? 'active-item-list' : null}`} >
                         <Link href="/welcome/providers" legacyBehavior>
                             <a className='flex flex-col items-center' onClick={() => handleOptionClick('providers')}>
                                 <i className='pi pi-th-large text-xl'></i>
@@ -130,7 +130,7 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
                             </a>
                         </Link>
                     </div>
-                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'customers' ? 'active-item-list' : null}`} >
+                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'customers' || activeOption == '/welcome/customers' ? 'active-item-list' : null}`} >
                         <Link href="/welcome/customers" legacyBehavior>
                             <a className='flex flex-col items-center' onClick={() => handleOptionClick('customers')}>
                                 <i className='pi pi-star text-xl'></i>
@@ -143,7 +143,7 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
                 : user.role == 'PROVIDER' ?
                 <div className='flex justify-between items-center'>
                     <div className='flex flex-row gap-10 items-center'>
-                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'welcome' ? 'active-item-list' : null}`}>
+                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'welcome' || activeOption === '/welcome' ? 'active-item-list' : null}`}>
                             <Link href="/welcome" legacyBehavior>
                                 <a className='flex flex-col items-center' onClick={() => handleOptionClick('welcome')}>
                                     <i className='pi pi-user text-xl'></i>
@@ -151,7 +151,7 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
                                 </a>
                             </Link>
                         </div>
-                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'leads' ? 'active-item-list' : null}`}>
+                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'leads' || activeOption === '/welcome/leads' ? 'active-item-list' : null}`}>
                             <Link href="/welcome/leads" legacyBehavior>
                                 <a className='flex flex-col items-center' onClick={() => handleOptionClick('leads')}>
                                     <i className='pi pi-inbox text-xl'></i>
@@ -159,19 +159,11 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
                                 </a>
                             </Link>
                         </div>
-                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'reviews' ? 'active-item-list' : null}`}>
-                            <Link href="/welcome/users" legacyBehavior>
+                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'reviews' || activeOption === '/welcome/ratings/[idProvider]' ? 'active-item-list' : null}`}>
+                            <Link href={`/welcome/ratings/${user.idProvider}`} legacyBehavior>
                                 <a className='flex flex-col items-center' onClick={() => handleOptionClick('reviews')}>
                                     <i className='pi pi-star text-xl'></i>
                                     <p className='text-sm'>Reviews</p>
-                                </a>
-                            </Link>
-                        </div>
-                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'business' ? 'active-item-list' : null}`}>
-                            <Link href="/welcome/users" legacyBehavior>
-                                <a className='flex flex-col items-center' onClick={() => handleOptionClick('business')}>
-                                    <i className='pi pi-building text-xl'></i>
-                                    <p className='text-sm'>My Business</p>
                                 </a>
                             </Link>
                         </div>

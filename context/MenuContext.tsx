@@ -11,7 +11,7 @@ export const MenuContext = createContext<MenuContextProps>({
 });
 
 export const MenuProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [activeOption, setActiveOption] = useState<string>('');
+  const [activeOption, setActiveOption] = useState<string>('welcome');
 
   return (
     <MenuContext.Provider value={{ activeOption, setActiveOption }}>

@@ -8,11 +8,12 @@ import FooterComponentAdmin from './footerAdmin';
 import { Profile } from '@/interfaces/interfaces';
 import {useContext} from 'react';
 import { MenuContext } from '@/context/MenuContext';
+import { useRouter } from 'next/router';
 
 const LayoutAdmin = ({children}: any) => {
    const {getUserAuthenticated, logout} = Auth();
 
-   const {activeOption = 'welcome', setActiveOption} = useContext(MenuContext);
+   const {activeOption, setActiveOption} = useContext(MenuContext);
    const [activeSideOption, setActiveSideOption] = useState<any>('');
 
    const [loading, setLoading] = useState<boolean>(false);
@@ -44,8 +45,11 @@ const LayoutAdmin = ({children}: any) => {
       }
   );
 
+  const router = useRouter();
+
   useEffect(() => {
    setDataUser();
+   // setActiveOption(router.pathname)
 }, []);
 
   const setDataUser = async () => {
@@ -74,7 +78,7 @@ const LayoutAdmin = ({children}: any) => {
          user={user} setLoading={setLoading} logout={logoutSession}
         />
         <div className='w-full h-screen flex flex-row items-start justify-between gap-5 px-5 pb-5 pt-36 lg:pt-44 bg-neutral-100'>
-            <SideBarComponent activeOption={activeOption} activeSideOption={activeSideOption} onSideOptionClick={handleSideOptionClick} />
+            <SideBarComponent user={user} activeSideOption={activeSideOption} onSideOptionClick={handleSideOptionClick} />
             <main className='w-full min-h-[360px] max-h-full h-full overflow-auto bg-white rounded-md shadow-md'>
                {children}
             </main>

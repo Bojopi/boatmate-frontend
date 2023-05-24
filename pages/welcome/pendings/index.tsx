@@ -7,7 +7,7 @@ const Index = () => {
     <>
       <LayoutAdmin>
         <ErrorCard>
-          <p>After you confirm an opportunity, those direct leads will show up in sent quotes and messages.</p>
+          <p>After the customer responds back to the sent quotes, it will move to "messages" as well as "pending"</p>
         </ErrorCard>
       </LayoutAdmin>
     </>
