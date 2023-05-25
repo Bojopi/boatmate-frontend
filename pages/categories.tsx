@@ -14,7 +14,7 @@ const CategoriesComponent = () => {
 
     useEffect(() => {
         getCategories();
-    }, []);
+    });
 
     const getCategories = async () => {
         const res = await getAllCategories();

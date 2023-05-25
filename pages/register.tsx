@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {FormProvider, useForm} from "react-hook-form";
 import Link from 'next/link'
 
@@ -51,13 +51,6 @@ const Register: React.FC = () => {
     const [toggleConfirmPass, setToggleConfirmPass] = useState<boolean>(false);
     const [errorMatch, setErrorMatch] = useState<boolean>(false);
 
-    useEffect(() => {
-        if (selectedLocation) {
-            methods.setValue('lat', selectedLocation.lat);
-            methods.setValue('lng', selectedLocation.lng);
-        }
-    }, [selectedLocation])
-
     const items = [
         {
             label: 'Personal Data',
@@ -96,13 +89,12 @@ const Register: React.FC = () => {
         formData.idRole = isSelected;
         formData.password = password;
 
+        formData.lat = selectedLocation.lat || ''
+        formData.lng = selectedLocation.lng || ''
+
         console.log(formData);
         setLoading(true);
         createUSer(formData, toast, setLoading)
-        // if(isValid && methods.getValues('password') === methods.getValues('c_password')) {
-        //     setLoading(true);
-        //     console.log(formData);
-        // }
     };
 
     const onErrors = () => {

@@ -26,7 +26,7 @@ const CategoriesIndex: React.FC = () => {
     useEffect(() => {
         getCategories();
         initFilters();
-    }, []);
+    });
 
     const getCategories = async () => {
         const response = await getAllCategories();

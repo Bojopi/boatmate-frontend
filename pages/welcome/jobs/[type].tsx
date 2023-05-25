@@ -22,7 +22,7 @@ const Index = () => {
         {
           type == 'confirmed' ?
             <ErrorCard>
-              <p>After the customer clicks hire pro, the job will move to "job confirmed"</p>
+              <p>After the customer clicks hire pro, the job will move to &quote;job confirmed&quote;</p>
             </ErrorCard>
           : type == 'done' ?
             <ErrorCard>
