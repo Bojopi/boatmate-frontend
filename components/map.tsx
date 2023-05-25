@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
-import { GoogleMap, Autocomplete, Marker, useLoadScript } from '@react-google-maps/api';
+import React, { useState } from 'react';
+import { GoogleMap, Autocomplete, Marker } from '@react-google-maps/api';
 import { useJsApiLoader } from '@react-google-maps/api';
 
 export type InputProps = {
@@ -24,7 +24,7 @@ const libraries: any = ['places'];
 
 const MapComponent: React.FC<InputProps> = ({readonly = false, height='400px', selectedLocation, setSelectedLocation, getAddress, selectedPlace, setSelectedPlace}) => {
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_APIKEY as string,
+    googleMapsApiKey: 'AIzaSyBfwNcp4UHQnucX_gq0_ThusY_ceSgAtyU',
     libraries
   });
 
