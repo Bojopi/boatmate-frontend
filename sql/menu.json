@@ -2,56 +2,146 @@
     {
         "label": "Boats",
         "items": [
-            { "label": "Detailing"},
-            { "label": "Hull Cleaning"},
-            { "label": "Fiberglass Repair"},
-            { "label": "Electronics"},
-            { "label": "Upholstery"},
-            { "label": "Bottom Paint"},
-            { "label": "Propellers"},
-            { "label": "Engine service"},
-            { "label": "Survey & Inspection"},
-            { "label": "Boat Transport"},
-            { "label": "Trailer Repair"},
-            { "label": "View All Services"}
+            { 
+                "label": "Detailing",
+                "url": "/"
+            },
+            { 
+                "label": "Hull Cleaning",
+                "url": "/"
+            },
+            { 
+                "label": "Fiberglass Repair",
+                "url": "/"
+            },
+            { 
+                "label": "Electronics",
+                "url": "/"
+            },
+            { 
+                "label": "Upholstery",
+                "url": "/"
+            },
+            { 
+                "label": "Bottom Paint",
+                "url": "/"
+            },
+            { 
+                "label": "Propellers",
+                "url": "/"
+            },
+            { 
+                "label": "Engine service",
+                "url": "/"
+            },
+            { 
+                "label": "Survey & Inspection",
+                "url": "/"
+            },
+            { 
+                "label": "Boat Transport",
+                "url": "/"
+            },
+            { 
+                "label": "Trailer Repair",
+                "url": "/"
+            },
+            { 
+                "label": "View All Services",
+                "url": "/categories"
+            }
         ]
     },
     {
         "label": "Jetskis",
         "items": [
-            { "label": "Fiberglass Repair"},
-            { "label": "Engine Service"},
-            { "label": "Seat Repair"},
-            { "label": "Electronics"},
-            { "label": "Tune Up"},
-            { "label": "Trailer Repair"},
-            { "label": "Paint Job"},
-            { "label": "View All Services"}
+            { 
+                "label": "Fiberglass Repair",
+                "url": "/"
+            },
+            { 
+                "label": "Engine Service",
+                "url": "/"
+            },
+            { 
+                "label": "Seat Repair",
+                "url": "/"
+            },
+            { 
+                "label": "Electronics",
+                "url": "/"
+            },
+            { 
+                "label": "Tune Up",
+                "url": "/"
+            },
+            { 
+                "label": "Trailer Repair",
+                "url": "/"
+            },
+            { 
+                "label": "Paint Job",
+                "url": "/"
+            },
+            { 
+                "label": "View All Services",
+                "url": "/categories"
+            }
         ]
     },
     {
         "label": "Dock & Storage",
         "items": [
-            { "label": "Dock Builder" },
-            { "label": "Boat Lift" },
-            { "label": "Marina" },
-            { "label": "Storage" },
-            { "label": "Winterización" },
-            { "label": "View All Services" }
+            { 
+                "label": "Dock Builder",
+                "url": "/"
+            },
+            { 
+                "label": "Boat Lift",
+                "url": "/"
+            },
+            { 
+                "label": "Marina",
+                "url": "/"
+            },
+            { 
+                "label": "Storage",
+                "url": "/"
+            },
+            { 
+                "label": "Winterización",
+                "url": "/"
+            },
+            { 
+                "label": "View All Services",
+                "url": "/categories"
+            }
         ]
     },
     {
         "label": "Insurance",
         "items": [
-            { "label": "Personal Insurance" },
-            { "label": "Commercial Insurance" }
+            { 
+                "label": "Personal Insurance",
+                "url": "/"
+            },
+            { 
+                "label": "Commercial Insurance",
+                "url": "/"
+            }
         ]
     },
     {
         "label": "More",
         "items": [
-            { "label": "Articles" },
-            { "label": "Cost Guides" }
+            { 
+                "label": "Articles",
+                "url": "/"
+            },
+            { 
+                "label": "Cost Guides",
+                "url": "/"
+            }
         ]
     }
 ]

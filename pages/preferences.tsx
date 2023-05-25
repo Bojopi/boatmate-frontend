@@ -75,22 +75,22 @@ const Preferences = () => {
         </Head>
         <Spinner loading={loading} />
         <Toast ref={toast} />
-        <div className='w-full h-screen bg-gray-100 flex flex-col items-center justify-center'>
-            <div className='bg-white rounded-md shadow-lg flex flex-col items-center gap-20 justify-center p-10'>
+        <div className='w-full h-screen bg-gray-100 flex items-center justify-center'>
+            <div className='bg-white md:rounded-md shadow-lg flex flex-col items-center gap-5 md:gap-20 justify-center p-10'>
                 <div className='flex flex-row items-center gap-5'>
                     <img
                         src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
                         alt="logo"
                         className='w-16 lg:w-24'
                     />
-                    <h1 className='mt-5 text-xl md:text-2xl font-semibold mr-5' style={{'color': '#373A85'}}>Which best describes your role?</h1>
+                    <h1 className='text-center text-lg md:text-2xl font-semibold mr-5' style={{'color': '#373A85'}}>Which best describes your role?</h1>
                 </div>
-                <div id='customer' onClick={setRole} className='w-full flex flex-row items-center justify-center gap-20'>
-                    <div className='flex flex-col items-center gap-10 p-10 rounded-md shadow-md border hover:bg-green-100 cursor-pointer'>
+                <div id='customer' onClick={setRole} className='w-full flex flex-row items-center justify-between'>
+                    <div className='flex flex-col items-center gap-5 md:gap-10 p-4 md:p-10 rounded-md shadow-md border hover:bg-green-100 cursor-pointer'>
                         <img id='customer' src="https://i.postimg.cc/Zn2fvXhV/sailor.png" width={100} height={100} alt="sailor" />
                         <p id='customer' className='font-extrabold text-[#373A85]'>BOAT OWNER</p>
                     </div>
-                    <div id='provider' onClick={setRole} className='flex flex-col items-center gap-10 p-10 rounded-md shadow-md border hover:bg-green-100 cursor-pointer'>
+                    <div id='provider' onClick={setRole} className='flex flex-col items-center gap-5 md:gap-10 p-4 md:p-10 rounded-md shadow-md border hover:bg-green-100 cursor-pointer'>
                         <img id='provider' src="https://i.postimg.cc/L8h5v7Lm/cargo-ship.png" width={100} height={100} alt="provider" />
                         <p id='provider' className='font-extrabold text-[#373A85]'>PROVIDER</p>
                     </div>

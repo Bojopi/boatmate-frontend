@@ -143,7 +143,7 @@ const Welcome = () => {
         setUser(response.data);
         setChecked(response.data.state);
         if(response.data.role === 'PROVIDER') {
-            const res = await getRatingProvider(response.data.idProvider);
+            const res = await getRatingProvider(response.data.uid);
             if(res.status === 200) {
                 const avg = avgRating(res.data.rating);
                 setRating(Number(avg));

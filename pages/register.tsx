@@ -192,13 +192,13 @@ const Register: React.FC = () => {
                 <div className='w-full flex justify-between'>
                     <button
                         type='button'
-                        className='p-3 text-xs md:text-base bg-gray-400 hover:bg-gray-600 text-white rounded-md hover:transition disabled:bg-gray-400'
+                        className='p-3 text-xs md:text-base bg-gray-400 hover:bg-gray-600 text-white rounded-md hover:transition disabled:bg-gray-300'
                         onClick={backStep}>
                             Back Step
                     </button>
                     <button
                         type='button'
-                        className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-400'
+                        className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-300'
                         disabled={validForm()}
                         onClick={handleOnSubmit}>
                             SING UP
@@ -210,7 +210,7 @@ const Register: React.FC = () => {
                 <div className='w-full flex justify-end'>
                     <button
                         type='button'
-                        className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-400'
+                        className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-300'
                         onClick={nextStep}
                         disabled={validForm()}>
                             Next Step
@@ -250,8 +250,8 @@ const Register: React.FC = () => {
             className="w-full h-1/3 shadow-md md:h-screen absolute top-0 left-0 bg-no-repeat bg-cover bg-center"
             style={{'backgroundImage': "url('https://i.postimg.cc/qv8LyXWs/tomas-malik-FHAHn-F9-C0-Sw-unsplash.jpg')"}}>
         </div>
-        <div className="container h-screen mx-auto flex justify-center items-center mt-10 md:mt-0">
-            <div className='bg-white z-10 w-11/12 md:w-1/2 rounded-lg shadow-2xl py-4 md:py-5 px-5 md:px-10 flex flex-col items-center'>
+        <div className="container h-screen mx-auto flex justify-center items-center">
+            <div className='bg-white z-10 w-11/12 md:w-1/2 rounded-lg md:rounded-none shadow-2xl py-4 md:py-5 px-5 md:px-10 flex flex-col items-center'>
                 <div className='w-full flex justify-between'>
                     <img
                         src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
@@ -268,8 +268,8 @@ const Register: React.FC = () => {
                         <form className="w-full">
                             {
                                 activeIndex === 0 ?
-                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
-                                    <InputWrapper outerClassName="col-span-6">
+                                <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+                                    <InputWrapper outerClassName="md:col-span-6">
                                             <Label id='personName'>Name *</Label>
                                             <Input
                                                 id='personName'
@@ -281,7 +281,7 @@ const Register: React.FC = () => {
                                             <ErrorMessage>{errors.personName.message}</ErrorMessage>
                                         )}
                                     </InputWrapper>
-                                    <InputWrapper outerClassName="col-span-6">
+                                    <InputWrapper outerClassName="md:col-span-6">
                                             <Label id='lastname'>Lastname *</Label>
                                             <Input
                                                 id='lastname'
@@ -293,7 +293,7 @@ const Register: React.FC = () => {
                                             <ErrorMessage>{errors.lastname.message}</ErrorMessage>
                                         )}
                                     </InputWrapper>
-                                    <InputWrapper outerClassName="col-span-12">
+                                    <InputWrapper outerClassName="md:col-span-12">
                                             <Label id='phone'>Phone *</Label>
                                             <Input
                                                 id='phone'
@@ -308,14 +308,14 @@ const Register: React.FC = () => {
                                             <ErrorMessage>{errors.phone.message}</ErrorMessage>
                                         )}
                                     </InputWrapper>
-                                    <div className='col-span-12'>
+                                    <div className='md:col-span-12'>
                                         <Label>Address *</Label>
                                         <MapComponent height='250px' getAddress={getAddress} selectedLocation={selectedLocation} selectedPlace={selectedPlace} setSelectedLocation={setSelectedLocation} setSelectedPlace={setSelectedPlace} />
                                     </div>
                                 </div>
                                 : activeIndex == 1 ?
                                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
-                                    <InputWrapper outerClassName="col-span-12">
+                                    <InputWrapper outerClassName="md:col-span-12">
                                             <Label id='email'>Email *</Label>
                                             <Input
                                                 id='email'
@@ -330,7 +330,7 @@ const Register: React.FC = () => {
                                             <ErrorMessage>{errors.email.message}</ErrorMessage>
                                         )}
                                     </InputWrapper>
-                                    <InputWrapper outerClassName="col-span-12">
+                                    <InputWrapper outerClassName="md:col-span-12">
                                             <Label id='password'>Password *</Label>
                                             <div className="p-password p-component p-inputwrapper p-input-icon-right">
                                                 <input
@@ -353,7 +353,7 @@ const Register: React.FC = () => {
                                             <li><i className={password.match(/[@$\-_]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One special character</li>
                                         </ul>
                                     </InputWrapper>
-                                    <InputWrapper outerClassName="col-span-12">
+                                    <InputWrapper outerClassName="md:col-span-12">
                                             <Label id='c_password'>Confirm Password *</Label>
                                             <div className="p-password p-component p-inputwrapper p-input-icon-right">
                                                 <input
@@ -373,8 +373,8 @@ const Register: React.FC = () => {
                                 </div>
                                 : activeIndex == 2 ?
                                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
-                                    <h1 className='col-span-12 mt-5 text-xl md:text-2xl font-semibold text-center' style={{'color': '#373A85'}}>Which best describes your role?</h1>
-                                    <div className='col-span-12 w-full flex flex-row items-center justify-center gap-20'>
+                                    <h1 className='md:col-span-12 mt-5 text-lg md:text-2xl font-semibold text-center' style={{'color': '#373A85'}}>Which best describes your role?</h1>
+                                    <div className='md:col-span-12 w-full flex flex-row items-center justify-center gap-3 md:gap-20'>
                                         <div id='customer' className={`flex flex-col items-center gap-5 p-5 rounded-md shadow-md border hover:bg-green-100 cursor-pointer ${isSelected == '4' ? 'bg-green-100' : 'bg-white'}`} onClick={selectedRole}>
                                             <img id='customer' src="https://i.postimg.cc/Zn2fvXhV/sailor.png" width={100} height={100} alt="sailor" />
                                             <p id='customer' className='font-extrabold text-[#373A85]'>BOAT OWNER</p>

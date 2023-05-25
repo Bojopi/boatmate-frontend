@@ -15,11 +15,11 @@ export default function FooterComponentThree() {
                             <p className="text-xs lg:text-sm mb-1 font-medium">support@boatmate.com</p>
                         </div>
                         <div className="mb-10 lg:mb-20 flex flex-row gap-3">
-                            <Link href={'/pro/list'} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faTwitter} /></Link>
-                            <Link href={'/pro/list'} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faFacebookF} /></Link>
-                            <Link href={'/pro/list'} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faPinterestP} /></Link>
-                            <Link href={'/pro/list'} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faYoutube} /></Link>
-                            <Link href={'/pro/list'} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faInstagram} /></Link>
+                            <Link href={'/pro/list'} ><FontAwesomeIcon className="text-[#373A85] text-xl md:text-[25px]" icon={faTwitter} /></Link>
+                            <Link href={'/pro/list'} ><FontAwesomeIcon className="text-[#373A85] text-xl md:text-[25px]" icon={faFacebookF} /></Link>
+                            <Link href={'/pro/list'} ><FontAwesomeIcon className="text-[#373A85] text-xl md:text-[25px]" icon={faPinterestP} /></Link>
+                            <Link href={'/pro/list'} ><FontAwesomeIcon className="text-[#373A85] text-xl md:text-[25px]" icon={faYoutube} /></Link>
+                            <Link href={'/pro/list'} ><FontAwesomeIcon className="text-[#373A85] text-xl md:text-[25px]" icon={faInstagram} /></Link>
                         </div>
                     </div>
                 </div>

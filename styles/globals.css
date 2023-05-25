@@ -38,3 +38,7 @@
   display: grid !important;
   grid-template-columns: repeat(2, 1fr) !important;
 }
+
+.container-group-categories {
+  column-count: 3;
+}

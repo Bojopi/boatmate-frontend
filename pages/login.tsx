@@ -45,6 +45,7 @@ const Login: React.FC = () => {
     } = methods;
 
     const onSubmit = (formData: FormProps) => {
+        console.log(formData)
         setLoading(true);
         if([formData.email, formData.password].includes('')) {
             onErrors();
@@ -93,7 +94,7 @@ const Login: React.FC = () => {
                 style={{'backgroundImage': "url('https://i.postimg.cc/qv8LyXWs/tomas-malik-FHAHn-F9-C0-Sw-unsplash.jpg')"}}>
                 <div></div>
             </div>
-            <div className="w-full h-screen absolute p-5 flex justify-center items-end lg:items-center">
+            <div className="w-full h-screen absolute p-5 flex justify-center items-center">
                 <div className='bg-white w-full md:w-2/4 rounded-lg shadow-2xl p-10 flex flex-col items-center'>
                     <div className='w-full flex justify-between'>
                         <img
@@ -144,12 +145,12 @@ const Login: React.FC = () => {
                                     <GoogleLogin onError={handleError} onSuccess={handleSuccess} />
                                 </div>
 
-                                <div className="mt-4 flex items-center justify-between">
-                                    <Link
+                                <div className="mt-4 flex items-center justify-end">
+                                    {/* <Link
                                         className='text-xs lg:text-sm font-medium text-[#00CBA4] hover:underline'
                                         href={'/forgot-password'}>
                                             Forgot password?
-                                    </Link>
+                                    </Link> */}
                                     <button type='submit' className='p-3 bg-[#109EDA] hover:bg-[#0E8FC7] text-white text-sm lg:text-base rounded-md hover:transition'>SIGN IN</button>
                                 </div>
                             </form>

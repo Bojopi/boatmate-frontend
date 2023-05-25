@@ -89,9 +89,10 @@ const ProPage = () => {
         </div>
 
         <div className="w-full mt-5 lg:mt-20 py-10 text-white bg-[#373A85] flex flex-col items-center">
-                <p className="text-lg text-center lg:text-3xl font-bold tracking-tight">Opportunity is waiting for you at BoatMate Ads</p>
+                <p className="text-xl text-center lg:text-3xl font-bold tracking-tight">Opportunity is waiting for you at BoatMate Ads</p>
                 <p className='mt-5 text-sm lg:text-base'>Join today to revolutionize the way you do business.</p>
-                <button type="button" className="py-2 px-3 mt-8 bg-white text-[#373A85] text-xs lg:text-base font-bold rounded-lg hover:bg-gray-200">Get Started</button>
+                <Link href={'/pro/list'} className="py-2 px-3 mt-8 bg-white text-[#373A85] text-xs lg:text-base font-bold rounded-lg hover:bg-gray-200">Get Started</Link>
+                {/* <button type="button" className="py-2 px-3 mt-8 bg-white text-[#373A85] text-xs lg:text-base font-bold rounded-lg hover:bg-gray-200">Get Started</button> */}
         </div>
 
         <FooterProComponent />
