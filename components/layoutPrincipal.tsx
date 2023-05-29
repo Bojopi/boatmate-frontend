@@ -1,7 +1,9 @@
 import React from 'react'
 import Head from 'next/head'
+import MenuBar from './menuBar';
+import FooterComponent from './footer';
 
-const Layout = (props: any) => {
+const LayoutPrincipal = ({children}: any) => {
     return (
         <>
         <Head>
@@ -10,11 +12,13 @@ const Layout = (props: any) => {
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" type="image/png" href="/Biggest_BoatMate-removebg-preview.ico" />
         </Head>
-         <main className='w-full h-full'>
-            {props.children}
+        <MenuBar linkMenu='Join Our Pro Network' urlMenu='/pro'/>
+         <main className='w-full pt-20 md:pt-24 lg:pt-36'>
+            {children}
          </main>
+         <FooterComponent />
         </>
      );
 }
 
-export default Layout;
+export default LayoutPrincipal;

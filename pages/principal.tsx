@@ -8,18 +8,13 @@ import {
     faSailboat,
     faBrush,
     faPaintRoller,
-    faVolumeHigh,
     faBroom,
-    faBolt,
-    faScrewdriverWrench,
 } from "@fortawesome/free-solid-svg-icons"
 
 import CardComponent from "../components/card"
-import FooterComponent from "../components/footer"
 import SectionTitle from "../components/sectionTitle"
 import { RaitingComponent } from '../components/rating';
 import { reduceRating } from '../functions/reduce';
-import MenuBar from '@/components/menuBar'
 
 
 const Principal = () => {
@@ -62,48 +57,23 @@ const Principal = () => {
             img: <FontAwesomeIcon icon={faBrush} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
         },
         {
-            name: "Barnacle Scraping",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faGear} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Maintenance & Repair",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faScrewdriverWrench} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Electronics",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faBolt} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Hull Cleaning",
-            rate: 1,
-            price: '$100',
-            img: <FontAwesomeIcon icon={faBroom} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
-        {
-            name: "Bottom Painting",
+            name: "Boat Covers",
             rate: 1,
             price: '$100',
             img: <FontAwesomeIcon icon={faPaintRoller} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
         },
         {
-            name: "Sound & Entertainment",
+            name: "Barnacle Scraping",
             rate: 1,
             price: '$100',
-            img: <FontAwesomeIcon icon={faVolumeHigh} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
-        },
+            img: <FontAwesomeIcon icon={faBroom} style={{color: "#373a85",}} className='text-lg md:text-2xl' />,
+        }
     ];
 
     const costGuides = ['Engine Service Cost', 'Fiberglass Repair Cost', 'Underwater Growth and Barnacle Removal Cost', 'Electronics Replacement Cost', 'Upholstery Repair Cost', 'Insurance Cost'];
 
   return (
     <>
-        <MenuBar linkMenu='Join Our Pro Network' urlMenu='/pro'/>
         <SectionTitle
             title1="Maximizing connectivity"
             title2="in the boating industry"
@@ -149,7 +119,7 @@ const Principal = () => {
                             </div>
                             <p className="text-xs lg:text-sm font-bold pt-1"><span className="font-light">from: </span>{item.price}</p>
                             <div className="hidden lg:flex pt-2">
-                                <RaitingComponent value={item.rate} />
+                                <RaitingComponent value={reduceRating(item.rate)} />
                             </div>
                         </div>
                     </Link>
@@ -216,14 +186,14 @@ const Principal = () => {
         <div className="w-full lg:h-[500px] p-10 lg:p-40 text-white flex flex-row gap-5 lg:gap-10 items-center overflow-hidden" style={{'backgroundColor': '#373A85'}}>
             <div className="">
                 <p className="text-base w-full lg:text-4xl font-bold tracking-wide">Grow your business with us. Become a BoatMate Pro today.</p>
-                <button type="button" className="py-2 px-3 mt-8 bg-white text-[#373A85] text-xs lg:text-base font-bold rounded-lg hover:bg-gray-200">Learn more</button>
+                <div className='mt-8'>
+                    <Link href={'/pro'} className="py-2 px-3 bg-white text-[#373A85] text-xs lg:text-base font-bold rounded-lg hover:bg-gray-200">Learn more</Link>
+                </div>
             </div>
             <div className="hidden lg:block p-10">
                 <img src="https://i.postimg.cc/44L02jb0/beth-macdonald-t-JMX4k-Id-UV4-unsplash.jpg" className="rounded-md w-full" alt="obreros" />
             </div>
         </div>
-
-        <FooterComponent />
     </>
   )
 }

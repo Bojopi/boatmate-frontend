@@ -29,7 +29,7 @@ const BoatsIndex: React.FC = () => {
         setLoading(true);
         getAllBoats(setBoats, getBoats, setLoading);
         initFilters();
-    });
+    }, []);
 
     const getBoats = (data: any) => {
         return [...(data || [])].map((d) => {

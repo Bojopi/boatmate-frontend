@@ -43,7 +43,7 @@ const Preferences = () => {
 
     useEffect(() => {
         setDataUser();
-    });
+    }, []);
 
     const setDataUser = async () => {
         const response = await getUserAuthenticated();

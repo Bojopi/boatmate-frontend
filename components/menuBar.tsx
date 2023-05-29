@@ -47,7 +47,7 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
 
     const handleOpen = (e: any) => {
         for(let i = 0; i < document.getElementsByTagName('ul').length; i++) {
-            if(!document.getElementsByTagName('ul').item(i)?.className.includes('container-group-categories')) {
+            if(document.getElementsByTagName('ul').item(i)?.className.includes('item-menu')) {
                 document.getElementsByTagName('ul').item(i)?.setAttribute('hidden', 'true');
             }
         }
@@ -58,7 +58,7 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
         document.addEventListener('mouseover', (event: any) => {
             if(event.target.nodeName !== 'LI' && event.target.nodeName !== 'UL' && event.target.nodeName !== 'A') {
                 for(let i = 0; i < document.getElementsByTagName('ul').length; i++) {
-                    if(!document.getElementsByTagName('ul').item(i)?.className.includes('container-group-categories')) {
+                    if(document.getElementsByTagName('ul').item(i)?.className.includes('item-menu')) {
                         document.getElementsByTagName('ul').item(i)?.setAttribute('hidden', 'true');
                     }
                 }
@@ -75,8 +75,8 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
         {menuItem ? null : <p className='text-[#373A85] text-xs md:text-lg font-bold -mb-1'>Ads</p>}
     </Link>
     const end = <>
-        <Link href={urlMenu} className={`mr-2 md:mr-5 font-bold cursor-pointer tracking-tighter hover:underline text-xs md:text-base ${menuItem ? 'hidden' :'block'}`}>{linkMenu}</Link>
-        <div className='hidden md:block'>
+        <div className={menuItem ? 'hidden md:block' : 'block'}>
+            <Link href={urlMenu} className='mr-2 md:mr-5 font-bold cursor-pointer tracking-tighter hover:underline text-xs md:text-base' >{linkMenu}</Link>
             {
                 menuItem ? 
                 <>

@@ -5,16 +5,19 @@ import 'primeicons/primeicons.css';
 import type { AppProps } from 'next/app'
 import Layout from './layouts/index';
 import { MenuProvider } from '@/context/MenuContext';
+import { FormProvider } from '@/context/FormContext';
 
 export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <MenuProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </MenuProvider>
+      <FormProvider>
+        <MenuProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </MenuProvider>
+      </FormProvider>
     </>
   )
 }

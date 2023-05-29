@@ -32,7 +32,7 @@ const CustomersIndex: React.FC = () => {
         setLoading(true)
         getCustomers();
         initFilters();
-    });
+    }, []);
 
     const getCustomers = async () => {
         const response = await getAllCustomers();

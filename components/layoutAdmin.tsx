@@ -8,13 +8,11 @@ import FooterComponentAdmin from './footerAdmin';
 import { Profile } from '@/interfaces/interfaces';
 import {useContext} from 'react';
 import { MenuContext } from '@/context/MenuContext';
-import { useRouter } from 'next/router';
 
 const LayoutAdmin = ({children}: any) => {
    const {getUserAuthenticated, logout} = Auth();
 
-   const {activeOption, setActiveOption} = useContext(MenuContext);
-   const [activeSideOption, setActiveSideOption] = useState<any>('');
+   const {activeOption, setActiveOption, activeSideOption, setActiveSideOption} = useContext(MenuContext);
 
    const [loading, setLoading] = useState<boolean>(false);
 
@@ -45,11 +43,8 @@ const LayoutAdmin = ({children}: any) => {
       }
   );
 
-  const router = useRouter();
-
   useEffect(() => {
    setDataUser();
-   // setActiveOption(router.pathname)
 }, []);
 
   const setDataUser = async () => {
@@ -62,10 +57,6 @@ const LayoutAdmin = ({children}: any) => {
       logout(setLoading);
   };
 
-   const handleSideOptionClick = (option: string) => {
-      setActiveSideOption(option)
-   }
-
     return (
         <>
         <Head>
@@ -75,10 +66,10 @@ const LayoutAdmin = ({children}: any) => {
             <link rel="icon" type="image/png" href="/Biggest_BoatMate-removebg-preview.ico" />
         </Head>
         <MenuBarSupAdmin
-         user={user} setLoading={setLoading} logout={logoutSession}
+         user={user} setLoading={setLoading} logout={logoutSession} activeOption={activeOption} setActiveOption={setActiveOption} setActiveSideOption={setActiveSideOption}
         />
         <div className='w-full h-screen flex flex-row items-start justify-between gap-5 px-5 pb-5 pt-36 lg:pt-44 bg-neutral-100'>
-            <SideBarComponent user={user} activeSideOption={activeSideOption} onSideOptionClick={handleSideOptionClick} />
+            <SideBarComponent user={user} activeOption={activeOption} activeSideOption={activeSideOption} setActiveSideOption={setActiveSideOption} />
             <main className='w-full min-h-[360px] max-h-full h-full overflow-auto bg-white rounded-md shadow-md'>
                {children}
             </main>

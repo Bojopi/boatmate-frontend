@@ -4,51 +4,51 @@
         "items": [
             { 
                 "label": "Detailing",
-                "url": "/"
+                "url": "/category/detailing"
             },
             { 
                 "label": "Hull Cleaning",
-                "url": "/"
+                "url": "/category/cleaning"
             },
             { 
                 "label": "Fiberglass Repair",
-                "url": "/"
+                "url": "/category/fiberglass"
             },
             { 
                 "label": "Electronics",
-                "url": "/"
+                "url": "/category/electronics"
             },
             { 
                 "label": "Upholstery",
-                "url": "/"
+                "url": "/category/upholstery"
             },
             { 
                 "label": "Bottom Paint",
-                "url": "/"
+                "url": "/category/paint"
             },
             { 
                 "label": "Propellers",
-                "url": "/"
+                "url": "/category/propellers"
             },
             { 
                 "label": "Engine service",
-                "url": "/"
+                "url": "/category/engine"
             },
             { 
                 "label": "Survey & Inspection",
-                "url": "/"
+                "url": "/category/survey"
             },
             { 
                 "label": "Boat Transport",
-                "url": "/"
+                "url": "/category/transport"
             },
             { 
                 "label": "Trailer Repair",
-                "url": "/"
+                "url": "/category/trailer"
             },
             { 
                 "label": "View All Services",
-                "url": "/categories"
+                "url": "/category/categories"
             }
         ]
     },
@@ -57,35 +57,35 @@
         "items": [
             { 
                 "label": "Fiberglass Repair",
-                "url": "/"
+                "url": "/category/fiberglass"
             },
             { 
                 "label": "Engine Service",
-                "url": "/"
+                "url": "/category/engine"
             },
             { 
                 "label": "Seat Repair",
-                "url": "/"
+                "url": "/category/seat"
             },
             { 
                 "label": "Electronics",
-                "url": "/"
+                "url": "/category/electronics"
             },
             { 
                 "label": "Tune Up",
-                "url": "/"
+                "url": "/category/tune"
             },
             { 
                 "label": "Trailer Repair",
-                "url": "/"
+                "url": "/category/trailer"
             },
             { 
                 "label": "Paint Job",
-                "url": "/"
+                "url": "/category/paint"
             },
             { 
                 "label": "View All Services",
-                "url": "/categories"
+                "url": "/category/categories"
             }
         ]
     },
@@ -94,27 +94,27 @@
         "items": [
             { 
                 "label": "Dock Builder",
-                "url": "/"
+                "url": "/category/dock"
             },
             { 
                 "label": "Boat Lift",
-                "url": "/"
+                "url": "/category/boat"
             },
             { 
                 "label": "Marina",
-                "url": "/"
+                "url": "/category/marina"
             },
             { 
                 "label": "Storage",
-                "url": "/"
+                "url": "/category/storage"
             },
             { 
-                "label": "Winterización",
-                "url": "/"
+                "label": "Winterization",
+                "url": "/category/winterization"
             },
             { 
                 "label": "View All Services",
-                "url": "/categories"
+                "url": "/category/categories"
             }
         ]
     },
@@ -123,11 +123,11 @@
         "items": [
             { 
                 "label": "Personal Insurance",
-                "url": "/"
+                "url": "/category/personal"
             },
             { 
                 "label": "Commercial Insurance",
-                "url": "/"
+                "url": "/category/commercial"
             }
         ]
     },
@@ -136,11 +136,11 @@
         "items": [
             { 
                 "label": "Articles",
-                "url": "/"
+                "url": "/category/articles"
             },
             { 
                 "label": "Cost Guides",
-                "url": "/"
+                "url": "/category/cost"
             }
         ]
     }

@@ -6,6 +6,7 @@ import MenuBar from '@/components/menuBar'
 import { Categories } from '@/hooks/categories'
 import { Category } from '@/interfaces/interfaces'
 import Link from 'next/link'
+import LayoutPrincipal from '@/components/layoutPrincipal'
 
 const CategoriesComponent = () => {
     const {getAllCategories} = Categories();
@@ -24,8 +25,8 @@ const CategoriesComponent = () => {
     }
 
   return (
-    <Layout>
-        <MenuBar linkMenu='Join Our Pro Network' urlMenu='/pro'/>
+    <LayoutPrincipal>
+        {/* <MenuBar linkMenu='Join Our Pro Network' urlMenu='/pro'/> */}
         <div className='w-full flex flex-col items-center justify-center pb-10 pt-36 lg:pt-44'>
             <p className='text-xl font-bold'>Find the perfect pro for your project.</p>
             <p className='text-lg'>Select a category or city below to get started.</p>
@@ -46,8 +47,8 @@ const CategoriesComponent = () => {
                 }
             </ul>
         </div>
-        <FooterComponent />
-    </Layout>
+        {/* <FooterComponent /> */}
+    </LayoutPrincipal>
   )
 }
 

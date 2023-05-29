@@ -111,7 +111,7 @@ const Welcome = () => {
 
     useEffect(() => {
         setDataUser();
-    });
+    }, []);
 
     const resetMap = async (lat: number, lng: number) => {
           const {data} = await getAddress(lat, lng);

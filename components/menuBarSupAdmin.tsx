@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link';
 import { Menubar } from 'primereact/menubar';
 import { Avatar } from 'primereact/avatar';
@@ -11,20 +11,24 @@ import { Rating } from 'primereact/rating';
 import { Ratings } from '@/hooks/rating';
 import { avgRating } from '@/functions/rating';
 import { Maps } from '@/hooks/maps';
-import { MenuContext } from '@/context/MenuContext';
 
 export type MenuProps = {
     user: Profile;
     logout: any;
     setLoading: any;
+    activeOption: any;
+    setActiveOption: any;
+    setActiveSideOption: any;
 }
 
 const MenuBarSupAdmin: React.FC<MenuProps> = ({
     user,
     logout,
-    setLoading
+    setLoading,
+    activeOption,
+    setActiveOption,
+    setActiveSideOption
 }) => {
-    const {activeOption, setActiveOption} = useContext(MenuContext);
 
     const { getRatingProvider } = Ratings();
     const { getAddress } = Maps();
@@ -82,7 +86,7 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
 
     const calcRating = async () => {
         const response = await getRatingProvider(Number(user.idProvider));
-        if(response.status == 200) {
+        if(response.status == 200 && response.data.rating.length > 0) {
             const avg = avgRating(response.data.rating);
             setRating(Number(avg))
         }
@@ -90,7 +94,7 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
 
     const getAddressMap = async () => {
         const response = await getAddress(Number(user.providerLat), Number(user.providerLng));
-        if(response.status == 200) {
+        if(response.status == 200 && response.data.results.length > 0) {
             setAddress(response.data.results[0].formatted_address);
         }
     }
@@ -106,33 +110,33 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
             {
                 user.role == 'ADMIN' || user.role == 'SUPERADMIN' ?
                 <div className='flex flex-row gap-10 items-center'>
-                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'welcome' || activeOption == '/welcome' ? 'active-item-list' : null}`}>
+                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'welcome' ? 'active-item-list' : null}`}>
                         <Link href="/welcome" legacyBehavior>
-                            <a className='flex flex-col items-center' onClick={() => handleOptionClick('welcome')}>
+                            <a className='flex flex-col items-center' onClick={() => {handleOptionClick('welcome'); setActiveSideOption('profiles')}}>
                                 <i className='pi pi-cog text-xl'></i>
                                 <p className='text-sm'>Settings</p>
                             </a>
                         </Link>
                     </div>
-                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'users' || activeOption == '/welcome/users' ? 'active-item-list' : null}`} >
+                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'users' ? 'active-item-list' : null}`} >
                         <Link href="/welcome/users" legacyBehavior>
-                            <a className='flex flex-col items-center' onClick={() => handleOptionClick('users')}>
+                            <a className='flex flex-col items-center' onClick={() => {handleOptionClick('users'); setActiveSideOption('users')}}>
                                 <i className='pi pi-users text-xl'></i>
                                 <p className='text-sm'>Users</p>
                             </a>
                         </Link>
                     </div>
-                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'providers' || activeOption == '/welcome/providers' ? 'active-item-list' : null}`} >
+                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'providers' ? 'active-item-list' : null}`} >
                         <Link href="/welcome/providers" legacyBehavior>
-                            <a className='flex flex-col items-center' onClick={() => handleOptionClick('providers')}>
+                            <a className='flex flex-col items-center' onClick={() => {handleOptionClick('providers'); setActiveSideOption('providers')}}>
                                 <i className='pi pi-th-large text-xl'></i>
                                 <p className='text-sm'>Providers & Services</p>
                             </a>
                         </Link>
                     </div>
-                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'customers' || activeOption == '/welcome/customers' ? 'active-item-list' : null}`} >
+                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'customers' ? 'active-item-list' : null}`} >
                         <Link href="/welcome/customers" legacyBehavior>
-                            <a className='flex flex-col items-center' onClick={() => handleOptionClick('customers')}>
+                            <a className='flex flex-col items-center' onClick={() => {handleOptionClick('customers'); setActiveSideOption('customers')}}>
                                 <i className='pi pi-star text-xl'></i>
                                 <p className='text-sm'>Customers</p>
                             </a>
@@ -143,25 +147,25 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
                 : user.role == 'PROVIDER' ?
                 <div className='flex justify-between items-center'>
                     <div className='flex flex-row gap-10 items-center'>
-                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'welcome' || activeOption === '/welcome' ? 'active-item-list' : null}`}>
+                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'welcome' ? 'active-item-list' : null}`}>
                             <Link href="/welcome" legacyBehavior>
-                                <a className='flex flex-col items-center' onClick={() => handleOptionClick('welcome')}>
+                                <a className='flex flex-col items-center' onClick={() => {handleOptionClick('welcome'); setActiveSideOption('profiles')}}>
                                     <i className='pi pi-user text-xl'></i>
                                     <p className='text-sm'>Profile</p>
                                 </a>
                             </Link>
                         </div>
-                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'leads' || activeOption === '/welcome/leads' ? 'active-item-list' : null}`}>
+                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'leads' ? 'active-item-list' : null}`}>
                             <Link href="/welcome/leads" legacyBehavior>
-                                <a className='flex flex-col items-center' onClick={() => handleOptionClick('leads')}>
+                                <a className='flex flex-col items-center' onClick={() => {handleOptionClick('leads'); setActiveSideOption('leads')}}>
                                     <i className='pi pi-inbox text-xl'></i>
                                     <p className='text-sm'>Leads</p>
                                 </a>
                             </Link>
                         </div>
-                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'reviews' || activeOption === '/welcome/ratings/[idProvider]' ? 'active-item-list' : null}`}>
+                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'reviews' ? 'active-item-list' : null}`}>
                             <Link href={`/welcome/ratings/${user.idProvider}`} legacyBehavior>
-                                <a className='flex flex-col items-center' onClick={() => handleOptionClick('reviews')}>
+                                <a className='flex flex-col items-center' onClick={() => {handleOptionClick('reviews'); setActiveSideOption('reviews')}}>
                                     <i className='pi pi-star text-xl'></i>
                                     <p className='text-sm'>Reviews</p>
                                 </a>

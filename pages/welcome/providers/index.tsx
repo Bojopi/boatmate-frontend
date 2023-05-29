@@ -37,7 +37,7 @@ const ProvidersIndex: React.FC = () => {
         setLoading(true);
         getAllProviders(setProviders, setLoading);
         initFilters();
-    });
+    }, []);
 
     const getSeverity = (state: boolean) => {
         switch (state) {

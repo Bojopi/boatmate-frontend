@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { PuffLoader } from 'react-spinners'
 
 export type SpinnerProps = {

@@ -1,8 +1,6 @@
 import Link from 'next/link'
 
-import Layout from '@/components/layout'
-import MenuBar from '@/components/menuBar'
-import FooterProComponent from '@/components/footer_pro'
+import LayoutPro from '@/components/layoutPro'
 
 
 
@@ -10,9 +8,8 @@ const ProPage = () => {
 
   return (
     <>
-    <Layout>
-        <MenuBar linkMenu='Sign In' urlMenu='/login' menuItem={false}/>
-        <div className='w-full h-[90vh] lg:h-auto grid grid-cols-1 lg:grid-cols-2 lg:mt-24 items-center overflow-hidden bg-[#373A85]'>
+    <LayoutPro footer={1}>
+        <div className='w-full h-[90vh] lg:h-auto grid grid-cols-1 lg:grid-cols-2 items-center overflow-hidden bg-[#373A85]'>
             <div className='w-5/6 lg:w-7/12 mx-auto text-white'>
                 <p className='text-xl lg:text-3xl font-semibold'>Grow Your Business</p>
                 <p className='text-sm lg:text-base font-medium leading-tight mt-5 lg:mt-3'>Increase your exposure to millions of homeowners looking to find local contractors just like you.</p>
@@ -23,7 +20,7 @@ const ProPage = () => {
                 <div className='flex flex-row gap-2 items-center mt-5 text-sm lg:text-base font-medium'>
                     <p>Already have an account? </p>
                     <div className='border-b border-b-white flex flex-row items-center gap-2 transform-none hover:gap-4 transition-all'>
-                        <Link href={''} >Sign in here</Link>
+                        <Link href={'/login'} >Sign in here</Link>
                         <span className='pi pi-arrow-right'></span>
                     </div>
                 </div>
@@ -92,11 +89,8 @@ const ProPage = () => {
                 <p className="text-xl text-center lg:text-3xl font-bold tracking-tight">Opportunity is waiting for you at BoatMate Ads</p>
                 <p className='mt-5 text-sm lg:text-base'>Join today to revolutionize the way you do business.</p>
                 <Link href={'/pro/list'} className="py-2 px-3 mt-8 bg-white text-[#373A85] text-xs lg:text-base font-bold rounded-lg hover:bg-gray-200">Get Started</Link>
-                {/* <button type="button" className="py-2 px-3 mt-8 bg-white text-[#373A85] text-xs lg:text-base font-bold rounded-lg hover:bg-gray-200">Get Started</button> */}
         </div>
-
-        <FooterProComponent />
-    </Layout>
+    </LayoutPro>
     </>
   )
 }
