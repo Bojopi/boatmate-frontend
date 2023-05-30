@@ -107,12 +107,12 @@ const ServicesIndex: React.FC = () => {
     };
 
     const categoryBodyTemplate = (rowData: Service) => {
-        if(rowData.service_categories.length > 0) {
-            const firstElement = rowData.service_categories[0];
+        if(rowData.service_categories!.length > 0) {
+            const firstElement = rowData.service_categories![0];
             return (
                 <div className='text-sm text-gray-600'>{
                     firstElement?.category.category_name}
-                    {(rowData.service_categories.length - 1) != 0 ? ` and +${rowData.service_categories.length -1} more...` : null}</div>
+                    {(rowData.service_categories!.length - 1) != 0 ? ` and +${rowData.service_categories!.length -1} more...` : null}</div>
             )
         } else {
             return (
