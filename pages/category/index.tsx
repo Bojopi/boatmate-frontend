@@ -76,7 +76,7 @@ const Index = () => {
           className="w-full h-56 md:h-80 bg-no-repeat bg-cover bg-center"
           style={{'backgroundImage': "url('https://images.unsplash.com/photo-1533678819397-99457d235e42?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80')"}}
           >
-            <div className='w-full h-full bg-black/50 flex flex-col gap-2 justify-center items-center text-center'>
+            <div className='w-full h-full bg-black/50 flex flex-col gap-2 justify-center items-center text-center px-5'>
               <p className='text-lg md:text-4xl font-medium text-white' style={{textShadow: '2px 2px 15px black', textTransform: 'capitalize'}} >Find top-rated {title} contractors in your area</p>
               <p className='text-sm md:text-lg text-white' style={{textShadow: '2px 2px 10px black'}}>Enter your address and find the best offers</p>
               <div className='p-inputgroup flex justify-center'>
@@ -107,8 +107,8 @@ const Index = () => {
             </div>
           </div>
           <div className='p-5 md:p-10'>
-            <p className='text-lg font-medium' style={{textTransform: 'capitalize'}}>Explore our catalog of {title} based services</p>
-            <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-3 mt-10'>
+            <p className='text-base md:text-lg font-medium' style={{textTransform: 'capitalize'}}>Explore our catalog of {title} based services</p>
+            <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-3 mt-5 md:mt-10 px-0 md:px-5 lg:px-20'>
               {
                 serviceList && serviceList.length > 0 ?
                 serviceList.map((item: ServiceProvider, i: number) => {

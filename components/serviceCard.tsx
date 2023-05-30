@@ -28,9 +28,7 @@ const ServiceCardComponent: React.FC<ServiceProps> = ({service}) => {
     };
 
     const getAddressMap = async (lat: number, lng: number) => {
-        console.log(lat, lng)
         const response = await getAddress(lat, lng);
-        console.log(response)
         if(response.status == 200 && response.data.results.length > 0) {
             setAddress(response.data.results[0].formatted_address);
         }
@@ -43,25 +41,27 @@ const ServiceCardComponent: React.FC<ServiceProps> = ({service}) => {
 
   return (
     <div className='p-5 rounded-md shadow-md border'>
-        <div className='grid grid-cols-3 items-center'>
-            <div className='col-span-1 w-full flex justify-center items-center'>
+        <div className='grid grid-cols-12 items-center'>
+            <div className='col-span-3 w-full flex justify-center items-center'>
                 {
                     service.provider.provider_image != null ?
                         <img src={`${service.provider.provider_image}`} alt={`${service.provider.provider_name}`} />
                     :
-                        <Avatar icon="pi pi-image" size="xlarge" shape="circle" />
+                        <Avatar icon="pi pi-image" size='large' shape="circle" />
                 }
             </div>
-            <div className='col-span-2 flex flex-col gap-1'>
-                <p>{service.provider.provider_name}</p>
-                <RaitingComponent value={rating} />
-                <div className='flex items-center gap-1'>
-                    <i className='pi pi-map-marker'></i>
-                    <p>{address}</p>
+            <div className='col-span-9'>
+                <div className='flex flex-col gap-2'>
+                    <p>{service.provider.provider_name}</p>
+                    <RaitingComponent value={rating} />
+                    <div className='flex items-baseline gap-1'>
+                        <i className='pi pi-map-marker text-[13px]'></i>
+                        <p className='text-xs md:text-sm'>{address}</p>
+                    </div>
                 </div>
-                <div className='flex items-center justify-between'>
-                    <div className='w-4/5 bg-neutral-100'>Descripcion</div>
-                    <Button type='button' label='View Profile'></Button>
+                <div className='mt-2 grid grid-cols-12 gap-2'>
+                    <p className='col-span-8 bg-neutral-100 text-sm line-clamp-2 p-1'>{service.service_provider_description}</p>
+                    <Button type='button' label='View Profile' className='col-span-4 text-xs lg:text-sm font-normal lg:font-medium'></Button>
                 </div>
             </div>
         </div>
