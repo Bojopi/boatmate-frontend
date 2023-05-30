@@ -107,8 +107,8 @@ const Index = () => {
             </div>
           </div>
           <div className='p-5 md:p-10'>
-            <p style={{textTransform: 'capitalize'}}>Explore our catalog of {title} based services</p>
-            <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-3'>
+            <p className='text-lg font-medium' style={{textTransform: 'capitalize'}}>Explore our catalog of {title} based services</p>
+            <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-3 mt-10'>
               {
                 serviceList && serviceList.length > 0 ?
                 serviceList.map((item: ServiceProvider, i: number) => {
