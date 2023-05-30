@@ -40,5 +40,11 @@
 }
 
 .container-group-categories {
-  column-count: 3;
+  column-count: 2;
+}
+
+@media (min-width: 768px) {
+  .container-group-categories {
+    column-count: 3;
+  }
 }

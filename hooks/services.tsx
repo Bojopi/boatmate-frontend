@@ -94,6 +94,8 @@ export const Services = () => {
         })
     };
 
+    const getProvidersService = (idService: number) => axios.get(`/provider-service/${idService}`);
+
 
     return {
         getAllServices,
@@ -101,7 +103,8 @@ export const Services = () => {
         deleteService,
         show,
         createService,
-        updateService
+        updateService,
+        getProvidersService
     }
 }
 

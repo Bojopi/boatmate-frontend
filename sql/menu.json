@@ -8,11 +8,11 @@
             },
             { 
                 "label": "Hull Cleaning",
-                "url": "/category/cleaning"
+                "url": "/category/hull-cleaning"
             },
             { 
                 "label": "Fiberglass Repair",
-                "url": "/category/fiberglass"
+                "url": "/category/fiberglass-repair"
             },
             { 
                 "label": "Electronics",
@@ -24,7 +24,7 @@
             },
             { 
                 "label": "Bottom Paint",
-                "url": "/category/paint"
+                "url": "/category/bottom-paint"
             },
             { 
                 "label": "Propellers",
@@ -32,19 +32,19 @@
             },
             { 
                 "label": "Engine service",
-                "url": "/category/engine"
+                "url": "/category/engine-service"
             },
             { 
                 "label": "Survey & Inspection",
-                "url": "/category/survey"
+                "url": "/category/survey-&-inspection"
             },
             { 
                 "label": "Boat Transport",
-                "url": "/category/transport"
+                "url": "/category/boat-transport"
             },
             { 
                 "label": "Trailer Repair",
-                "url": "/category/trailer"
+                "url": "/category/trailer-repair"
             },
             { 
                 "label": "View All Services",
@@ -57,15 +57,15 @@
         "items": [
             { 
                 "label": "Fiberglass Repair",
-                "url": "/category/fiberglass"
+                "url": "/category/fiberglass-repair"
             },
             { 
                 "label": "Engine Service",
-                "url": "/category/engine"
+                "url": "/category/engine-service"
             },
             { 
                 "label": "Seat Repair",
-                "url": "/category/seat"
+                "url": "/category/seat-repair"
             },
             { 
                 "label": "Electronics",
@@ -73,15 +73,15 @@
             },
             { 
                 "label": "Tune Up",
-                "url": "/category/tune"
+                "url": "/category/tune-up"
             },
             { 
                 "label": "Trailer Repair",
-                "url": "/category/trailer"
+                "url": "/category/trailer-repair"
             },
             { 
                 "label": "Paint Job",
-                "url": "/category/paint"
+                "url": "/category/paint-job"
             },
             { 
                 "label": "View All Services",
@@ -94,11 +94,11 @@
         "items": [
             { 
                 "label": "Dock Builder",
-                "url": "/category/dock"
+                "url": "/category/dock-builder"
             },
             { 
                 "label": "Boat Lift",
-                "url": "/category/boat"
+                "url": "/category/boat-lift"
             },
             { 
                 "label": "Marina",
@@ -123,11 +123,11 @@
         "items": [
             { 
                 "label": "Personal Insurance",
-                "url": "/category/personal"
+                "url": "/category/personal-insurance"
             },
             { 
                 "label": "Commercial Insurance",
-                "url": "/category/commercial"
+                "url": "/category/commercial-insurance"
             }
         ]
     },
@@ -140,7 +140,7 @@
             },
             { 
                 "label": "Cost Guides",
-                "url": "/category/cost"
+                "url": "/category/cost-guides"
             }
         ]
     }

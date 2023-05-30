@@ -26,15 +26,14 @@ const CategoriesComponent = () => {
 
   return (
     <LayoutPrincipal>
-        {/* <MenuBar linkMenu='Join Our Pro Network' urlMenu='/pro'/> */}
-        <div className='w-full flex flex-col items-center justify-center pb-10 pt-36 lg:pt-44'>
-            <p className='text-xl font-bold'>Find the perfect pro for your project.</p>
-            <p className='text-lg'>Select a category or city below to get started.</p>
+        <div className='w-full flex flex-col items-center justify-center py-10'>
+            <p className='text-lg md:text-xl font-bold'>Find the perfect pro for your project.</p>
+            <p className='text-base md:text-lg'>Select a category or city below to get started.</p>
         </div>
 
-        <div className='w-full py-10 px-40 bg-neutral-100'>
+        <div className='w-full py-10 px-5 md:px-40 bg-neutral-100'>
             <p className='font-bold'>Top categories</p>
-            <ul className='w-full container-group-categories'>
+            <ul className='w-full container-group-categories text-sm md:text-base'>
                 {
                     categories ? categories.map((item: Category, i: number) => (
                         <li key={i} className='leading-loose text-[#0d8fc7] font-medium w-auto'>
@@ -47,7 +46,6 @@ const CategoriesComponent = () => {
                 }
             </ul>
         </div>
-        {/* <FooterComponent /> */}
     </LayoutPrincipal>
   )
 }
