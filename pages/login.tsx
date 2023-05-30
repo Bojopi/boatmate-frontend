@@ -45,7 +45,6 @@ const Login: React.FC = () => {
     } = methods;
 
     const onSubmit = (formData: FormProps) => {
-        console.log(formData)
         setLoading(true);
         if([formData.email, formData.password].includes('')) {
             onErrors();
