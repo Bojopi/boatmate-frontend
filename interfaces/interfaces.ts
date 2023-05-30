@@ -103,7 +103,8 @@ export interface Service {
     service_name:        string;
     service_description: string;
     service_state:       boolean;
-    service_categories:  ServiceCategory[];
+    service_categories?:  ServiceCategory[];
+    service_providers?:   ServiceProvider[];
 }
 
 export interface ServiceCategory {
@@ -162,10 +163,11 @@ export interface Rating {
     person_image:                 null | string;
 }
 
-
 export interface ServiceProvider {
-    id_service_provider: number;
-    price:               number;
-    providerIdProvider:  number;
-    serviceIdService:    number;
+    id_service_provider:          number;
+    service_provider_state:       boolean;
+    service_provider_description: string;
+    providerIdProvider:           number;
+    serviceIdService:             number;
+    provider:                     Provider;
 }

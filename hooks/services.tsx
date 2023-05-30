@@ -96,6 +96,18 @@ export const Services = () => {
 
     const getProvidersService = (idService: number) => axios.get(`/provider-service/${idService}`);
 
+    const findByNameProvidersService = (data: any, setList: any, setLoading: any) => {
+        axios.post('/provider-service', data)
+        .then((res) => {
+            setList(res.data.service.service_providers);
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.log(error);
+            setLoading(false);
+        })
+    }
+
 
     return {
         getAllServices,
@@ -104,7 +116,8 @@ export const Services = () => {
         show,
         createService,
         updateService,
-        getProvidersService
+        getProvidersService,
+        findByNameProvidersService
     }
 }
 
