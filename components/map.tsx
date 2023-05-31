@@ -11,7 +11,7 @@ export type InputProps = {
   selectedPlace: string;
   setSelectedPlace: any;
   height?: string;
-  setZip: any;
+  setZip?: any;
 }
 
 let center = {
