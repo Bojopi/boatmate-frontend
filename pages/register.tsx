@@ -25,6 +25,7 @@ export type FormProps = {
     phone:          string;
     lat:            string;
     lng:            string;
+    zip:            string;
     providerName:   string;
 }
 
@@ -41,6 +42,7 @@ const Register: React.FC = () => {
 
     const [selectedPlace, setSelectedPlace] = useState<any>('');
     const [selectedLocation, setSelectedLocation] = useState<any>(null);
+    const [zip, setZip] = useState<string>('No Zip Code');
 
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -73,6 +75,7 @@ const Register: React.FC = () => {
             phone:          '',
             lat:            '',
             lng:            '',
+            zip:            '',
             providerName:   '',
         }
     });
@@ -89,8 +92,9 @@ const Register: React.FC = () => {
         formData.idRole = isSelected;
         formData.password = password;
 
-        formData.lat = selectedLocation.lat || ''
-        formData.lng = selectedLocation.lng || ''
+        formData.lat = selectedLocation.lat ? selectedLocation.lat : ''
+        formData.lng = selectedLocation.lng ? selectedLocation.lng : ''
+        formData.zip = zip;
 
         console.log(formData);
         setLoading(true);
@@ -302,7 +306,7 @@ const Register: React.FC = () => {
                                     </InputWrapper>
                                     <div className='md:col-span-12'>
                                         <Label>Address *</Label>
-                                        <MapComponent height='250px' getAddress={getAddress} selectedLocation={selectedLocation} selectedPlace={selectedPlace} setSelectedLocation={setSelectedLocation} setSelectedPlace={setSelectedPlace} />
+                                        <MapComponent height='250px' getAddress={getAddress} selectedLocation={selectedLocation} selectedPlace={selectedPlace} setSelectedLocation={setSelectedLocation} setSelectedPlace={setSelectedPlace} setZip={setZip} />
                                     </div>
                                 </div>
                                 : activeIndex == 1 ?

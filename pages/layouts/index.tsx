@@ -17,11 +17,10 @@ const Layouts: React.FC<LayoutProps> = ({children}) => {
         case "/login":
         case "/register":
         case "/forget-pass":
-            return <>{children}</>;
+            return <Layout>{children}</Layout>;
         case "/welcome":
             return <LayoutAdmin>{children}</LayoutAdmin>;
         case "/":
-        case "/category":
             return <LayoutPrincipal>{children}</LayoutPrincipal>;
         default:
             return <Layout>{children}</Layout>

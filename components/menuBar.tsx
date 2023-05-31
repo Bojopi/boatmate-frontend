@@ -103,11 +103,11 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
 
                         <ul id={`sub-${i}`} hidden={true} className='absolute top-[140px] z-20 bg-white font-normal border-t-4 border-b-8 border-[#00CBA4] item-menu'>
                             {menu.items.map((item: any, i: number) => (
-                                <li key={i} className='w-full py-3 px-5 cursor-pointer hover:bg-gray-100'>
-                                    <Link href={`${item.url}`} >
-                                        {item.label}
-                                    </Link>
-                                </li>
+                                <Link key={i} href={`${item.url}`} >
+                                    <li className='w-full py-3 px-5 cursor-pointer hover:bg-gray-100'>
+                                            {item.label}
+                                    </li>
+                                </Link>
                             ))}
                         </ul>
                     </div>

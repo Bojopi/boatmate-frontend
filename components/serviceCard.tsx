@@ -6,18 +6,20 @@ import { RaitingComponent } from './rating';
 import { Ratings } from '@/hooks/rating';
 import { avgRating } from '@/functions/rating';
 import { Maps } from '@/hooks/maps';
+import Link from 'next/link';
 
 export type ServiceProps = {
     service: ServiceProvider;
+    disabled?: boolean;
 }
 
-const ServiceCardComponent: React.FC<ServiceProps> = ({service}) => {
+const ServiceCardComponent: React.FC<ServiceProps> = ({service, disabled = false}) => {
 
     const { getRatingProvider } = Ratings();
     const { getAddress } = Maps();
 
     const [rating, setRating] = useState<any>(0);
-    const [address, setAddress] = useState<string>('No direction');
+    const [address, setAddress] = useState<string>('No Address');
 
     const getRating = async (idProvider: number) => {
         const response = await getRatingProvider(idProvider);
@@ -52,7 +54,7 @@ const ServiceCardComponent: React.FC<ServiceProps> = ({service}) => {
             </div>
             <div className='col-span-9'>
                 <div className='flex flex-col gap-2'>
-                    <p>{service.provider.provider_name}</p>
+                    <p className='font-medium'>{service.provider.provider_name}</p>
                     <RaitingComponent value={rating} />
                     <div className='flex items-baseline gap-1'>
                         <i className='pi pi-map-marker text-[13px]'></i>
@@ -60,8 +62,15 @@ const ServiceCardComponent: React.FC<ServiceProps> = ({service}) => {
                     </div>
                 </div>
                 <div className='mt-2 grid grid-cols-12 gap-2'>
-                    <p className='col-span-8 bg-neutral-100 text-sm line-clamp-2 p-1'>{service.service_provider_description}</p>
-                    <Button type='button' label='View Profile' className='col-span-4 text-xs lg:text-sm font-normal lg:font-medium'></Button>
+                    <p className='col-span-12 md:col-span-8 bg-neutral-100 text-sm line-clamp-2 p-1 rounded-md'>{service.service_provider_description}</p>
+                    <Button 
+                    type='button' 
+                    label='View Profile' 
+                    className='col-span-12 md:col-span-4 text-xs lg:text-sm font-normal lg:font-medium' 
+                    disabled={disabled} >
+                        <Link href={'/providers'} >
+                        </Link>
+                    </Button>
                 </div>
             </div>
         </div>

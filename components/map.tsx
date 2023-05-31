@@ -11,6 +11,7 @@ export type InputProps = {
   selectedPlace: string;
   setSelectedPlace: any;
   height?: string;
+  setZip: any;
 }
 
 let center = {
@@ -22,7 +23,7 @@ let zoom = 15
 
 const libraries: any = ['places'];
 
-const MapComponent: React.FC<InputProps> = ({readonly = false, height='400px', selectedLocation, setSelectedLocation, getAddress, selectedPlace, setSelectedPlace}) => {
+const MapComponent: React.FC<InputProps> = ({readonly = false, height='400px', selectedLocation, setSelectedLocation, getAddress, selectedPlace, setSelectedPlace, setZip}) => {
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyBfwNcp4UHQnucX_gq0_ThusY_ceSgAtyU',
     libraries
@@ -41,6 +42,8 @@ const MapComponent: React.FC<InputProps> = ({readonly = false, height='400px', s
   const onPlaceChanged = () => {
     if (autocomplete != null) {
       const place = autocomplete.getPlace();
+      const code = place.address_components.find((data: any) => data.types.includes('postal_code'));
+      setZip(code != undefined ? code.long_name : 'No Zip Code');
       setSelectedPlace(place.formatted_address)
       setSelectedLocation({
         lat: place.geometry.location.lat(),
@@ -62,6 +65,8 @@ const MapComponent: React.FC<InputProps> = ({readonly = false, height='400px', s
 
     try {
       const { data } = await getAddress(e.latLng.lat(), e.latLng.lng());
+      const code = data.results[0].address_components.find((data: any) => data.types.includes('postal_code'));
+      setZip(code != undefined ? code.long_name : 'No Zip Code');
       setSelectedPlace(data.results[0].formatted_address);
     } catch (error) {
       console.log('Error getting the address');

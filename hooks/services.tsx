@@ -96,10 +96,12 @@ export const Services = () => {
 
     const getProvidersService = (idService: number) => axios.get(`/provider-service/${idService}`);
 
-    const findByNameProvidersService = (data: any, setList: any, setLoading: any) => {
+    const findByNameProvidersService = (data: any, setList: any, setLoading: any, setTitle: any) => {
         axios.post('/provider-service', data)
         .then((res) => {
-            setList(res.data.service.service_providers);
+            const services = res.data.service.service_providers.filter((item: any) => item.service_provider_state == true);
+            setTitle(res.data.service.service_name);
+            setList(services);
             setLoading(false);
         })
         .catch((error) => {
