@@ -38,12 +38,15 @@ export const Contracts = () => {
             toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
             setLoading(false);
         })
-    }
+    };
+
+    const getContractsProvider = (idProvider: number) => axios.get(`/contract-provider/${idProvider}`);
 
 
     return {
         getContracts,
-        updateContract
+        updateContract,
+        getContractsProvider
     }
 }
 

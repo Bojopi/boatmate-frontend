@@ -61,6 +61,7 @@ export interface Provider {
     phone:                string;
     person_name:          string;
     lastname:             string;
+    zip:                  string;
 }
 
 export interface ProviderServices {
@@ -170,4 +171,17 @@ export interface ServiceProvider {
     providerIdProvider:           number;
     serviceIdService:             number;
     provider:                     Provider;
+}
+
+export interface ContractProvider {
+    id_contract:            number;
+    contract_date:          Date;
+    contract_state:         string;
+    contract_description:   string;
+    price:                  number;
+    service_provider_state: boolean;
+    email:                  string;
+    person_name:            string;
+    lastname:               string;
+    phone:                  string;
 }

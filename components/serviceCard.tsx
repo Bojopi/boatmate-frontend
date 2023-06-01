@@ -64,11 +64,11 @@ const ServiceCardComponent: React.FC<ServiceProps> = ({service, disabled = false
                 <div className='mt-2 grid grid-cols-12 gap-2'>
                     <p className='col-span-12 md:col-span-8 bg-neutral-100 text-sm line-clamp-2 p-1 rounded-md'>{service.service_provider_description}</p>
                     <Button 
-                    type='button' 
-                    label='View Profile' 
-                    className='col-span-12 md:col-span-4 text-xs lg:text-sm font-normal lg:font-medium' 
+                    type='button'
+                    className='col-span-12 md:col-span-4 flex justify-center items-center text-xs lg:text-sm font-normal lg:font-medium' 
                     disabled={disabled} >
-                        <Link href={'/providers'} >
+                        <Link href={`/providers/${service.provider.id_provider}`} >
+                        View Profile
                         </Link>
                     </Button>
                 </div>
