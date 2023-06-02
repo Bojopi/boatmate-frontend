@@ -6,18 +6,21 @@ import type { AppProps } from 'next/app'
 import Layout from './layouts/index';
 import { MenuProvider } from '@/context/MenuContext';
 import { FormProvider } from '@/context/FormContext';
+import { SearchServiceProvider } from '@/context/SearchServiceContext';
 
 export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <FormProvider>
-        <MenuProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </MenuProvider>
-      </FormProvider>
+      <SearchServiceProvider>
+        <FormProvider>
+          <MenuProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </MenuProvider>
+        </FormProvider>
+      </SearchServiceProvider>
     </>
   )
 }

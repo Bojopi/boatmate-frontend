@@ -1,33 +1,32 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import LayoutPrincipal from '@/components/layoutPrincipal';
 import { useRouter } from 'next/router';
-import { Autocomplete, useJsApiLoader } from '@react-google-maps/api';
 import { Button } from 'primereact/button';
 import { Services } from '@/hooks/services';
-import { ServiceProvider } from '@/interfaces/interfaces';
+import { Service, ServiceProvider } from '@/interfaces/interfaces';
 import Spinner from '@/components/spinner';
 import ServiceCardComponent from '@/components/serviceCard';
 import { Auth } from '@/hooks/auth';
 import { Messages } from 'primereact/messages';
-
-const libraries: any = ['places'];
+import { Dropdown } from 'primereact/dropdown';
+import { AutoComplete, AutoCompleteChangeEvent, AutoCompleteCompleteEvent } from 'primereact/autocomplete';
+import { InputNumber } from 'primereact/inputnumber';
+import { SearchServiceContext } from '@/context/SearchServiceContext';
 
 export type SearchProps = {
   name: string;
 }
 
 const Index = () => {
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyBfwNcp4UHQnucX_gq0_ThusY_ceSgAtyU',
-    libraries
-  });
 
-  const { findByNameProvidersService } = Services();
+  const { findByNameProvidersService, getAllServices } = Services();
   const { getUserAuthenticated } = Auth();
 
-  const [autocomplete, setAutocomplete] = useState<any>(null);
-  const [selectedPlace, setSelectedPlace] = useState<string>('');
-  const [selectedLocation, setSelectedLocation] = useState<any>(null);
+  const {zip, setZip} = useContext(SearchServiceContext);
+
+  const [services, setServices] = useState<Service[]>([]);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [filteredServices, setFilteredServices] = useState<Service[]>([])
 
   const [serviceList, setServiceList] = useState<ServiceProvider[]>([])
 
@@ -35,15 +34,44 @@ const Index = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [disabled, setDisabled] = useState<boolean>(false);
+  const [inputDisabled, setInputDisabled] = useState<boolean>(false);
+
+  const order = [{option: 'name'}];
+  const [selectOrder, setSelectOrder] = useState<any>(null);
 
   const msg = useRef<any>(null);
 
   const router = useRouter();
 
-  const changeTitle = (titleData: string) => {
-    const newTitle = titleData.split('-').join(' ')
-    const data: SearchProps = {name: newTitle}
-    findByNameProvidersService(data, setServiceList, setLoading, setTitle);
+  const getServices = async () => {
+    try {
+      const response = await getAllServices();
+      const enableList = response.data.services.filter((item: Service) => item.service_state);
+      setServices(enableList);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getData = async (titleData: string) => {
+    const newTitle = titleData.split('-').join(' ');
+    let data: SearchProps = {name: newTitle};
+    try {
+      const response = await findByNameProvidersService(data);
+      if(response.status == 200) {
+        let services = response.data.service.service_providers.filter((item: ServiceProvider) => item.service_provider_state == true);
+        if(zip != null && zip != 0) {
+          services = services.filter((item: ServiceProvider) => item.provider.zip == zip);
+        }
+        setTitle(response.data.service.service_name);
+        setSelectedService(response.data.service)
+        setServiceList(services);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   }
 
   const getUser = async () => {
@@ -71,30 +99,54 @@ const Index = () => {
   useEffect(() => {
     setLoading(true);
     if(router.query.option) {
-      changeTitle(router.query.option as string);
       getUser();
+      getServices();
+      getData(router.query.option as string);
     } else {
       setTitle('No service');
       setLoading(false);
     }
-  }, [router.query.option]);
+  }, [router.query.option, zip]);
 
-  if (loadError) return <div>Error al cargar el mapa</div>;
-  if (!isLoaded) return <div></div>;
 
-  const onPlaceChanged = () => {
-    if (autocomplete != null) {
-      const place = autocomplete.getPlace();
-      setSelectedPlace(place.formatted_address);
-      setSelectedLocation({
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
-        address: place.formatted_address,
-      });
-    } else {
-        console.log('Autocomplete is not loaded yet!');
+  const searchServices = (e: AutoCompleteCompleteEvent) => {
+    let _filteredServices;
+
+    if (!e.query.trim().length) {
+        _filteredServices = [...services];
+    }
+    else {
+        _filteredServices = services.filter((service) => {
+            return service.service_name.toLowerCase().startsWith(e.query.toLowerCase());
+        });
+    }
+
+    setFilteredServices(_filteredServices);
+  }
+
+  const orderList = (orderBy: any) => {
+    let filter = [...serviceList];
+    setSelectOrder(orderBy)
+    if(orderBy) {
+      if (orderBy.option === 'name') {
+        filter = filter.sort((a: ServiceProvider, b: ServiceProvider) => {
+          return a.provider.provider_name.localeCompare(b.provider.provider_name);
+        });
+        setServiceList(filter);
+      }
     }
   };
+
+  const onClickSearch = () => {
+    console.log('aqui', selectedService, zip)
+    if(selectedService != null && zip != null) {
+      setInputDisabled(false);
+      setZip(zip);
+      router.push(`/category/${selectedService.service_name.replace(' ', '-')}`)
+    } else {
+      setInputDisabled(true);
+    }
+  }
 
   return (
     <>
@@ -106,42 +158,41 @@ const Index = () => {
           >
             <div className='w-full h-full bg-black/50 flex flex-col gap-2 justify-center items-center text-center px-5'>
               <p className='text-lg md:text-4xl font-medium text-white' style={{textShadow: '2px 2px 15px black', textTransform: 'capitalize'}} >Find top-rated {title} contractors in your area</p>
-              <p className='text-sm md:text-lg text-white' style={{textShadow: '2px 2px 10px black'}}>Enter your address and find the best offers</p>
-              <div className='p-inputgroup flex justify-center'>
-                  <span className="p-inputgroup-addon bg-white rounded-s-md border-r-0">
-                      <i className="pi pi-map-marker text-[#109EDA] text-lg font-bold"></i>
-                  </span>
-                  <Autocomplete
-                      onLoad={autocomplete => setAutocomplete(autocomplete)}
-                      onPlaceChanged={onPlaceChanged}
-                  >
-                      <input 
-                      type="text" 
-                      className='p-inputtext w-full md:w-[300px] h-12 rounded-e-md rounded-l-none border-l-0 text-sm md:text-base' 
-                      value={selectedPlace} 
-                      onChange={(e: any) => {
-                          if(e.target.value == '') {
-                              setSelectedLocation(null);
-                          }
-                          setSelectedPlace(e.target.value)
-                      }} 
-                      placeholder='Tampa, Florida' />
-                  </Autocomplete>
-              </div>
-              <Button 
-              type='button'
-              className='w-auto flex justify-center items-center py-2 border-none focus:shadow-md focus:shadow-[#6d70c7]/50 rounded-md bg-[#373A85] text-white text-sm md:text-base font-medium hover:bg-[#2a2c64]'
-              >Get Started</Button>
             </div>
           </div>
           <Messages ref={msg} />
           <div className='p-5 md:p-10'>
-            <p className='text-base md:text-lg font-medium' style={{textTransform: 'capitalize'}}>Explore our catalog of {title} based services</p>
+            <div className='w-full flex items-center justify-between search-input-group'>
+              {/* <p className='text-base md:text-lg font-medium' style={{textTransform: 'capitalize'}}>Explore our catalog of {title} based services</p> */}
+              <div className='w-[65%] md:w-[40%] p-inputgroup'>
+                <AutoComplete 
+                field='service_name' 
+                value={selectedService} 
+                suggestions={filteredServices} 
+                completeMethod={searchServices} 
+                onChange={(e: AutoCompleteChangeEvent) => setSelectedService(e.value)}
+                placeholder='Find a service'
+                className={`w-[20%] lg:w-[40%] ${inputDisabled ? 'p-invalid' : ''}`} />
+                <span className={`p-inputgroup-addon bg-white border-r-0 ${inputDisabled ? 'border-red-500' : ''}`}>
+                    <i className="pi pi-map-marker text-[#109EDA] text-sm font-bold"></i>
+                </span>
+                <InputNumber 
+                value={zip} 
+                onValueChange={(e) => setZip(e.value != undefined ? e.value : 0)} 
+                useGrouping={false} 
+                maxLength={5} 
+                placeholder='Zip code'
+                className={`input-number ${inputDisabled ? 'p-invalid': ''}`} />
+                <Button type='button' icon='pi pi-search' onClick={onClickSearch}></Button>
+              </div>
+              <Dropdown value={selectOrder} onChange={(e) => orderList(e.value)} options={order} optionLabel="option" 
+                placeholder="Order by" className="w-[30%]" showClear />
+            </div>
             <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-3 mt-5 md:mt-10 px-0 md:px-5 lg:px-20'>
               {
                 serviceList && serviceList.length > 0 ?
-                serviceList.map((item: ServiceProvider, i: number) => {
-                  return (<ServiceCardComponent key={i} service={item} disabled={disabled} ></ServiceCardComponent>)
+                serviceList.map((item: ServiceProvider) => {
+                  return (<ServiceCardComponent key={item.id_service_provider} service={item} disabled={disabled} ></ServiceCardComponent>)
                 })
                 : 
                 <div className='col-span-1 md:col-span-2 flex flex-col gap-3 justify-center items-center my-[25%] md:my-3'>
