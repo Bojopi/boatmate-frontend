@@ -119,7 +119,7 @@ const RatingIndex: React.FC = () => {
                                         provider_visible: !rating.provider_visible
                                     }
                                     setLoading(true);
-                                    changeVisible(Number(rating.id_rating), data, ratings, setRatings, toast, setLoading);
+                                    changeVisible(Number(rating.id_rating), data, filterRating, setFilterRating, toast, setLoading);
                                 }} />
                             </div>
                         </div>

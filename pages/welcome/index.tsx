@@ -5,7 +5,6 @@ import { Avatar } from 'primereact/avatar';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser, faMountainSun } from '@fortawesome/free-solid-svg-icons';
-import { faFacebookF, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { ProgressBar } from 'primereact/progressbar';
 import { Rating } from 'primereact/rating';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -21,6 +20,9 @@ import { Textarea } from '@/components/react-hook-form/textarea';
 import { Profile } from '@/interfaces/interfaces';
 import { Ratings as Rtng } from '@/hooks/rating';
 import { avgRating, calculateAllRatingPercentages } from '@/functions/rating';
+import { Portofolios } from '@/hooks/portofolio';
+import { Portofolio } from '@/interfaces/interfaces';
+import Create from './providers/portofolio/create';
 
 export type FormProps = {
     name: string;
@@ -42,6 +44,7 @@ const Welcome = () => {
     const {getRatingProvider} = Rtng();
     const {updateProfile} = Users();
     const {getAddress} = Maps();
+    const {getPortofolioProvider, postImagesPortofolio} = Portofolios();
 
     const [loading, setLoading] = useState<boolean>(false);
     const [checked, setChecked] = useState<boolean>(false);
@@ -88,6 +91,8 @@ const Welcome = () => {
     const [rating, setRating] = useState<number>(0);
     const [countRating, setCountRating] = useState<number>(0);
     const [ratingDetail, setRatingDetail] = useState<any>({});
+
+    const [portofolioList, setPortofolioList] = useState<Portofolio[]>([])
 
     const methods = useForm<FormProps>({
         defaultValues: {
@@ -145,14 +150,8 @@ const Welcome = () => {
         setUser(response.data);
         setChecked(response.data.state);
         if(response.data.role === 'PROVIDER') {
-            const res = await getRatingProvider(response.data.idProvider);
-            setCountRating(res.data.countRating)
-            const ratDetail = calculateAllRatingPercentages(res.data.rating);
-            setRatingDetail(ratDetail)
-            if(res.status == 200 && res.data.rating.length > 0) {
-                const avg = avgRating(res.data.rating);
-                setRating(Number(avg))
-            }
+            getRatings(response.data.idProvider);
+            getPortofolio(response.data.idProvider);
             setSelectedLocation({
                 lat: Number(response.data.providerLat || 0),
                 lng: Number(response.data.providerLng || 0),
@@ -160,6 +159,33 @@ const Welcome = () => {
             resetMap(response.data.providerLat || 0, response.data.providerLng || 0);
         }
         reset(response.data)
+    }
+
+    const getPortofolio = async (idProvider: number) => {
+        try {
+            const response = await getPortofolioProvider(idProvider);
+            if(response.status == 200) {
+                setPortofolioList(response.data.portofolio);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+    const getRatings = async (idProvider: number) => {
+        try {
+            const res = await getRatingProvider(idProvider);
+            setCountRating(res.data.countRating)
+            const ratDetail = calculateAllRatingPercentages(res.data.rating);
+            setRatingDetail(ratDetail)
+            if(res.status == 200 && res.data.rating.length > 0) {
+                const avg = avgRating(res.data.rating);
+                setRating(Number(avg))
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const activeEdit = (e: any) => {
@@ -460,16 +486,33 @@ const Welcome = () => {
                             <p className='font-bold'>Photos</p>
                         </div>
                         <div className='flex flex-row overflow-hidden gap-3 mt-5'>
-                            <div className='border-2 border-dashed rounded-md w-[100px] h-[100px] bg-gray-100 flex items-center justify-center shrink-0'>
-                                <Link href={''} className='pi pi-plus-circle text-[#109EDA] text-xl font-medium'></Link>
-                            </div>
-                            {Array.from({length: 7}).map((item: any, i: number) => {
-                                return (
-                                    <div key={i} className='border-2 border-dashed rounded-md w-[100px] h-[100px] bg-gray-50 flex items-center justify-center shrink-0'>
-                                        <FontAwesomeIcon icon={faMountainSun} className='text-gray-300 w-[40px]' />
-                                    </div>
-                                )
-                            })}
+                            {
+                                portofolioList.length > 0 ?
+                                 portofolioList.map((item: Portofolio, i: number) => {
+                                    if(i < 8) {
+                                        return (
+                                            <div 
+                                                key={i}
+                                                className='w-[200px] h-[200px] bg-no-repeat bg-cover bg-center border-2 rounded-md'
+                                                style={{'backgroundImage': `url(${item.portofolio_image})`}}
+                                            >
+                                                <div className='text-white bg-black/30 w-full h-full p-2 opacity-0 hover:opacity-100 transition-opacity'>
+                                                    <p className='font-medium text-sm md:text-base'>Description</p>
+                                                    <p className='text-xs md:text-sm'>{item.portofolio_description}</p>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+                                 })
+                                :
+                                Array.from({length: 7}).map((item: any, i: number) => {
+                                    return (
+                                        <div key={i} className='border-2 border-dashed rounded-md w-[100px] h-[100px] bg-gray-50 flex items-center justify-center shrink-0'>
+                                            <FontAwesomeIcon icon={faMountainSun} className='text-gray-300 w-[40px]' />
+                                        </div>
+                                    )
+                                })
+                            }
                         </div>
                         <div className='border-2 rounded-md mt-2 p-3 flex flex-row justify-between items-center gap-3'>
                             <div>
@@ -477,7 +520,8 @@ const Welcome = () => {
                                 <p className='text-xs text-gray-600' >Include photos of your work (before and after), team, workspace, or equipment.</p>
 
                             </div>
-                            <Link href={''} className='bg-[#109EDA] border-2 border-[#109EDA] rounded-md text-white font-bold text-center px-5 py-2 hover:bg-[#149ad3] hover:border-[#149ad3]' >Add photos</Link>
+                            <Create idProvider={user.idProvider} portofolio={portofolioList} setPortofolio={setPortofolioList} setLoading={setLoading} toast={toast} />
+                            {/* <Link href={''} className='bg-[#109EDA] border-2 border-[#109EDA] rounded-md text-white font-bold text-center px-5 py-2 hover:bg-[#149ad3] hover:border-[#149ad3]' >Add photos</Link> */}
                         </div>
                     </div>
 

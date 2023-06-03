@@ -9,6 +9,7 @@ import { FileUpload } from "primereact/fileupload";
 import { Tag } from "primereact/tag";
 import { Textarea } from "@/components/react-hook-form/textarea";
 import { Portofolios } from "@/hooks/portofolio";
+import { useRouter } from "next/router";
 
 export type FormProps = {
     portofolioDescription: string;
@@ -33,6 +34,8 @@ const Create: React.FC<PortofolioProps> = ({portofolio, setPortofolio, setLoadin
 
     const fileUploadProviderRef = useRef<any>(null);
 
+    const router = useRouter();
+
     const methods = useForm<FormProps>({
         defaultValues: {
             portofolioDescription: '',
@@ -42,7 +45,6 @@ const Create: React.FC<PortofolioProps> = ({portofolio, setPortofolio, setLoadin
 
     const {
         handleSubmit,
-        setError,
         reset,
         formState: {errors},
     } = methods;
@@ -116,9 +118,18 @@ const Create: React.FC<PortofolioProps> = ({portofolio, setPortofolio, setLoadin
 
     return (
         <>
-            <Button type="button" label="Update Files" outlined icon="pi pi-upload" onClick={openModal} />
+            {
+                router.pathname == '/welcome' ?
+                <Button 
+                type="button" 
+                label="Add photos" 
+                className="bg-[#109EDA] border-2 border-[#109EDA] rounded-md text-white font-bold text-center px-5 py-2 hover:bg-[#149ad3] hover:border-[#149ad3]" 
+                onClick={openModal} />
+                :
+                <Button type="button" label="Update Files" outlined icon="pi pi-upload" onClick={openModal} />
+            }
 
-            <Dialog header="New Portofolio" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
+            <Dialog header="New Portofolio" visible={visible} className="w-[90vw] md:w-[50vw]" onHide={() => setVisible(false)} footer={footerContent}>
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-1 lg:grid-cols-12 p-5 gap-3'>
                         <InputWrapper outerClassName="col-span-12">

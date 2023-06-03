@@ -33,7 +33,6 @@ const Edit: React.FC<PortofolioProps> = ({idPortofolio, toast, setLoading, porto
 
     const {
         handleSubmit,
-        setError,
         reset,
         formState: {errors},
     } = methods;
@@ -75,7 +74,7 @@ const Edit: React.FC<PortofolioProps> = ({idPortofolio, toast, setLoading, porto
             <Button type="button" icon="pi pi-pencil" text tooltip='Edit' tooltipOptions={{position: 'top'}} onClick={openModal}
             />
 
-            <Dialog header="Update Portofolio" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
+            <Dialog header="Update Portofolio" visible={visible} className="w-[90vw] md:w-[50vw]" onHide={() => setVisible(false)} footer={footerContent}>
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-1 lg:grid-cols-12 p-5 gap-3'>
                         <InputWrapper outerClassName="col-span-12">

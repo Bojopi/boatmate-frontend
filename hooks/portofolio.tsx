@@ -1,10 +1,7 @@
 import { axios } from "@/config/axios";
-import { useRouter } from "next/router";
 
 
 export const Portofolios = () => {
-
-    const router = useRouter();
 
     const getPortofolioProvider = (idProvider: any) => axios.get(`/portofolios/${idProvider}`);
 
