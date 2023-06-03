@@ -178,22 +178,6 @@ const Create: React.FC = () => {
         toast.current!.show({severity:'error', summary:'Error', detail: 'You must fill in all fields', life: 4000});
     };
 
-    const customerOptionTemplate = (option: Customer) => {
-        return (
-            <div className="flex align-items-center">
-                <div>{option.person_name ? option.person_name : ''} {option.lastname ? option.lastname : ''}</div>
-            </div>
-        );
-    };
-    
-    const selectedCustomerTemplate = (option: Customer) => {
-        return (
-            <div className="flex align-items-center">
-                <div>{option.person_name ? option.person_name : ''} {option.lastname ? option.lastname : ''}</div>
-            </div>
-        );
-    };
-
   return (
     <LayoutAdmin>
         <Spinner loading={loading} />
@@ -207,8 +191,6 @@ const Create: React.FC = () => {
                     value={customer}
                     options={customers}
                     optionLabel='person_name'
-                    itemTemplate={customerOptionTemplate}
-                    valueTemplate={selectedCustomerTemplate}
                     placeholder='Select a customer'
                     showClear
                     className='w-full'
