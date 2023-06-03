@@ -7,7 +7,7 @@ const Index = () => {
     <>
       <LayoutAdmin>
         <ErrorCard>
-          <p>After the customer responds back to the sent quotes, it will move to &quote;messages&quote; as well as &quote;pending&quote;</p>
+          <p>After the customer responds back to the sent quotes, it will move to "messages" as well as "pending"</p>
         </ErrorCard>
       </LayoutAdmin>
     </>

@@ -156,7 +156,7 @@ const ProviderServicesIndex: React.FC = () => {
 
       const descriptionTemplate = (rowData: ProviderServices) => {
         return (
-            <p className={rowData.service_provider_description ? '' : 'text-gray-400'}>{rowData.service_provider_description ? rowData.service_provider_description : 'No description'}</p>
+            <p className={rowData.service_provider_description ? 'line-clamp-2' : 'text-gray-400'}>{rowData.service_provider_description ? rowData.service_provider_description : 'No description'}</p>
         )
       }
 

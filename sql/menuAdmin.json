@@ -1,0 +1,70 @@
+[
+    {
+        "label": "Settings",
+        "url": "/welcome",
+        "icon": "pi pi-cog text-xl",
+        "items": [
+            { 
+                "label": "Profile",
+                "url": "/welcome"
+            }
+        ]
+    },
+    {
+        "label": "Users",
+        "url": "/welcome/users",
+        "icon": "pi pi-users text-xl",
+        "items": [
+            { 
+                "label": "Users",
+                "url": "/welcome/users"
+            },
+            { 
+                "label": "Roles",
+                "url": "/welcome/roles"
+            }
+        ]
+    },
+    {
+        "label": "Providers & Services",
+        "url": "/welcome/providers",
+        "icon": "pi pi-th-large text-xl",
+        "items": [
+            { 
+                "label": "Providers",
+                "url": "/welcome/providers"
+            },
+            { 
+                "label": "Services",
+                "url": "/welcome/services"
+            },
+            { 
+                "label": "Categories",
+                "url": "/welcome/categories"
+            },
+            { 
+                "label": "Ratings",
+                "url": "/welcome/ratings"
+            },
+            { 
+                "label": "Service History",
+                "url": "/welcome/service-history"
+            }
+        ]
+    },
+    {
+        "label": "Customers",
+        "url": "/welcome/customers",
+        "icon": "pi pi-star text-xl",
+        "items": [
+            { 
+                "label": "Customers",
+                "url": "/welcome/customers"
+            },
+            { 
+                "label": "Boats",
+                "url": "/welcome/boats"
+            }
+        ]
+    }
+]

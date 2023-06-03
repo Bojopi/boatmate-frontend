@@ -19,8 +19,8 @@ import { Maps } from '@/hooks/maps';
 import { Tag } from 'primereact/tag';
 import { Textarea } from '@/components/react-hook-form/textarea';
 import { Profile } from '@/interfaces/interfaces';
-import { Ratings } from '@/hooks/rating';
-import { avgRating } from '@/functions/rating';
+import { Ratings as Rtng } from '@/hooks/rating';
+import { avgRating, calculateAllRatingPercentages } from '@/functions/rating';
 
 export type FormProps = {
     name: string;
@@ -39,7 +39,7 @@ export type FormProps = {
 
 const Welcome = () => {
     const {getUserAuthenticated} = Auth();
-    const {getRatingProvider} = Ratings();
+    const {getRatingProvider} = Rtng();
     const {updateProfile} = Users();
     const {getAddress} = Maps();
 
@@ -86,6 +86,8 @@ const Welcome = () => {
         }
     );
     const [rating, setRating] = useState<number>(0);
+    const [countRating, setCountRating] = useState<number>(0);
+    const [ratingDetail, setRatingDetail] = useState<any>({});
 
     const methods = useForm<FormProps>({
         defaultValues: {
@@ -143,22 +145,19 @@ const Welcome = () => {
         setUser(response.data);
         setChecked(response.data.state);
         if(response.data.role === 'PROVIDER') {
-            const res = await getRatingProvider(response.data.uid);
-            if(res.status === 200) {
+            const res = await getRatingProvider(response.data.idProvider);
+            setCountRating(res.data.countRating)
+            const ratDetail = calculateAllRatingPercentages(res.data.rating);
+            setRatingDetail(ratDetail)
+            if(res.status == 200 && res.data.rating.length > 0) {
                 const avg = avgRating(res.data.rating);
-                setRating(Number(avg));
+                setRating(Number(avg))
             }
             setSelectedLocation({
                 lat: Number(response.data.providerLat || 0),
                 lng: Number(response.data.providerLng || 0),
             })
             resetMap(response.data.providerLat || 0, response.data.providerLng || 0);
-        } else if(response.data.role === 'CUSTOMER') {
-            setSelectedLocation({
-                lat: Number(response.data.customerLat || 0),
-                lng: Number(response.data.customerLng || 0),
-            })
-            resetMap(response.data.customerLat || 0, response.data.customerLng || 0);
         }
         reset(response.data)
     }
@@ -235,8 +234,6 @@ const Welcome = () => {
                                     {
                                         user.role === 'PROVIDER' && user.providerImage != null ?
                                         <Avatar image={user.providerImage} size='xlarge' shape="circle" />
-                                        : user.role === 'CUSTOMER' && user.image != null ?
-                                        <Avatar image={user.image} size='large' shape="circle" />
                                         : (user.role === 'ADMIN' || user.role === 'SUPERADMIN') && user.image != null ?
                                         <Avatar image={user.image} size='large' shape="circle" />
                                         : <FontAwesomeIcon icon={faCircleUser} className='w-8 h-8' style={{color: "#c2c2c2"}} />
@@ -247,7 +244,7 @@ const Welcome = () => {
                                             user.role === 'PROVIDER' ?
                                             <div className='flex flex-row gap-2 justify-start'>
                                                 <Rating value={rating} readOnly cancel={false} onIconProps={{style: {color: '#109EDA', fontSize:'12px'}}} offIconProps={{style: {fontSize:'12px'}}} />
-                                                <Link href={`/welcome/providers/ratings/${user.idProvider}`} className='text-[#109EDA] text-sm' >Ask for Reviews</Link>
+                                                <Link href={`/welcome/ratings/${user.idProvider}`} className='text-[#109EDA] text-sm' >Ask for Reviews</Link>
                                             </div>
                                             : null
                                         }
@@ -256,16 +253,16 @@ const Welcome = () => {
                                 <p id='personal' className='text-[#109EDA] font-bold cursor-pointer' onClick={activeEdit}>Edit</p>
                             </div>
 
-                            <div className='w-full flex flex-col mt-5'>
-                                <div className='w-full flex flex-row gap-5'>
-                                    <div className='w-1/2 py-2'>
+                            <div className='w-full grid grid-cols-12 mt-5'>
+                                <div className='col-span-12 grid grid-cols-12 gap-5'>
+                                    <div className='col-span-6 py-2'>
                                         <div className='font-medium flex flex-row items-center gap-2'>
                                             <i className='pi pi-user'></i>
                                             <p>Name</p>
                                         </div>
                                         <Input type='text' id='name' name='name' readonly={personalActive} />
                                     </div>
-                                    <div className='w-1/2 py-2'>
+                                    <div className='col-span-6 py-2'>
                                         <div className='font-medium flex flex-row items-center gap-2'>
                                             <i className='pi pi-user'></i>
                                             <p>Lastname</p>
@@ -276,7 +273,7 @@ const Welcome = () => {
                                 {
                                     user.role === 'PROVIDER' ?
                                     <>
-                                        <div className='w-full py-2'>
+                                        <div className='col-span-12 py-2'>
                                             <div className='font-medium flex flex-row items-center gap-2'>
                                                 <i className='pi pi-building'></i>
                                                 <p>Bussiness Name</p>
@@ -285,7 +282,7 @@ const Welcome = () => {
                                         </div>
                                         {
                                             !personalActive ?
-                                            <div className='w-full py-2'>
+                                            <div className='col-span-12 py-2'>
                                                 <div className='font-medium flex flex-row items-center gap-2'>
                                                     <i className='pi pi-image'></i>
                                                     <p>Bussiness image</p>
@@ -308,29 +305,29 @@ const Welcome = () => {
                                     </>
                                     : null
                                 }
-                                <div className={personalActive ? 'hidden' : 'py-2'}>
+                                <div className={personalActive ? 'hidden' : 'col-span-12 py-2'}>
                                     <div className='font-medium flex flex-row items-center gap-2'>
                                         <i className='pi pi-lock'></i>
                                         <p>Password</p>
                                     </div>
                                     <Input id='password' name='password' type='password' readonly={personalActive} />
                                 </div>
-                                <div className='w-full flex flex-row gap-5'>
-                                    <div className='w-[40%] py-2'>
+                                <div className='col-span-12 grid grid-cols-12 gap-5'>
+                                    <div className='col-span-12 md:col-span-5 py-2'>
                                         <div className='font-medium flex flex-row items-center gap-2'>
                                             <i className='pi pi-at'></i>
                                             <p>Email</p>
                                         </div>
                                         <Input id='email' name='email' type='email' placeholder='user@email.com' readonly={personalActive} />
                                     </div>
-                                    <div className='w-[40%] py-2'>
+                                    <div className='col-span-12 md:col-span-5 py-2'>
                                         <div className='font-medium flex flex-row items-center gap-2'>
                                             <i className='pi pi-phone'></i>
                                             <p>Phone</p>
                                         </div>
                                         <Input type='tel' id='phone' name='phone' placeholder="(999) 999-9999" readonly={personalActive} />
                                     </div>
-                                    <div className='w-[20%] py-2'>
+                                    <div className='col-span-12 md:col-span-2 py-2'>
                                         <div className='font-medium flex flex-row items-center gap-2'>
                                             <i className='pi pi-question-circle'></i>
                                             <p>State</p>
@@ -338,7 +335,7 @@ const Welcome = () => {
                                         <ToggleButton id='state' name='state' checked={checked} onChange={(e) => {setChecked(e.value)}} onLabel='Active' offLabel='Inactive' onIcon="pi pi-check" offIcon="pi pi-times" disabled={personalActive} className='w-full' />
                                     </div>
                                 </div>
-                                <div className='py-2'>
+                                <div className='col-span-12 py-2'>
                                     <div className='font-medium flex flex-row items-center gap-2'>
                                         <i className='pi pi-map-marker'></i>
                                         <p>Address</p>
@@ -353,7 +350,7 @@ const Welcome = () => {
                                 </div>
                                 {
                                     !personalActive ?
-                                    <div className='py-2'>
+                                    <div className='col-span-12 py-2'>
                                         <div className='font-medium flex flex-row items-center gap-2'>
                                             <i className='pi pi-image'></i>
                                             <p>Profile image</p>
@@ -484,7 +481,7 @@ const Welcome = () => {
                         </div>
                     </div>
 
-                    <div className='border-t-2 p-5 mb-5'>
+                    {/* <div className='border-t-2 p-5 mb-5'>
                         <p className='font-bold'>Social Media</p>
                         <div className='w-full grid grid-cols-3 gap-5 mt-5'>
                             <Link href={''} className='py-1 bg-white border-2 flex flex-row justify-center items-center gap-5 text-gray-500 rounded-md hover:bg-gray-50'>
@@ -500,41 +497,41 @@ const Welcome = () => {
                                 <p className='text-sm font-medium'>Add Twitter</p>
                             </Link>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className='p-5 mb-5'>
                         <p className='font-bold'>Reviews</p>
-                        <div className='w-full flex flex-row items-center justify-center gap-20 mt-5'>
-                            <div>
-                                <p className='text-[#00CBA4] font-bold'>0.0</p>
-                                <Rating value={0} cancel={false} readOnly offIcon={'pi pi-star-fill'} offIconProps={{style: {color: 'rgb(209, 213, 219)'}}} />
-                                <p className='text-xs'>0 reviews</p>
+                        <div className='w-full flex flex-row items-center justify-center md:gap-20 mt-5 px-5 md:px-20'>
+                            <div className='w-[40%] md:w-full'>
+                                <p className='text-[#00CBA4] font-bold'>{rating}</p>
+                                <Rating value={rating} cancel={false} readOnly offIcon={'pi pi-star-fill'} offIconProps={{style: {color: 'rgb(209, 213, 219)'}}} />
+                                <p className='text-xs'>{countRating} reviews</p>
                             </div>
-                            <div className='w-1/3 flex flex-col items-start'>
-                                <div className='w-full grid grid-cols-4 justify-items-center items-center'>
-                                    <p className='col-span-1'>5<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={0} showValue={false} className='col-span-2 h-[10px] w-full' />
-                                    <p className='col-span-1'>0%</p>
+                            <div className='w-[60%] md:w-full flex flex-col items-start'>
+                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
+                                    <p className='col-span-2'>5<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
+                                    <ProgressBar value={ratingDetail['5']} showValue={false} className='col-span-6 h-[10px] w-full' />
+                                    <p className='col-span-4'>{ratingDetail['5']}%</p>
                                 </div>
-                                <div className='w-full grid grid-cols-4 justify-items-center items-center'>
-                                    <p className='col-span-1'>4<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={0} showValue={false} className='col-span-2 h-[10px] w-full' />
-                                    <p className='col-span-1'>0%</p>
+                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
+                                    <p className='col-span-2'>4<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
+                                    <ProgressBar value={ratingDetail['4']} showValue={false} className='col-span-6 h-[10px] w-full' />
+                                    <p className='col-span-4'>{ratingDetail['4']}%</p>
                                 </div>
-                                <div className='w-full grid grid-cols-4 justify-items-center items-center'>
-                                    <p className='col-span-1'>3<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={0} showValue={false} className='col-span-2 h-[10px] w-full' />
-                                    <p className='col-span-1'>0%</p>
+                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
+                                    <p className='col-span-2'>3<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
+                                    <ProgressBar value={ratingDetail['3']} showValue={false} className='col-span-6 h-[10px] w-full' />
+                                    <p className='col-span-4'>{ratingDetail['3']}%</p>
                                 </div>
-                                <div className='w-full grid grid-cols-4 justify-items-center items-center'>
-                                    <p className='col-span-1'>2<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={0} showValue={false} className='col-span-2 h-[10px] w-full' />
-                                    <p className='col-span-1'>0%</p>
+                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
+                                    <p className='col-span-2'>2<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
+                                    <ProgressBar value={ratingDetail['2']} showValue={false} className='col-span-6 h-[10px] w-full' />
+                                    <p className='col-span-4'>{ratingDetail['2']}%</p>
                                 </div>
-                                <div className='w-full grid grid-cols-4 justify-items-center items-center'>
-                                    <p className='col-span-1'>1<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={0} showValue={false} className='col-span-2 h-[10px] w-full' />
-                                    <p className='col-span-1'>0%</p>
+                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
+                                    <p className='col-span-2'>1<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
+                                    <ProgressBar value={ratingDetail['1']} showValue={false} className='col-span-6 h-[10px] w-full' />
+                                    <p className='col-span-4'>{ratingDetail['1']}%</p>
                                 </div>
                             </div>
                         </div>
@@ -545,7 +542,7 @@ const Welcome = () => {
                                 <p className='text-xs text-gray-600' >Tell us which customers to ask for a review, and we&apos;ll send the request for you.</p>
 
                             </div>
-                            <Link href={''} className='bg-[#109EDA] border-2 border-[#109EDA] rounded-md text-white font-bold text-center px-5 py-2 hover:bg-[#149ad3] hover:border-[#149ad3] shrink-0' >Ask for reviews</Link>
+                            <Link href={`/welcome/ratings/${user.idProvider}`} className='bg-[#109EDA] border-2 border-[#109EDA] rounded-md text-white font-bold text-center px-5 py-2 hover:bg-[#149ad3] hover:border-[#149ad3] shrink-0' >Ask for reviews</Link>
                         </div>
                     </div>
                     </>

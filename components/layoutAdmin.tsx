@@ -8,54 +8,64 @@ import FooterComponentAdmin from './footerAdmin';
 import { Profile } from '@/interfaces/interfaces';
 import {useContext} from 'react';
 import { MenuContext } from '@/context/MenuContext';
+import MenuAdmin from '@/sql/menuAdmin.json';
+import MenuProvider from '@/sql/menuProvider.json';
 
 const LayoutAdmin = ({children}: any) => {
-   const {getUserAuthenticated, logout} = Auth();
+    const {getUserAuthenticated, logout} = Auth();
 
-   const {activeOption, setActiveOption, activeSideOption, setActiveSideOption} = useContext(MenuContext);
+    const {activeOption, setActiveOption, activeSideOption, setActiveSideOption} = useContext(MenuContext);
 
-   const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
-   const [user, setUser] = useState<Profile>(
-      {
-          uid:                 0,
-          email:               '',
-          state:               false,
-          google:               false,
-          idPerson:            0,
-          name:                '',
-          lastname:            '',
-          phone:               '',
-          image:               '',
-          idRole:              0,
-          role:                '',
-          idProvider:          0,
-          providerName:        '',
-          providerImage:       '',
-          providerDescription: '',
-          providerLat:         '',
-          providerLng:         '',
-          idCustomer:          '',
-          customerLat:         '',
-          customerLng:         '',
-          iat:                 0,
-          exp:                 0,
-      }
-  );
+    const [menuList, setMenuList] = useState<any[]>([]);
 
-  useEffect(() => {
-   setDataUser();
-}, []);
+    const [user, setUser] = useState<Profile>(
+        {
+            uid:                 0,
+            email:               '',
+            state:               false,
+            google:               false,
+            idPerson:            0,
+            name:                '',
+            lastname:            '',
+            phone:               '',
+            image:               '',
+            idRole:              0,
+            role:                '',
+            idProvider:          0,
+            providerName:        '',
+            providerImage:       '',
+            providerDescription: '',
+            providerLat:         '',
+            providerLng:         '',
+            idCustomer:          '',
+            customerLat:         '',
+            customerLng:         '',
+            iat:                 0,
+            exp:                 0,
+        }
+    );
 
-  const setDataUser = async () => {
-   const response = await getUserAuthenticated();
-   setUser(response.data);
-}
+    useEffect(() => {
+        setDataUser();
+    }, []);
 
-   const logoutSession = async () => {
+    const setDataUser = async () => {
+        const response = await getUserAuthenticated();
+        setUser(response.data);
+
+        if(response.data.role === 'ADMIN' || response.data.role === "SUPERADMIN") {
+            setMenuList(MenuAdmin);
+        } else if(response.data.role === "PROVIDER") {
+            setMenuList(MenuProvider);
+        }
+    }
+
+    const logoutSession = async () => {
       googleLogout();
       logout(setLoading);
-  };
+    };
 
     return (
         <>
@@ -66,15 +76,15 @@ const LayoutAdmin = ({children}: any) => {
             <link rel="icon" type="image/png" href="/Biggest_BoatMate-removebg-preview.ico" />
         </Head>
         <MenuBarSupAdmin
-         user={user} setLoading={setLoading} logout={logoutSession} activeOption={activeOption} setActiveOption={setActiveOption} setActiveSideOption={setActiveSideOption}
+         user={user} setLoading={setLoading} logout={logoutSession} activeOption={activeOption} setActiveOption={setActiveOption} setActiveSideOption={setActiveSideOption} menuList={menuList}
         />
-        <div className='w-full h-screen flex flex-row items-start justify-between gap-5 px-5 pb-5 pt-36 lg:pt-44 bg-neutral-100'>
-            <SideBarComponent user={user} activeOption={activeOption} activeSideOption={activeSideOption} setActiveSideOption={setActiveSideOption} />
+        <div className='w-full h-screen flex flex-row items-start justify-between gap-5 px-5 pb-5 pt-24 md:pt-44 bg-neutral-100'>
+            <SideBarComponent user={user} activeOption={activeOption} activeSideOption={activeSideOption} setActiveSideOption={setActiveSideOption} menuList={menuList} />
             <main className='w-full min-h-[360px] max-h-full h-full overflow-auto bg-white rounded-md shadow-md'>
                {children}
             </main>
         </div>
-        <FooterComponentAdmin />
+        <FooterComponentAdmin user={user} />
         </>
      );
 }

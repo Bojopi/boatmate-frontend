@@ -142,7 +142,7 @@ const Index = () => {
     if(selectedService != null && zip != null) {
       setInputDisabled(false);
       setZip(zip);
-      router.push(`/category/${selectedService.service_name.replace(' ', '-')}`)
+      router.push(`/category/${selectedService.service_name.replace(' ', '-').toLowerCase()}`)
     } else {
       setInputDisabled(true);
     }
@@ -163,7 +163,6 @@ const Index = () => {
           <Messages ref={msg} />
           <div className='p-5 md:p-10'>
             <div className='w-full flex items-center justify-between search-input-group'>
-              {/* <p className='text-base md:text-lg font-medium' style={{textTransform: 'capitalize'}}>Explore our catalog of {title} based services</p> */}
               <div className='w-[65%] md:w-[40%] p-inputgroup'>
                 <AutoComplete 
                 field='service_name' 

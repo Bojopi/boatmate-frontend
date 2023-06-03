@@ -80,7 +80,7 @@ const Edit: React.FC<RoleProps> = ({idProvider, idService, serviceList, setServi
             <Button type="button" icon="pi pi-pencil" className="p-button-success" text tooltip='Edit' onClick={openModal}
             />
 
-            <Dialog header="Edit Service" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
+            <Dialog header="Edit Service" visible={visible} className="w-[90vw] md:w-[50vw]" onHide={() => setVisible(false)} footer={footerContent}>
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-1 lg:grid-cols-12 p-5 gap-3'>
                         <InputWrapper outerClassName="col-span-12">

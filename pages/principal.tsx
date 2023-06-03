@@ -75,8 +75,8 @@ const Principal = () => {
   return (
     <>
         <SectionTitle
-            title1="Maximizing connectivity"
-            title2="in the boating industry"
+            title1="Connect with Marine Service"
+            title2="Pros in your area."
             btnLabel="Learn More"
             img="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/54c3355d-4b60-4ed9-a168-e45abec1ea61/nicol-JrMzz7jUD5s-unsplash.png"
         />

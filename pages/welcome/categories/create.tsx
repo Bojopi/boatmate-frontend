@@ -86,7 +86,7 @@ const Create: React.FC<CategoryProps> = ({idCategory = 0, categories, setCategor
                 />
             }
 
-            <Dialog header={idCategory === 0 ? "New Category" : "Edit Category"} visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
+            <Dialog header={idCategory === 0 ? "New Category" : "Edit Category"} visible={visible} className="w-[90vw] md:w-[50vw]" onHide={() => setVisible(false)} footer={footerContent}>
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-1 lg:grid-cols-12 p-5 gap-3'>
                         <InputWrapper outerClassName="col-span-12">

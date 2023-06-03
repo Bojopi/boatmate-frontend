@@ -143,7 +143,7 @@ export interface Portofolio {
     providerId:             number;
 }
 
-export interface Rating {
+export interface Ratings {
     id_rating:                    number;
     rating:                       number;
     review:                       string;

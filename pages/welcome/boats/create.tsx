@@ -178,19 +178,37 @@ const Create: React.FC = () => {
         toast.current!.show({severity:'error', summary:'Error', detail: 'You must fill in all fields', life: 4000});
     };
 
+    const customerOptionTemplate = (option: Customer) => {
+        return (
+            <div className="flex align-items-center">
+                <div>{option.person_name} {option.lastname}</div>
+            </div>
+        );
+    };
+    
+    const selectedCustomerTemplate = (option: Customer) => {
+        return (
+            <div className="flex align-items-center">
+                <div>{option.person_name} {option.lastname}</div>
+            </div>
+        );
+    };
+
   return (
     <LayoutAdmin>
         <Spinner loading={loading} />
         <Toast ref={toast} />
         <FormProvider {...methods}>
             <h2 className='w-full text-lg font-medium border-b-2 p-5 shadow-sm'>{router.query.id ? 'Edit Boat' : 'Create Boat'}</h2>
-            <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-1 lg:grid-cols-12 px-10 py-5 gap-3'>
-                <InputWrapper outerClassName='col-span-6'>
+            <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-12 px-10 py-5 gap-3'>
+                <InputWrapper outerClassName='col-span-12 md:col-span-6'>
                     <Label id='id_customer'>Select a customer</Label>
                     <Dropdown
                     value={customer}
                     options={customers}
                     optionLabel='person_name'
+                    itemTemplate={customerOptionTemplate}
+                    valueTemplate={selectedCustomerTemplate}
                     placeholder='Select a customer'
                     showClear
                     className='w-full'
@@ -199,7 +217,7 @@ const Create: React.FC = () => {
                     />
                 </InputWrapper>
 
-                <InputWrapper outerClassName='col-span-6'>
+                <InputWrapper outerClassName='col-span-12 md:col-span-6'>
                     <Label id='type'>Type:</Label>
                     <Input
                     id='type'
@@ -238,7 +256,7 @@ const Create: React.FC = () => {
                     suffix=" in" />
                 </InputWrapper>
 
-                <InputWrapper outerClassName='col-span-6'>
+                <InputWrapper outerClassName='col-span-12 md:col-span-6'>
                     <Label id='model'>Model:</Label>
                     <Input
                     id='model'
@@ -254,7 +272,7 @@ const Create: React.FC = () => {
                     )}
                 </InputWrapper>
 
-                <InputWrapper outerClassName='col-span-6'>
+                <InputWrapper outerClassName='col-span-12 md:col-span-6'>
                     <Label id='brand'>Brand:</Label>
                     <Input
                     id='brand'
@@ -270,7 +288,7 @@ const Create: React.FC = () => {
                     )}
                 </InputWrapper>
 
-                <InputWrapper outerClassName='col-span-6'>
+                <InputWrapper outerClassName='col-span-12 md:col-span-6'>
                     <Label id='modelMotor'>Model motor:</Label>
                     <Input
                     id='modelMotor'
@@ -286,7 +304,7 @@ const Create: React.FC = () => {
                     )}
                 </InputWrapper>
 
-                <InputWrapper outerClassName='col-span-6'>
+                <InputWrapper outerClassName='col-span-12 md:col-span-6'>
                     <Label id='brandMotor'>Brand motor:</Label>
                     <Input
                     id='brandMotor'

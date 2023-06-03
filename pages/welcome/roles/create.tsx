@@ -3,7 +3,6 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Roles } from "@/hooks/roles";
 import { FormProvider, useForm } from "react-hook-form";
-import { useRouter } from "next/router";
 import { InputWrapper } from '../../../components/react-hook-form/input-wrapper';
 import { Label } from "@/components/react-hook-form/label";
 import { Input } from "@/components/react-hook-form/input";
@@ -25,8 +24,6 @@ const Create: React.FC<RoleProps> = ({idRole = 0, roles, setRoles, setLoading, t
     const {createRole, show, updateRole} = Roles();
 
     const [visible, setVisible] = useState(false);
-
-    const router = useRouter();
 
     const methods = useForm<FormProps>({
         defaultValues: {
@@ -92,9 +89,9 @@ const Create: React.FC<RoleProps> = ({idRole = 0, roles, setRoles, setLoading, t
                 />
             }
 
-            <Dialog header={idRole === 0 ? 'New Role' : 'Edit Role'} visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
+            <Dialog header={idRole === 0 ? 'New Role' : 'Edit Role'} visible={visible} className="w-[90vw] md:w-[50vw]" onHide={() => setVisible(false)} footer={footerContent}>
                 <FormProvider {...methods}>
-                    <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-1 lg:grid-cols-12 p-5 gap-3'>
+                    <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-12 p-5 gap-3'>
                         <InputWrapper outerClassName="col-span-12">
                             <Label id="roleDescription">Role name</Label>
                             <Input 

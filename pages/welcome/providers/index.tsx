@@ -131,6 +131,12 @@ const ProvidersIndex: React.FC = () => {
             <p>{rowData.person_name} {rowData.lastname}</p>
         )
     }
+    
+    const descriptionTemplate = (rowData: Provider) => {
+        return (
+            <p className={rowData.provider_description ? 'line-clamp-2' : 'text-gray-400'}>{rowData.provider_description ? rowData.provider_description : 'No description'}</p>
+        )
+    }
 
     const actionsBodyTemplate = (rowData: Provider) => {
         return (
@@ -213,7 +219,7 @@ const ProvidersIndex: React.FC = () => {
                     className='min-h-full'>
                 <Column field="provider_name" header="Provider Name" body={providerBodyTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
                 <Column field="person_name" header="Owner's name" body={ownerBodyTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-                <Column field="provider_description" header="Description" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
+                <Column field="provider_description" header="Description" body={descriptionTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
                 <Column field="profile_state" header="State" filterMenuStyle={{ width: '6rem' }} style={{ minWidth: '6rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
                 <Column field="email" header="Email" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
                 <Column field="phone" header="Phone" filter filterMenuStyle={{ width: '10rem' }} style={{ minWidth: '10rem' }} />

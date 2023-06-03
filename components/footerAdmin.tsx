@@ -2,18 +2,21 @@ import { faFacebookF, faInstagram, faPinterestP, faTwitter, faYoutube } from "@f
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 
+export type FooterProps = {
+    user: any
+}
 
-export default function FooterComponentAdmin() {
+const FooterComponentAdmin: React.FC<FooterProps> = ({user}) => {
     return ( 
         <footer className="w-full p-5 lg:p-10 bg-gray-200">
             <div className="w-full">
                 <div className="flex flex-row justify-between border-b-2 border-b-gray-400">
-                    <div className="flex flex-row gap-40">
+                    <div className="flex flex-row gap-10 md:gap-40">
                         <div className="flex flex-col">
                             <p className="text-sm lg:text-base font-bold mb-5">BoatMate</p>
-                            <Link href={''} className="text-xs lg:text-sm mb-1">Profile</Link>
-                            <Link href={''} className="text-xs lg:text-sm mb-1">Leads</Link>
-                            <Link href={''} className="text-xs lg:text-sm mb-1">Reviews</Link>
+                            <Link href={'/welcome'} className="text-xs lg:text-sm mb-1">Profile</Link>
+                            <Link href={'/welcome/leads'} className="text-xs lg:text-sm mb-1">Leads</Link>
+                            <Link href={`/welcome/ratings/${user.idProvider}`} className="text-xs lg:text-sm mb-1">Reviews</Link>
                         </div>
                         <div className="flex flex-col">
                             <p className="text-sm lg:text-base font-bold mb-5">Settings & Support</p>
@@ -28,11 +31,11 @@ export default function FooterComponentAdmin() {
                             <p className="text-xs lg:text-sm mb-1">support@boatmate.com</p>
                         </div>
                         <div className="mb-10 lg:mb-20 flex flex-row gap-3">
-                            <Link href={'/admin'} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faTwitter} /></Link>
-                            <Link href={'/admin'} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faFacebookF} /></Link>
-                            <Link href={'/admin'} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faPinterestP} /></Link>
-                            <Link href={'/admin'} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faYoutube} /></Link>
-                            <Link href={'/admin'} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faInstagram} /></Link>
+                            <Link href={''} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faTwitter} /></Link>
+                            <Link href={''} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faFacebookF} /></Link>
+                            <Link href={''} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faPinterestP} /></Link>
+                            <Link href={''} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faYoutube} /></Link>
+                            <Link href={''} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faInstagram} /></Link>
                         </div>
                     </div>
                 </div>
@@ -53,3 +56,5 @@ export default function FooterComponentAdmin() {
         </footer>
      );
 }
+
+export default FooterComponentAdmin

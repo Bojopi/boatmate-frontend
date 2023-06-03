@@ -11,6 +11,7 @@ import { Rating } from 'primereact/rating';
 import { Ratings } from '@/hooks/rating';
 import { avgRating } from '@/functions/rating';
 import { Maps } from '@/hooks/maps';
+import { useRouter } from 'next/router';
 
 export type MenuProps = {
     user: Profile;
@@ -19,6 +20,7 @@ export type MenuProps = {
     activeOption: any;
     setActiveOption: any;
     setActiveSideOption: any;
+    menuList: any;
 }
 
 const MenuBarSupAdmin: React.FC<MenuProps> = ({
@@ -27,7 +29,7 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
     setLoading,
     activeOption,
     setActiveOption,
-    setActiveSideOption
+    menuList
 }) => {
 
     const { getRatingProvider } = Ratings();
@@ -36,7 +38,12 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
     const [rating, setRating] = useState<number>(0);
     const [address, setAddress] = useState<string>('');
 
+    const [menus, setMenus] = useState<any>([]);
+
+    const router = useRouter();
+
     const menu = useRef<any>(null);
+    const menuPhone = useRef<any>(null);
     const items: any[] = [
         {
             template: (item: any, options: any) => {
@@ -44,6 +51,7 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
                     <button onClick={() => {
                         setLoading(true);
                         logout(setLoading);
+                        setActiveOption(0);
                     }} className='w-full px-3 py-1 flex flex-row items-center gap-3 hover:bg-gray-100'>
                         <i className='pi pi-sign-out'></i>
                         <p>Sign out</p>
@@ -51,22 +59,56 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
                 )
             }
         }
-    ]
+    ];
+
+    const fillItems = () => {
+        let items: any[] = [
+            { 
+                template: (item: any, options: any) => {
+                    return (
+                        <button onClick={() => {
+                            setLoading(true);
+                            logout(setLoading);
+                            setActiveOption(0);
+                        }} className='w-full px-3 py-1 flex flex-row items-center gap-3 hover:bg-gray-100'>
+                            <i className='pi pi-sign-out'></i>
+                            <p>Sign out</p>
+                        </button>
+                    )
+                }
+            },
+            { separator: true},
+            ...menuList.map((item: any) => {
+                item.items.map((child: any) => {
+                    if(child.label == 'Ratings') {
+                        child.url = child.url.replace('[idProvider]', String(user.idProvider))
+                    } 
+                    return child
+                })
+                const { url, icon, ...rest} = item;
+                return rest;
+            })
+        ]
+
+        setMenus(items);
+    }
 
     useEffect(() => {
-        if(user.role === 'PROVIDER') {
+        validateRoute();
+        fillItems();
+        if(user.role === "PROVIDER") {
             calcRating();
             getAddressMap();
         }
     }, [user])
 
-    const start = <Link href={'/admin'} className='flex flex-row items-end'>
+    const start = <Link href={'/welcome'} className='flex flex-row items-end'>
         <img
         alt="logo"
         src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
         className="mr-2 h-10 lg:h-20">
         </img>
-        <p className='text-[#373A85] text-lg font-bold -mb-1'>Ads</p>
+        <p className='text-[#373A85] text-xs md:text-lg font-bold mb-0 md:-mb-1'>Ads</p>
     </Link>
 
     const end = <div className='flex flex-col items-center'>
@@ -78,8 +120,10 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
                     :
                     <FontAwesomeIcon icon={faCircleUser} className='w-8 h-8' style={{color: "#c2c2c2"}} />
             }
-            <TieredMenu model={items} popup ref={menu} className='mt-1' />
-            <Button rounded text icon="pi pi-angle-down" className='text-[#109EDA] shrink-0' onClick={(e) => menu.current.toggle(e)} />
+            <TieredMenu model={items} popup ref={menu} className='mt-1 hidden md:block' />
+            <Button rounded text icon="pi pi-angle-down" className='text-[#109EDA] shrink-0 hidden md:block' onClick={(e) => menu.current.toggle(e)} />
+            <TieredMenu model={menus} popup ref={menuPhone} className='mt-1 block md:hidden' breakpoint="767px" />
+            <Button rounded text icon="pi pi-angle-down" className='text-[#109EDA] shrink-0 block md:hidden' onClick={(e) => menuPhone.current.toggle(e)} />
         </div>
         <p className='text-[#109EDA] text-sm font-semibold cursor-default w-full text-right' >{user.name} {user.lastname}</p>
     </div>
@@ -99,90 +143,62 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
         }
     }
 
-    const handleOptionClick = (option: string) => {
-        setActiveOption(option);
+    const validateRoute = () => {
+        menuList.map((item: any, i: number) => {
+            item.items.map((child: any) => {
+                if(router.pathname == child.url) {
+                    setActiveOption(i);
+                }
+                else {
+                    if(child.items != null) {
+                        child.items.map((items: any) => {
+                            if(router.pathname == items.url) {
+                                setActiveOption(i);
+                            } else {
+                                if(router.pathname.split('[').length > 1) {
+                                    if(items.url.includes(router.pathname.split('[')[0])) {
+                                        setActiveOption(i);
+                                    }
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+        })
     }
 
   return (
     <div className="fixed w-full z-10">
         <Menubar start={start} end={end} className="bg-white shadow-md z-10 lg:px-[10%] rounded-none" />
-        <div className='bg-gray-200 shadow-sm lg:px-[10%] py-2'>
-            {
-                user.role == 'ADMIN' || user.role == 'SUPERADMIN' ?
-                <div className='flex flex-row gap-10 items-center'>
-                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'welcome' ? 'active-item-list' : null}`}>
-                        <Link href="/welcome" legacyBehavior>
-                            <a className='flex flex-col items-center' onClick={() => {handleOptionClick('welcome'); setActiveSideOption('profiles')}}>
-                                <i className='pi pi-cog text-xl'></i>
-                                <p className='text-sm'>Settings</p>
-                            </a>
-                        </Link>
-                    </div>
-                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'users' ? 'active-item-list' : null}`} >
-                        <Link href="/welcome/users" legacyBehavior>
-                            <a className='flex flex-col items-center' onClick={() => {handleOptionClick('users'); setActiveSideOption('users')}}>
-                                <i className='pi pi-users text-xl'></i>
-                                <p className='text-sm'>Users</p>
-                            </a>
-                        </Link>
-                    </div>
-                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'providers' ? 'active-item-list' : null}`} >
-                        <Link href="/welcome/providers" legacyBehavior>
-                            <a className='flex flex-col items-center' onClick={() => {handleOptionClick('providers'); setActiveSideOption('providers')}}>
-                                <i className='pi pi-th-large text-xl'></i>
-                                <p className='text-sm'>Providers & Services</p>
-                            </a>
-                        </Link>
-                    </div>
-                    <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'customers' ? 'active-item-list' : null}`} >
-                        <Link href="/welcome/customers" legacyBehavior>
-                            <a className='flex flex-col items-center' onClick={() => {handleOptionClick('customers'); setActiveSideOption('customers')}}>
-                                <i className='pi pi-star text-xl'></i>
-                                <p className='text-sm'>Customers</p>
-                            </a>
-                        </Link>
-                    </div>
-                </div>
+        <div className='bg-gray-200 shadow-sm md:px-[10%] md:py-2'>
+            <div className={`${user.role == 'PROVIDER' ? 'flex justify-between items-center' : ''}`}>
+                <div className='md:flex flex-row gap-10 items-center hidden'>
+                    {
+                        menuList.map((item: any, i: number) => {
+                            return (
+                                <div key={i} className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == i ? 'active-item-list' : null}`} onClick={(e: any) => setActiveOption(i)} >
+                                    <Link href={item.label == 'Reviews' ? item.url.replace('[idProvider]', String(user.idProvider)) : item.url} legacyBehavior>
+                                        <a className='flex flex-col items-center' >
+                                            <i className={item.icon}></i>
+                                            <p className='text-sm'>{item.label}</p>
+                                        </a>
+                                    </Link>
+                                </div>
+                            )
+                        })
+                    }
 
-                : user.role == 'PROVIDER' ?
-                <div className='flex justify-between items-center'>
-                    <div className='flex flex-row gap-10 items-center'>
-                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'welcome' ? 'active-item-list' : null}`}>
-                            <Link href="/welcome" legacyBehavior>
-                                <a className='flex flex-col items-center' onClick={() => {handleOptionClick('welcome'); setActiveSideOption('profiles')}}>
-                                    <i className='pi pi-user text-xl'></i>
-                                    <p className='text-sm'>Profile</p>
-                                </a>
-                            </Link>
-                        </div>
-                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'leads' ? 'active-item-list' : null}`}>
-                            <Link href="/welcome/leads" legacyBehavior>
-                                <a className='flex flex-col items-center' onClick={() => {handleOptionClick('leads'); setActiveSideOption('leads')}}>
-                                    <i className='pi pi-inbox text-xl'></i>
-                                    <p className='text-sm'>Leads</p>
-                                </a>
-                            </Link>
-                        </div>
-                        <div className={`text-gray-500 hover:text-gray-800 cursor-pointer item-list ${activeOption == 'reviews' ? 'active-item-list' : null}`}>
-                            <Link href={`/welcome/ratings/${user.idProvider}`} legacyBehavior>
-                                <a className='flex flex-col items-center' onClick={() => {handleOptionClick('reviews'); setActiveSideOption('reviews')}}>
-                                    <i className='pi pi-star text-xl'></i>
-                                    <p className='text-sm'>Reviews</p>
-                                </a>
-                            </Link>
-                        </div>
-                    </div>
-                    <div>
-                        <p className='text-xs'>{user.providerName}</p>
-                        <div className='flex flex-row gap-2 justify-start'>
-                            <Rating value={rating} readOnly cancel={false} onIconProps={{style: {color: 'rgb(107, 114, 128)'}}} />
-                            <p className='text-sm'>{rating == 0 ? 'N/A' : rating}</p>
-                        </div>
-                        <p className='text-xs font-medium'>{address}</p>
-                    </div>
                 </div>
-                : null
-            }
+                <div className={`${user.role == 'PROVIDER' ? 'block pl-5' : 'hidden'}`}>
+                    <p className='text-xs'>{user.providerName}</p>
+                    <div className='flex flex-row gap-2 justify-start'>
+                        <Rating value={rating} readOnly cancel={false} onIconProps={{style: {color: 'rgb(107, 114, 128)'}}} />
+                        <p className='text-sm'>{rating == 0 ? 'N/A' : rating}</p>
+                    </div>
+                    <p className='text-xs font-medium'>{address}</p>
+                </div>
+            </div>
         </div>
     </div>
   )

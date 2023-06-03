@@ -88,7 +88,6 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
 
     const {
         handleSubmit,
-        setError,
         reset,
         formState: {errors},
     } = methods;
@@ -180,8 +179,8 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
         <Toast ref={toast} />
         <FormProvider {...methods}>
             <h2 className='w-full text-lg font-medium border-b-2 p-5 shadow-sm'>{router.query.id ? 'Edit User' : 'Create User'}</h2>
-            <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-1 lg:grid-cols-12 p-5 gap-3'>
-                <div className='col-span-2'>
+            <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-12 p-5 gap-3'>
+                <div className='col-span-4 md:col-span-2'>
                     <Label id='perImage'>Profile Image</Label>
                     <div className='relative h-20'>
                         <div className='absolute top-0 left-0 bg-gray-300 hover:bg-none rounded-full w-20 h-20 flex justify-center items-center'>
@@ -192,16 +191,16 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
                             }
                         </div>
                         <Tooltip target={'.image-new'}/>
-                        <div 
+                        <div
                         className='image-new absolute top-0 left-0 bg-none text-transparent hover:text-gray-50 hover:bg-gray-500/50 rounded-full w-20 h-20 flex justify-center items-center p-2 cursor-pointer'
                         data-pr-tooltip="Upload new image"
                         data-pr-position="right"
                         >
                             <div className='relative w-full h-full'>
-                                <input 
-                                type="file" 
-                                name="personImage" 
-                                id="personImage" 
+                                <input
+                                type="file"
+                                name="personImage"
+                                id="personImage"
                                 onChange={(e) => {
                                     console.log(e)
                                     setImagePerson(e.target.files![0])
@@ -219,7 +218,7 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
                         : null
                     }
                 </div>
-                <InputWrapper outerClassName='col-span-5'>
+                <InputWrapper outerClassName='col-span-8 md:col-span-5'>
                     <Label id='personName'>Name</Label>
                     <Input type='text' id='personName' name='personName' placeholder='Alice' />
                     {errors.personName?.message && (
@@ -227,7 +226,7 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
                     )}
                 </InputWrapper>
 
-                <InputWrapper outerClassName='col-span-5'>
+                <InputWrapper outerClassName='col-span-12 md:col-span-5'>
                     <Label id='lastname'>Lastname</Label>
                     <Input type='text' id='lastname' name='lastname' placeholder='Scooter' />
                     {errors.lastname?.message && (
@@ -235,7 +234,7 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
                     )}
                 </InputWrapper>
 
-                <InputWrapper outerClassName='col-span-6'>
+                <InputWrapper outerClassName='col-span-12 md:col-span-6'>
                     <Label id='email'>Email</Label>
                     <Input type='email' id='email' name='email' placeholder='tugrp@example.com' />
                     {errors.email?.message && (
@@ -243,7 +242,7 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
                     )}
                 </InputWrapper>
 
-                <InputWrapper outerClassName='col-span-6'>
+                <InputWrapper outerClassName='col-span-12 md:col-span-6'>
                     <Label id='password'>Password</Label>
                     <Input type='password' id='password' name='password' placeholder='********' />
                     {errors.password?.message && (
@@ -271,17 +270,17 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
 
                 <InputWrapper outerClassName='col-span-12'>
                     <Label id='roleId'>Role</Label>
-                    <Dropdown 
+                    <Dropdown
                     value={role}
                     options={roles}
                     optionLabel='name'
                     placeholder='Select a role'
-                    showClear 
+                    showClear
                     className='w-full'
                     onChange={(e) => {setRole(e.target.value)}}
                     />
                 </InputWrapper>
-                
+
                 {
                     role?.code === '3' ?
                     <>
@@ -301,7 +300,7 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
                             placeholder='Add a description of your business'
                             />
                         </InputWrapper>
-                        
+
                         <div className='col-span-12'>
                             <div className='font-medium flex flex-row items-center gap-2'>
                                 <i className='pi pi-image'></i>

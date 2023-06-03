@@ -3,8 +3,8 @@ import React, {useState, useEffect, useRef} from 'react'
 import { DataView } from 'primereact/dataview';
 import { useRouter } from 'next/router';
 import { Toast } from 'primereact/toast';
-import { Rating } from '@/interfaces/interfaces';
-import { Ratings } from '@/hooks/rating';
+import { Ratings } from '@/interfaces/interfaces';
+import { Ratings as Rtng } from '@/hooks/rating';
 import { Avatar } from 'primereact/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-regular-svg-icons';
@@ -16,12 +16,12 @@ import { isSameDay, isWithinInterval, setHours, setMinutes, setSeconds, toDate }
 import Edit from './edit';
 
 const RatingIndex: React.FC = () => {
-    const { getRatingProvider, changeVisible } = Ratings();
+    const { getRatingProvider, changeVisible } = Rtng();
 
     const router = useRouter();
 
-    const [ratings, setRatings] = useState<Rating[]>([]);
-    const [filterRating, setFilterRating] = useState<Rating[]>([]);
+    const [ratings, setRatings] = useState<Ratings[]>([]);
+    const [filterRating, setFilterRating] = useState<Ratings[]>([]);
 
     const [dateIni, setDateIni] = useState<Date | null>(null);
     const [dateEnd, setDateEnd] = useState<Date | null>(null);
@@ -51,14 +51,14 @@ const RatingIndex: React.FC = () => {
         const end = setSeconds(setMinutes(setHours(new Date(endDate), 23), 59), 59);
 
         if(initDate != null && endDate != null) {
-            const listRatings = ratings.filter((item: Rating) => {
+            const listRatings = ratings.filter((item: Ratings) => {
                 const date = new Date(item.rating_date)
                 return isWithinInterval(toDate(date), {start: toDate(init), end: toDate(end)})
             })
 
             setFilterRating(listRatings)
         } else if(initDate || endDate) {
-            const listRatings = ratings.filter((item: Rating) => {
+            const listRatings = ratings.filter((item: Ratings) => {
                 const date = new Date(item.rating_date)
                 return isSameDay(toDate(date), toDate(init || end))
             })
@@ -69,7 +69,7 @@ const RatingIndex: React.FC = () => {
         }
     }
 
-    const itemTemplate = (rating: Rating) => {
+    const itemTemplate = (rating: Ratings) => {
         return (
             <div className="w-full p-3">
                 <div className="w-full border border-gray-300 rounded-md shadow-md">
@@ -127,9 +127,9 @@ const RatingIndex: React.FC = () => {
 
     const header = () => {
         return (
-            <div className='flex justify-between items-center py-2'>
-                <p className='uppercase font-bold'>Ratings</p>
-                <div className='flex items-center gap-3'>
+            <div className='flex justify-between items-center gap-3 py-2'>
+                <p className='uppercase font-bold text-sm md:text-base'>Ratings</p>
+                <div className='flex items-center gap-1 md:gap-3'>
                     <span className="p-float-label">
                         <Calendar inputId="start_date" value={dateIni} onChange={(e: any) => setDateIni(e.value)} />
                         <label htmlFor="start_date" className='text-sm'>Start date</label>

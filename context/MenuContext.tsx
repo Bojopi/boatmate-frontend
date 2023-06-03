@@ -1,22 +1,22 @@
 import { ReactNode, createContext, useState } from 'react';
 
 interface MenuContextProps {
-  activeOption: string;
-  setActiveOption: (option: string) => void;
-  activeSideOption: string;
-  setActiveSideOption: (option: string) => void;
+  activeOption: number;
+  setActiveOption: (option: number) => void;
+  activeSideOption: number;
+  setActiveSideOption: (option: number) => void;
 }
 
 export const MenuContext = createContext<MenuContextProps>({
-  activeOption: '',
+  activeOption: 0,
   setActiveOption: () => {},
-  activeSideOption: '',
+  activeSideOption: 0,
   setActiveSideOption: () => {},
 });
 
 export const MenuProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [activeOption, setActiveOption] = useState<string>('welcome');
-  const [activeSideOption, setActiveSideOption] = useState<string>('profiles');
+  const [activeOption, setActiveOption] = useState<number>(0);
+  const [activeSideOption, setActiveSideOption] = useState<number>(0);
 
   return (
     <MenuContext.Provider value={{ activeOption, setActiveOption, activeSideOption, setActiveSideOption }}>

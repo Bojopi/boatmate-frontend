@@ -166,7 +166,7 @@ const CustomersIndex: React.FC = () => {
                 <Column field="email" header="Email" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
                 <Column field="phone" header="Phone Number" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
                 <Column field="state" header="State" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
-                <Column header='Actions' body={actionsBodyTemplate} style={{ width: '10rem', textAlign: 'center' }} />
+                {/* <Column header='Actions' body={actionsBodyTemplate} style={{ width: '10rem', textAlign: 'center' }} /> */}
             </DataTable>
         </div>
     </LayoutAdmin>

@@ -1,0 +1,60 @@
+[
+    {
+        "label": "Profile",
+        "url": "/welcome",
+        "icon": "pi pi-user text-xl",
+        "items": [
+            { 
+                "label": "Profile",
+                "url": "/welcome"
+            }
+        ]
+    },
+    {
+        "label": "Leads",
+        "url": "/welcome/leads",
+        "icon": "pi pi-inbox text-xl",
+        "items": [
+            { 
+                "label": "Messages",
+                "url": "/welcome/leads"
+            },
+            { 
+                "label": "Applications",
+                "url": "/welcome/applications"
+            },
+            { 
+                "label": "Opportunities",
+                "items": [
+                    {
+                        "label": "Pending",
+                        "url": "/welcome/pendings"
+                    },
+                    {
+                        "label": "Job confirmed",
+                        "url": "/welcome/jobs/confirmed"
+                    },
+                    {
+                        "label": "Job done",
+                        "url": "/welcome/jobs/done"
+                    },
+                    {
+                        "label": "Not hired",
+                        "url": "/welcome/jobs/not-hired"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "label": "Reviews",
+        "url": "/welcome/ratings/[idProvider]",
+        "icon": "pi pi-star text-xl",
+        "items": [
+            { 
+                "label": "Ratings",
+                "url": "/welcome/ratings/[idProvider]"
+            }
+        ]
+    }
+]
