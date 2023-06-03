@@ -7,6 +7,7 @@ import { ErrorMessage } from "@/components/react-hook-form/error-message";
 import { InputWrapper } from "@/components/react-hook-form/input-wrapper";
 import { Portofolios } from "@/hooks/portofolio";
 import { Textarea } from "@/components/react-hook-form/textarea";
+import { useRouter } from "next/router";
 
 export type FormProps = {
     description: string;
@@ -24,6 +25,8 @@ const Edit: React.FC<PortofolioProps> = ({idPortofolio, toast, setLoading, porto
     const {updatePortofolio, show} = Portofolios();
 
     const [visible, setVisible] = useState(false);
+
+    const router = useRouter();
 
     const methods = useForm<FormProps>({
         defaultValues: {
@@ -71,8 +74,14 @@ const Edit: React.FC<PortofolioProps> = ({idPortofolio, toast, setLoading, porto
 
     return (
         <>
-            <Button type="button" icon="pi pi-pencil" text tooltip='Edit' tooltipOptions={{position: 'top'}} onClick={openModal}
-            />
+            {
+                router.pathname == '/welcome' ?
+                <Button type="button" icon="pi pi-pencil" text className="text-white" onClick={openModal}
+                />
+                :
+                <Button type="button" icon="pi pi-pencil" text tooltip='Edit' tooltipOptions={{position: 'top'}} onClick={openModal}
+                />
+            }
 
             <Dialog header="Update Portofolio" visible={visible} className="w-[90vw] md:w-[50vw]" onHide={() => setVisible(false)} footer={footerContent}>
                 <FormProvider {...methods}>

@@ -23,6 +23,10 @@ import { avgRating, calculateAllRatingPercentages } from '@/functions/rating';
 import { Portofolios } from '@/hooks/portofolio';
 import { Portofolio } from '@/interfaces/interfaces';
 import Create from './providers/portofolio/create';
+import { Button } from 'primereact/button';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Galleria } from 'primereact/galleria';
+import Edit from './providers/portofolio/edit';
 
 export type FormProps = {
     name: string;
@@ -44,7 +48,7 @@ const Welcome = () => {
     const {getRatingProvider} = Rtng();
     const {updateProfile} = Users();
     const {getAddress} = Maps();
-    const {getPortofolioProvider, postImagesPortofolio} = Portofolios();
+    const {getPortofolioProvider, deleteImagePortofolio} = Portofolios();
 
     const [loading, setLoading] = useState<boolean>(false);
     const [checked, setChecked] = useState<boolean>(false);
@@ -59,6 +63,8 @@ const Welcome = () => {
     const [imageProvider, setImageProvider] = useState<any>(null);
 
     const toast = useRef<Toast>(null);
+    const galleria = useRef<any>(null);
+
     const fileUploadPersonRef = useRef<any>(null)
     const fileUploadProviderRef = useRef<any>(null)
 
@@ -92,7 +98,8 @@ const Welcome = () => {
     const [countRating, setCountRating] = useState<number>(0);
     const [ratingDetail, setRatingDetail] = useState<any>({});
 
-    const [portofolioList, setPortofolioList] = useState<Portofolio[]>([])
+    const [portofolioList, setPortofolioList] = useState<Portofolio[]>([]);
+    const [portofolioIndex, setPortofolioIndex] = useState<number>(0);
 
     const methods = useForm<FormProps>({
         defaultValues: {
@@ -245,11 +252,43 @@ const Welcome = () => {
     const chooseOptions = { icon: 'pi pi-fw pi-images', iconOnly: true, className: 'custom-choose-btn p-button-rounded p-button-outlined' };
     const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
 
+    const confirmDelete = (idPortofolio: number) => {
+        const accept = async () => {
+            setLoading(true)
+            const response = await deleteImagePortofolio(idPortofolio)
+            if(response.status == 200) {
+                setLoading(false)
+                getPortofolio(user.idProvider);
+                toast.current!.show({severity:'success', summary:'Success', detail: `${response.data.msg}`, life: 4000});
+            } else {
+                setLoading(false)
+                toast.current!.show({severity:'error', summary:'Error', detail: `${response.data.msg}`, life: 4000});
+            }
+        }
+        const reject = () => {toast.current!.show({severity:'info', summary:'Info', detail: 'Operation rejected', life: 4000});}
+        confirmDialog({
+            message: 'Do you want to delete this image?',
+            header: 'Delete Confirmation',
+            icon: 'pi pi-info-circle',
+            acceptClassName: 'p-button-danger',
+            accept,
+            reject
+        });
+    };
+
+    const itemTemplate = (item: Portofolio) => {
+        return <img src={item.portofolio_image} alt="photo" style={{ width: '100%', display: 'block' }} />;
+    }
+
 
   return (
         <>
         <Spinner loading={loading} />
         <Toast ref={toast} />
+        <ConfirmDialog />
+        <Galleria ref={galleria} value={portofolioList} numVisible={portofolioList.length} style={{ maxWidth: '50%' }} 
+                circular fullScreen showItemNavigators showThumbnails={false} item={itemTemplate} activeIndex={portofolioIndex}
+                onItemChange={(e) => setPortofolioIndex(e.index)} />
         <div className=' w-full h-full bg-white rounded-md shadow-md border overflow-y-auto'>
             <div>
                 <FormProvider {...methods}>
@@ -485,7 +524,7 @@ const Welcome = () => {
                         <div className='flex flex-row justify-between'>
                             <p className='font-bold'>Photos</p>
                         </div>
-                        <div className='flex flex-row overflow-hidden gap-3 mt-5'>
+                        <div className='max-w-full overflow-hidden overflow-y-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center gap-3 mt-5'>
                             {
                                 portofolioList.length > 0 ?
                                  portofolioList.map((item: Portofolio, i: number) => {
@@ -493,12 +532,20 @@ const Welcome = () => {
                                         return (
                                             <div 
                                                 key={i}
-                                                className='w-[200px] h-[200px] bg-no-repeat bg-cover bg-center border-2 rounded-md'
+                                                className='col-span-1 w-[150px] h-[150px] lg:w-[200px] lg:h-[200px] bg-no-repeat bg-cover bg-center border-2 rounded-md shadow-md shrink-0'
                                                 style={{'backgroundImage': `url(${item.portofolio_image})`}}
                                             >
-                                                <div className='text-white bg-black/30 w-full h-full p-2 opacity-0 hover:opacity-100 transition-opacity'>
+                                                <div className='text-white bg-black/30 w-full h-full p-2 relative flex flex-col opacity-0 hover:opacity-100 transition-opacity'>
                                                     <p className='font-medium text-sm md:text-base'>Description</p>
-                                                    <p className='text-xs md:text-sm'>{item.portofolio_description}</p>
+                                                    <p className='text-xs md:text-sm line-clamp-5'>{item.portofolio_description}</p>
+                                                    <div className='absolute bottom-0 flex items-center'>
+                                                        <Edit idPortofolio={item.id_portofolio} portofolio={portofolioList} setPortofolio={setPortofolioList} setLoading={setLoading} toast={toast} />
+                                                        <Button icon='pi pi-trash' text className='text-white' onClick={() => confirmDelete(item.id_portofolio)} />
+                                                        <Button  icon="pi pi-external-link" text className='text-white' onClick={() => {
+                                                            setPortofolioIndex(i)
+                                                            galleria.current.show()
+                                                            }} />
+                                                    </div>
                                                 </div>
                                             </div>
                                         )
@@ -521,7 +568,6 @@ const Welcome = () => {
 
                             </div>
                             <Create idProvider={user.idProvider} portofolio={portofolioList} setPortofolio={setPortofolioList} setLoading={setLoading} toast={toast} />
-                            {/* <Link href={''} className='bg-[#109EDA] border-2 border-[#109EDA] rounded-md text-white font-bold text-center px-5 py-2 hover:bg-[#149ad3] hover:border-[#149ad3]' >Add photos</Link> */}
                         </div>
                     </div>
 
