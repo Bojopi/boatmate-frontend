@@ -22,15 +22,15 @@ const Index = () => {
         {
           type == 'confirmed' ?
             <ErrorCard>
-              <p>After the customer clicks hire pro, the job will move to "job confirmed"</p>
+              <p>After the customer clicks hire pro, the job will move to &quot;job confirmed&quot;</p>
             </ErrorCard>
           : type == 'done' ?
             <ErrorCard>
-              <p>After the job is completed, the marine service provider can click “job completed” and it will move to “job done”</p>
+              <p>After the job is completed, the marine service provider can click &quot;job completed&quot; and it will move to &quot;job done&quot;</p>
             </ErrorCard>
           : type == 'not-hired' ?
             <ErrorCard>
-              <p>If the customer decides not to hire the marine service provider, there will be a button for them to choose “do not hire” and that message will automatically go into the “Not Hired” section.</p>
+              <p>If the customer decides not to hire the marine service provider, there will be a button for them to choose &quot;do not hire&quot; and that message will automatically go into the &quot;Not Hired&quot; section.</p>
             </ErrorCard>
           : null
         }
