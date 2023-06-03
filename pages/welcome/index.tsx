@@ -280,6 +280,15 @@ const Welcome = () => {
         return <img src={item.portofolio_image} alt="photo" style={{ width: '100%', display: 'block' }} />;
     }
 
+    const caption = (item: Portofolio) => {
+        return (
+            <React.Fragment>
+                <div className="text-lg mb-2 font-bold">Description</div>
+                <p className="text-white">{item.portofolio_description}</p>
+            </React.Fragment>
+        );
+    }
+
 
   return (
         <>
@@ -287,7 +296,7 @@ const Welcome = () => {
         <Toast ref={toast} />
         <ConfirmDialog />
         <Galleria ref={galleria} value={portofolioList} numVisible={portofolioList.length} style={{ maxWidth: '50%' }} 
-                circular fullScreen showItemNavigators showThumbnails={false} item={itemTemplate} activeIndex={portofolioIndex}
+                circular fullScreen showItemNavigators showThumbnails={false} item={itemTemplate} caption={caption} activeIndex={portofolioIndex}
                 onItemChange={(e) => setPortofolioIndex(e.index)} />
         <div className=' w-full h-full bg-white rounded-md shadow-md border overflow-y-auto'>
             <div>
