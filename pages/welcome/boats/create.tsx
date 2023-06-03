@@ -181,7 +181,7 @@ const Create: React.FC = () => {
     const customerOptionTemplate = (option: Customer) => {
         return (
             <div className="flex align-items-center">
-                <div>{option.person_name} {option.lastname}</div>
+                <div>{option.person_name ? option.person_name : ''} {option.lastname ? option.lastname : ''}</div>
             </div>
         );
     };
@@ -189,7 +189,7 @@ const Create: React.FC = () => {
     const selectedCustomerTemplate = (option: Customer) => {
         return (
             <div className="flex align-items-center">
-                <div>{option.person_name} {option.lastname}</div>
+                <div>{option.person_name ? option.person_name : ''} {option.lastname ? option.lastname : ''}</div>
             </div>
         );
     };
