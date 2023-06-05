@@ -13,7 +13,11 @@ export const Auth = () => {
             .then((res) => {
                 setLoading(false);
                 toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
-                router.push('/welcome')
+                if(res.data.role == 'CUSTOMER') {
+                    router.push('/')
+                } else {
+                    router.push('/welcome')
+                }
             })
             .catch(error => {
                 console.log(error)
