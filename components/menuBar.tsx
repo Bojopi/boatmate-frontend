@@ -6,41 +6,75 @@ import { Button } from 'primereact/button';
 import { TieredMenu } from 'primereact/tieredmenu';
 
 import menuItems from '../sql/menu.json'
+import { Profile } from '@/interfaces/interfaces';
+import { Avatar } from 'primereact/avatar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 
 export type MenuProps = {
     linkMenu: string;
     urlMenu: string;
+    user?: Profile | undefined;
     menuItem?: boolean;
+    logout?: any;
+    setLoading?: any;
 }
 
-const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
+const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, user = null, menuItem=true, logout, setLoading}) => {
 
     const menu = useRef<any>(null);
+    const menuUser = useRef<any>(null);
+    const menuPhone = useRef<any>(null);
 
     const [menus, setMenus] = useState<any>([]);
 
     useEffect(() => {
         fillItems();
-    }, []);
+    }, [user]);
+
+    // useEffect(() => {
+    //     console.log(user)
+    // }, [user])
 
     const fillItems = () => {
-        let items = [
-            { 
-                label: 'Sign Up Now',
-                url: '/register'
-            },
-            { 
-                label: 'Sign In',
-                url: '/login'
-            },
-            { separator: true},
-            ...menuItems,
-            { separator: true},
-            { 
-                label: 'Join Our Pro Network',
-                url: '/pro'
-            }
-        ]
+        let items: any = []
+        if(user) {
+            items = [
+                { 
+                    template: (item: any, options: any) => {
+                        return (
+                            <button onClick={() => {
+                                setLoading(true);
+                                logout(setLoading);
+                            }} className='w-full px-3 py-1 flex flex-row items-center gap-3 hover:bg-gray-100'>
+                                <i className='pi pi-sign-out'></i>
+                                <p>Sign out</p>
+                            </button>
+                        )
+                    }
+                },
+                { separator: true},
+                ...menuItems
+            ]
+        } else {
+            items = [
+                { 
+                    label: 'Sign Up Now',
+                    url: '/register'
+                },
+                { 
+                    label: 'Sign In',
+                    url: '/login'
+                },
+                { separator: true},
+                ...menuItems,
+                { separator: true},
+                { 
+                    label: 'Join Our Pro Network',
+                    url: '/pro'
+                }
+            ]
+        }
 
         setMenus(items);
     }
@@ -75,21 +109,41 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, menuItem=true}) => {
         {menuItem ? null : <p className='text-[#373A85] text-xs md:text-lg font-bold -mb-1'>Ads</p>}
     </Link>
     const end = <>
-        <div className={menuItem ? 'hidden md:block' : 'block'}>
-            <Link href={urlMenu} className='mr-2 md:mr-5 font-bold cursor-pointer tracking-tighter hover:underline text-xs md:text-base' >{linkMenu}</Link>
-            {
-                menuItem ? 
-                <>
-                    <Link href={'/register'} className='mr-2 md:mr-5 cursor-pointer tracking-tighter hover:underline text-xs md:text-base'>Sign up now</Link>
-                    <Link href={'/login'} className='mr-2 md:mr-5 cursor-pointer tracking-tighter hover:underline text-xs md:text-base'>Sign in</Link>
-                </>
-                : null
-            }
-        </div>
-        <div className={menuItem ? 'block md:hidden' : 'hidden'}>
-            <TieredMenu model={menus} popup ref={menu} breakpoint="767px" />
-            <Button label="Sign In" icon="pi pi-user" outlined onClick={(e) => menu.current.toggle(e)} />
-        </div>
+        {
+            user ? 
+            <div className='flex flex-row gap-2 items-center'>
+                <p className='text-[#109EDA] text-sm md:text-base font-semibold'>{user.name} {user.lastname}</p>
+                {
+                    user.image != null ?
+                        <Avatar image={user.image} shape="circle" />
+                        :
+                        <FontAwesomeIcon icon={faCircleUser} className='w-8 h-8' style={{color: "#c2c2c2"}} />
+                }
+                <TieredMenu model={menus} popup ref={menuUser} className='mt-1 hidden md:block' />
+                <Button rounded text icon="pi pi-angle-down" className='text-[#109EDA] shrink-0 hidden md:block' onClick={(e) => menuUser.current.toggle(e)} />
+                <TieredMenu model={menus} popup ref={menuPhone} className='mt-1 block md:hidden' breakpoint="767px" />
+                <Button rounded text icon="pi pi-angle-down" className='text-[#109EDA] shrink-0 block md:hidden' onClick={(e) => menuPhone.current.toggle(e)} />
+            </div>
+            :
+            <>
+                <div className={menuItem ? 'hidden md:block' : 'block'}>
+                    <Link href={urlMenu} className='mr-2 md:mr-5 font-bold cursor-pointer tracking-tighter hover:underline text-xs md:text-base' >{linkMenu}</Link>
+                    {
+                        menuItem ?
+                        <>
+                            <Link href={'/register'} className='mr-2 md:mr-5 cursor-pointer tracking-tighter hover:underline text-xs md:text-base'>Sign up now</Link>
+                            <Link href={'/login'} className='mr-2 md:mr-5 cursor-pointer tracking-tighter hover:underline text-xs md:text-base'>Sign in</Link>
+                        </>
+                        : null
+                    }
+                </div>
+                <div className={menuItem ? 'block md:hidden' : 'hidden'}>
+                    <TieredMenu model={menus} popup ref={menu} breakpoint="767px" />
+                    <Button label="Sign In" icon="pi pi-user" outlined onClick={(e) => menu.current.toggle(e)} />
+                </div>
+            </>
+        }
+
         </>;
 
     return (

@@ -32,7 +32,7 @@ export const Auth = () => {
         axios.post('/logout', {})
         .then((res) => {
             setLoading(false)
-            router.push('/')
+            router.push('/login')
         })
         .catch(error => {
             console.log('Error:', error)

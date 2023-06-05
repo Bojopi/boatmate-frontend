@@ -96,11 +96,13 @@ const Login: React.FC = () => {
             <div className="w-full h-screen absolute p-5 flex justify-center items-center">
                 <div className='bg-white w-full md:w-2/4 rounded-lg shadow-2xl p-10 flex flex-col items-center'>
                     <div className='w-full flex justify-between'>
-                        <img
-                            src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
-                            alt="logo"
-                            className='w-16 lg:w-24'
-                        />
+                        <Link href={'/'} className='w-16 lg:w-24' >
+                            <img
+                                src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
+                                alt="logo"
+                                className='w-16 lg:w-24'
+                            />
+                        </Link>
                         <h1 className='mt-5 text-xl md:text-4xl font-semibold mr-5' style={{'color': '#373A85'}}>SIGN IN</h1>
                     </div>
                     <FormProvider {...methods}>

@@ -10,8 +10,8 @@ const FooterComponentAdmin: React.FC<FooterProps> = ({user}) => {
     return ( 
         <footer className="w-full p-5 lg:p-10 bg-gray-200">
             <div className="w-full">
-                <div className="flex flex-row justify-between border-b-2 border-b-gray-400">
-                    <div className="flex flex-row gap-10 md:gap-40">
+                <div className="flex flex-col md:flex-row justify-between border-b-2 border-b-gray-400">
+                    <div className="flex flex-row justify-around md:justify-between md:gap-40">
                         <div className="flex flex-col">
                             <p className="text-sm lg:text-base font-bold mb-5">BoatMate</p>
                             <Link href={'/welcome'} className="text-xs lg:text-sm mb-1">Profile</Link>
@@ -24,7 +24,7 @@ const FooterComponentAdmin: React.FC<FooterProps> = ({user}) => {
                             <Link href={''} className="text-xs lg:text-sm mb-1">Personal Settings</Link>
                         </div>
                     </div>
-                    <div className="flex flex-col items-end">
+                    <div className="flex md:flex-col items-end justify-around md:justify-normal md:items-end">
                         <div className="mr-16 mb-10">
                             <p className="text-sm lg:text-base font-bold mb-5">We&apos;re here to help</p>
                             <p className="text-xs lg:text-sm mb-1">Call 1-813-766-7565</p>
