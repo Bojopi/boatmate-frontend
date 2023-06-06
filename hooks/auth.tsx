@@ -46,7 +46,11 @@ export const Auth = () => {
         axios.post('/create-profile', data)
         .then((res) => {
             toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
-            router.push('/welcome');
+            if(data.idRole == 4) {
+                router.push('/');
+            } else {
+                router.push('/welcome');
+            }
             setLoading(false);
         })
         .catch((err) => {

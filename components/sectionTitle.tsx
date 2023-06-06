@@ -77,20 +77,12 @@ import React, { useContext, useEffect, useState } from 'react'
                         <span className="text-5xl md:text-6xl tracking-tight font-extrabold mb-1" style={{'color': '#373A85'}}>{title1}</span>
                         <div className="text-4xl md:text-5xl tracking-tight font-bold mb-10 mt-2" style={{'color': '#109EDA'}}>{title2}</div>
                         <div className='w-full md:w-[80%] p-inputgroup search-input-group'>
-                        {/* <AutoComplete 
-                        field="service_name" 
-                        value={selectedService} 
-                        suggestions={filteredServices} 
-                        completeMethod={search} 
-                        dropdown
-                        className='w-full'
-                        onChange={(e: AutoCompleteChangeEvent) => setSelectedService(e.value)} 
-                        placeholder='e.g. Hull Cleaning' /> */}
                             <AutoComplete 
                             field='service_name' 
                             value={selectedService} 
                             suggestions={filteredServices} 
                             completeMethod={search} 
+                            dropdown
                             onChange={(e: AutoCompleteChangeEvent) => setSelectedService(e.value)}
                             placeholder='Find a service'
                             className={`w-[20%] lg:w-[40%] ${inputDisabled ? 'p-invalid' : ''}`} />
@@ -104,7 +96,7 @@ import React, { useContext, useEffect, useState } from 'react'
                             maxLength={5} 
                             placeholder='Zip code'
                             className={`input-number ${inputDisabled ? 'p-invalid': ''}`} />
-                            <Button type='button' icon='pi pi-search' onClick={onClickSearch}></Button>
+                            <Button type='button' icon='pi pi-search' className='bg-[#109EDA]' onClick={onClickSearch}></Button>
                         </div>
                     </section>
                 </div>

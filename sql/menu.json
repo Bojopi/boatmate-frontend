@@ -136,11 +136,11 @@
         "items": [
             { 
                 "label": "Articles",
-                "url": "/category/articles"
+                "url": "/"
             },
             { 
                 "label": "Cost Guides",
-                "url": "/category/cost-guides"
+                "url": "/"
             }
         ]
     }

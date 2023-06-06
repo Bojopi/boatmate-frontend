@@ -19,7 +19,7 @@ import Spinner from '@/components/spinner';
 export type FormProps = {
     email: string;
     password: string;
-    idRole: number;
+    idRole: string;
     personName: string;
     lastname: string;
     phone: string;
@@ -57,7 +57,7 @@ const CreateAccount = () => {
         defaultValues: {
             email: '',
             password: '',
-            idRole: 3,
+            idRole: "3",
             personName: '',
             lastname: '',
             phone: '',
@@ -77,8 +77,7 @@ const CreateAccount = () => {
     const onSubmit = (data: FormProps) => {
         setLoading(true);
         data.password = password;
-        data.idRole = 3;
-        console.log(data)
+        data.idRole = "3";
         createUSer(data, toast, setLoading);
     }
     
@@ -110,9 +109,9 @@ const CreateAccount = () => {
             <GoogleOAuthProvider clientId="376843512756-0sue8frqribicc3m7q5ib5ss4m7jkslg.apps.googleusercontent.com">
                 <div className='w-full flex justify-center py-5 md:py-10 bg-gray-100'>
                     <FormProvider {...methods}>
-                        <form onSubmit={handleSubmit(onSubmit, onErrors)} className="w-full md:w-2/3 lg:w-1/2 mx-5 grid grid-cols-1 md:grid-cols-12 gap-2 shadow-lg py-5 px-5 lg:px-10 rounded-md border bg-white border-b-4 border-b-[#00CBA4]">
-                            <p className="col-span-1 md:col-span-12 font-bold md:mb-5 text-sm lg:text-base text-center">Create your account</p>
-                            <InputWrapper outerClassName="col-span-1 md:col-span-12">
+                        <form onSubmit={handleSubmit(onSubmit, onErrors)} className="w-full md:w-2/3 lg:w-1/2 mx-5 grid grid-cols-12 gap-2 shadow-lg py-5 px-5 lg:px-10 rounded-md border bg-white border-b-4 border-b-[#00CBA4]">
+                            <p className="col-span-12 font-bold md:mb-5 text-sm lg:text-base text-center">Create your account</p>
+                            <InputWrapper outerClassName="col-span-12">
                                 <Label id="email">Email</Label>
                                 <Input 
                                 type='email' 
@@ -126,7 +125,7 @@ const CreateAccount = () => {
                                     <ErrorMessage>{errors.email.message}</ErrorMessage>
                                 )}
                             </InputWrapper>
-                            <InputWrapper outerClassName="col-span-1 md:col-span-12">
+                            <InputWrapper outerClassName="col-span-12">
                                 <Label id="password">Password</Label>
                                 <Password 
                                 id='password' 
@@ -144,7 +143,7 @@ const CreateAccount = () => {
                                 mediumRegex='/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{5,}$/g'
                                 strongRegex='/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{10,}$/g' />
                             </InputWrapper>
-                            <div className="col-span-1 md:col-span-12 flex flex-col gap-2 text-sm">
+                            <div className="col-span-12 flex flex-col gap-2 text-sm">
                                 <p>Your password must:</p>
                                 <ul className='list-disc list-inside'>
                                     <li>be 8 to 72 characters long</li>
@@ -157,11 +156,11 @@ const CreateAccount = () => {
                             <Divider align='center' className='col-span-1 md:col-span-12 my-2'>
                                 <p className='text-gray-500 text-sm font-medium'>OR</p>
                             </Divider>
-                            <p className='col-span-1 md:col-span-12 text-sm'>By clicking Sign up with Google, you agree to the <Link href={''} className='text-[#109EDA] underline font-medium' >Terms of Use</Link> and <Link href={''} className='text-[#109EDA] underline font-medium' >Privacy Policy</Link>.</p>
-                            <div className='w-full flex flex-row justify-center'>
+                            <p className='col-span-12 text-sm'>By clicking Sign up with Google, you agree to the <Link href={''} className='text-[#109EDA] underline font-medium' >Terms of Use</Link> and <Link href={''} className='text-[#109EDA] underline font-medium' >Privacy Policy</Link>.</p>
+                            <div className='col-span-12 w-full flex flex-row justify-center'>
                                 <GoogleLogin onError={handleError} onSuccess={handleSuccess} />
                             </div>
-                            <div className="col-span-1 md:col-span-12 flex flex-col items-center mt-5">
+                            <div className="col-span-12 flex flex-col items-center mt-5">
                                 <p className="text-xs lg:text-sm">Already have an account? <Link href={''} className="text-[#109EDA] font-medium">Log in</Link>.</p>
                             </div>
                         </form>

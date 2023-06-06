@@ -96,7 +96,6 @@ const Register: React.FC = () => {
         formData.lng = selectedLocation.lng ? selectedLocation.lng : ''
         formData.zip = zip;
 
-        console.log(formData);
         setLoading(true);
         createUSer(formData, toast, setLoading)
     };
@@ -197,7 +196,7 @@ const Register: React.FC = () => {
                         className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-300'
                         disabled={validForm()}
                         onClick={handleOnSubmit}>
-                            SING UP
+                            SIGN UP
                     </button>
                 </div>
             )
@@ -335,7 +334,7 @@ const Register: React.FC = () => {
                                                     id="password"
                                                     value={password}
                                                     onChange={changePass}
-                                                    pattern='/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{10,}$/g'
+                                                    pattern={`/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@$\-_]).{10,}$/g`}
                                                     required
                                                     className='p-inputtext p-component p-password-input w-full'
                                                     />
@@ -346,7 +345,7 @@ const Register: React.FC = () => {
                                             <li><i className={password.match(/[A-Z]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One letter (A-Z)</li>
                                             <li><i className={password.match(/.{10,}/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> 10 characters minimum</li>
                                             <li><i className={password.match(/\d/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One number (0-9)</li>
-                                            <li><i className={password.match(/[@$\-_]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One special character</li>
+                                            <li><i className={password.match(/[!@$\-_]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One special character</li>
                                         </ul>
                                     </InputWrapper>
                                     <InputWrapper outerClassName="md:col-span-12">
@@ -358,7 +357,7 @@ const Register: React.FC = () => {
                                                     id="confirmPassword"
                                                     value={confirmPassword}
                                                     onChange={changePass}
-                                                    pattern='/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{10,}$/g'
+                                                    pattern={`/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@$\-_]).{10,}$/g`}
                                                     required
                                                     className='p-inputtext p-component p-password-input w-full'
                                                     />

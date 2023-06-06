@@ -96,7 +96,7 @@ const Welcome = () => {
     );
     const [rating, setRating] = useState<number>(0);
     const [countRating, setCountRating] = useState<number>(0);
-    const [ratingDetail, setRatingDetail] = useState<any>({});
+    const [ratingDetail, setRatingDetail] = useState<any>({1: 0, 2: 0, 3: 0, 4: 0, 5: 0});
 
     const [portofolioList, setPortofolioList] = useState<Portofolio[]>([]);
     const [portofolioIndex, setPortofolioIndex] = useState<number>(0);
@@ -154,6 +154,7 @@ const Welcome = () => {
 
     const setDataUser = async () => {
         const response = await getUserAuthenticated();
+        console.log(response.data);
         setUser(response.data);
         setChecked(response.data.state);
         if(response.data.role === 'PROVIDER') {
@@ -184,9 +185,10 @@ const Welcome = () => {
         try {
             const res = await getRatingProvider(idProvider);
             setCountRating(res.data.countRating)
-            const ratDetail = calculateAllRatingPercentages(res.data.rating);
-            setRatingDetail(ratDetail)
             if(res.status == 200 && res.data.rating.length > 0) {
+                const ratDetail = calculateAllRatingPercentages(res.data.rating);
+                setRatingDetail(ratDetail)
+
                 const avg = avgRating(res.data.rating);
                 setRating(Number(avg))
             }
@@ -561,7 +563,7 @@ const Welcome = () => {
                                     }
                                  })
                                 :
-                                Array.from({length: 7}).map((item: any, i: number) => {
+                                Array.from({length: 1}).map((item: any, i: number) => {
                                     return (
                                         <div key={i} className='border-2 border-dashed rounded-md w-[100px] h-[100px] bg-gray-50 flex items-center justify-center shrink-0'>
                                             <FontAwesomeIcon icon={faMountainSun} className='text-gray-300 w-[40px]' />
