@@ -128,11 +128,11 @@ const Welcome = () => {
     }, []);
 
     const resetMap = async (lat: number, lng: number) => {
-          const {data} = await getAddress(lat, lng);
-          if(data.results.length > 0) {
-              setSelectedPlace(data.results[0].formatted_address);
-          }
-      }
+        const {data} = await getAddress(lat, lng);
+        if(data.results.length > 0) {
+            setSelectedPlace(data.results[0].formatted_address);
+        }
+    }
 
     const onSubmit = (formData: FormProps) => {
         setLoading(true)
