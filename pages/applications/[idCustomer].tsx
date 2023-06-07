@@ -43,9 +43,9 @@ const ApplicationsPage = () => {
         <Toast ref={toast} />
         <div className='w-full md:w-[70%] h-full p-10 m-auto flex flex-col gap-3'>
           {
-            contracts.map((contract: ContractCustomer) => {
+            contracts.map((contract: ContractCustomer, i: number) => {
               return (
-                <ProviderServiceCardComponent contract={contract} setLoading={setLoading} toast={toast} contractList={contracts} setContractList={setContracts} />
+                <ProviderServiceCardComponent key={i} contract={contract} setLoading={setLoading} toast={toast} contractList={contracts} setContractList={setContracts} />
               )
             })
           }
