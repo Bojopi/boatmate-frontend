@@ -37,7 +37,7 @@ export default function FooterProComponent() {
                     <Link href={'/pro'} className='hover:underline'>Investor Relations</Link>
                 </div>
                 <div className="col-span-3 lg:col-span-2 mx-20 text-xs lg:text-base font-medium">
-                    <div className="w-full flex flex-row justify-between">
+                    <div className="w-full flex flex-row gap-3">
                         <Link href={'https://twitter.com/BoatMateInc'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faTwitter} /></a></Link>
                         <Link href={'https://www.facebook.com/BoatMateInc'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faFacebookF} /></a></Link>
                         <Link href={'https://www.instagram.com/boatmateinc/'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faInstagram} /></a></Link>

@@ -24,7 +24,7 @@ const FooterComponentAdmin: React.FC<FooterProps> = ({user}) => {
                             <Link href={''} className="text-xs lg:text-sm mb-1">Personal Settings</Link>
                         </div>
                     </div>
-                    <div className="flex md:flex-col items-end justify-around md:justify-normal md:items-end">
+                    <div className="flex md:flex-col pl-14 md:p-0 items-end md:items-start">
                         <div className="mr-16 mb-10">
                             <p className="text-sm lg:text-base font-bold mb-5">We&apos;re here to help</p>
                             <p className="text-xs lg:text-sm mb-1">Call 1-813-766-7565</p>

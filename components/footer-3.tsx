@@ -7,17 +7,17 @@ export default function FooterComponentThree() {
     return ( 
         <footer className="w-full p-5 lg:p-10 bg-gray-200">
             <div className="w-full">
-                <div className="border-b-2 border-b-gray-400">
-                    <div className="flex flex-col items-end">
+                <div className="border-b-2 border-b-gray-400 flex justify-end">
+                    <div className="flex flex-col">
                         <div className="mr-16 mb-10">
                             <p className="text-sm lg:text-base font-bold mb-5">We&apos;re here to help</p>
                             <p className="text-xs lg:text-sm mb-1 font-medium">Call 1-813-766-7565</p>
                             <p className="text-xs lg:text-sm mb-1 font-medium">support@boatmate.com</p>
                         </div>
                         <div className="mb-10 lg:mb-20 flex flex-row gap-3">
-                        <Link href={'https://twitter.com/BoatMateInc'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faTwitter} /></a></Link>
-                        <Link href={'https://www.facebook.com/BoatMateInc'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faFacebookF} /></a></Link>
-                        <Link href={'https://www.instagram.com/boatmateinc/'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faInstagram} /></a></Link>
+                            <Link href={'https://twitter.com/BoatMateInc'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faTwitter} /></a></Link>
+                            <Link href={'https://www.facebook.com/BoatMateInc'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faFacebookF} /></a></Link>
+                            <Link href={'https://www.instagram.com/boatmateinc/'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faInstagram} /></a></Link>
                         </div>
                     </div>
                 </div>

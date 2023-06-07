@@ -57,7 +57,7 @@ export default function FooterComponent() {
                     src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
                     className="col-span-1 lg:col-span-1 w-full lg:w-[50%]"></img>
                 <p className="col-span-3 lg:col-span-2 text-left text-xs lg:text-sm font-normal lg:font-medium p-1 lg:p-5 tracking-wide w-full">Tampa, FL | (813) 766-7565 | support@boatmate.com | Copyright &copy; 2021-2023 BoatMate, Inc. All rights reserved</p>
-                <div className="col-span-4 lg:col-span-1 flex flex-row justify-between">
+                <div className="col-span-4 lg:col-span-1 flex flex-row gap-3">
                     <Link href={'https://twitter.com/BoatMateInc'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faTwitter} /></a></Link>
                     <Link href={'https://www.facebook.com/BoatMateInc'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faFacebookF} /></a></Link>
                     <Link href={'https://www.instagram.com/boatmateinc/'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faInstagram} /></a></Link>
