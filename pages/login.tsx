@@ -146,12 +146,12 @@ const Login: React.FC = () => {
                                     <GoogleLogin onError={handleError} onSuccess={handleSuccess} />
                                 </div>
 
-                                <div className="mt-4 flex items-center justify-end">
-                                    {/* <Link
+                                <div className="mt-4 flex items-center justify-between">
+                                    <Link
                                         className='text-xs lg:text-sm font-medium text-[#00CBA4] hover:underline'
-                                        href={'/forgot-password'}>
+                                        href={'/forgot'}>
                                             Forgot password?
-                                    </Link> */}
+                                    </Link>
                                     <button type='submit' className='p-3 bg-[#109EDA] hover:bg-[#0E8FC7] text-white text-sm lg:text-base rounded-md hover:transition'>SIGN IN</button>
                                 </div>
                             </form>
