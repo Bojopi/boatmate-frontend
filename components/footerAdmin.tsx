@@ -31,11 +31,9 @@ const FooterComponentAdmin: React.FC<FooterProps> = ({user}) => {
                             <p className="text-xs lg:text-sm mb-1">support@boatmate.com</p>
                         </div>
                         <div className="mb-10 lg:mb-20 flex flex-row gap-3">
-                            <Link href={''} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faTwitter} /></Link>
-                            <Link href={''} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faFacebookF} /></Link>
-                            <Link href={''} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faPinterestP} /></Link>
-                            <Link href={''} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faYoutube} /></Link>
-                            <Link href={''} ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[25px]" icon={faInstagram} /></Link>
+                            <Link href={'https://twitter.com/BoatMateInc'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faTwitter} /></a></Link>
+                            <Link href={'https://www.facebook.com/BoatMateInc'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faFacebookF} /></a></Link>
+                            <Link href={'https://www.instagram.com/boatmateinc/'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faInstagram} /></a></Link>
                         </div>
                     </div>
                 </div>

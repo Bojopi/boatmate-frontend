@@ -38,11 +38,9 @@ export default function FooterProComponent() {
                 </div>
                 <div className="col-span-3 lg:col-span-2 mx-20 text-xs lg:text-base font-medium">
                     <div className="w-full flex flex-row justify-between">
-                        <Link href={'/pro'} className='flex justify-center items-center p-2 rounded-full' ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faTwitter} /></Link>
-                        <Link href={'/pro'} className='flex justify-center items-center p-2 rounded-full' ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faFacebookF} /></Link>
-                        <Link href={'/pro'} className='flex justify-center items-center p-2 rounded-full' ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faPinterestP} /></Link>
-                        <Link href={'/pro'} className='flex justify-center items-center p-2 rounded-full' ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faYoutube} /></Link>
-                        <Link href={'/pro'} className='flex justify-center items-center p-2 rounded-full' ><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faInstagram} /></Link>
+                        <Link href={'https://twitter.com/BoatMateInc'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faTwitter} /></a></Link>
+                        <Link href={'https://www.facebook.com/BoatMateInc'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faFacebookF} /></a></Link>
+                        <Link href={'https://www.instagram.com/boatmateinc/'} className='flex justify-center items-center p-2 rounded-full' legacyBehavior ><a target="_blank" rel="noopener noreferrer"><FontAwesomeIcon className="text-[#373A85] text-xl lg:text-[30px]" icon={faInstagram} /></a></Link>
                     </div>
                     <p>Connect with us</p>
                     <p className="mt-1 text-base lg:text-2xl">1-888-819-2644</p>
