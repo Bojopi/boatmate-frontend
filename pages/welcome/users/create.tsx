@@ -202,7 +202,6 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
                                 name="personImage"
                                 id="personImage"
                                 onChange={(e) => {
-                                    console.log(e)
                                     setImagePerson(e.target.files![0])
                                 }}
                                 className='absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer'

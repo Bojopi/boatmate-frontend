@@ -11,7 +11,6 @@ const Index = () => {
 
   useEffect(() => {
     if(router.query.type) {
-      console.log(router.query.type)
       setType(router.query.type);
     }
   }, [router.query.type])

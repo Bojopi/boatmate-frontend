@@ -92,7 +92,6 @@ const Create: React.FC<PortofolioProps> = ({portofolio, setPortofolio, setLoadin
     const onTemplateSelect = (e: any) => {
         let files = e.files;
         Object.keys(files).forEach((key) => {
-            console.log(files[key])
             imagesList.push(files[key])
         });
     };

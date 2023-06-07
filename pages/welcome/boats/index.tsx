@@ -106,7 +106,7 @@ const BoatsIndex: React.FC = () => {
     };
 
     const dateFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
-        return <Calendar value={options.value} onChange={(e: any) => {console.log(e.value); options.filterCallback(e.value, options.index)}} view='year' dateFormat="yy" placeholder="yyyy" mask="9999" />;
+        return <Calendar value={options.value} onChange={(e: any) => {options.filterCallback(e.value, options.index)}} view='year' dateFormat="yy" placeholder="yyyy" mask="9999" />;
     };
 
     const customerBodyTemplate = (rowData: Boat) => {

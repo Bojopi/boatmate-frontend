@@ -138,7 +138,6 @@ const Index = () => {
   };
 
   const onClickSearch = () => {
-    console.log('aqui', selectedService, zip)
     if(selectedService != null && zip != null) {
       setInputDisabled(false);
       setZip(zip);

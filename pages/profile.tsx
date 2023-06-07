@@ -59,7 +59,6 @@ const Profile = () => {
 
     const setDataUser = async () => {
         const response = await getUserAuthenticated();
-        console.log(response.data);
         setUser(response.data);
         setChecked(response.data.state);
         setSelectedLocation({
