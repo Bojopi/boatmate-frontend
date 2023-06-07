@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from 'react';
-import Layout from '@/components/layout'
 import { FormProvider, useForm } from 'react-hook-form';
 import { Avatar } from 'primereact/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,6 +11,10 @@ import { ToggleButton } from 'primereact/togglebutton';
 import MapComponent from '@/components/map';
 import { FileUpload } from 'primereact/fileupload';
 import { Tag } from 'primereact/tag';
+import LayoutPrincipal from '@/components/layoutPrincipal';
+import Spinner from '@/components/spinner';
+import { Toast } from 'primereact/toast';
+import { Users } from '@/hooks/user';
 
 export type FormProps = {
     name: string;
@@ -29,6 +32,7 @@ const Profile = () => {
 
     const { getUserAuthenticated } = Auth();
     const {getAddress} = Maps();
+    const {updateProfile} = Users();
 
     const [user, setUser] = useState<Profile>();
 
@@ -44,6 +48,8 @@ const Profile = () => {
 
     const fileUploadPersonRef = useRef<any>(null);
 
+    const toast = useRef<Toast>(null);
+
     const resetMap = async (lat: number, lng: number) => {
         const {data} = await getAddress(lat, lng);
         if(data.results.length > 0) {
@@ -55,15 +61,18 @@ const Profile = () => {
         const response = await getUserAuthenticated();
         console.log(response.data);
         setUser(response.data);
+        setChecked(response.data.state);
         setSelectedLocation({
             lat: Number(response.data.customerLat || 0),
             lng: Number(response.data.customerLng || 0),
         })
         resetMap(response.data.providerLat || 0, response.data.providerLng || 0);
         reset(response.data)
+        setLoading(false)
     }
 
     useEffect(() => {
+        setLoading(true)
         setDataUser();
     }, []);
 
@@ -86,8 +95,21 @@ const Profile = () => {
         reset,
     } = methods;
 
-    const onSubmit = (data: FormProps) => {}
-    const onErrors = () => {}
+    const onSubmit = (formData: FormProps) => {
+        setLoading(true)
+        formData.personImage = imagePerson;
+
+        formData.lat = String(selectedLocation.lat);
+        formData.lng = String(selectedLocation.lng);
+
+        updateProfile(Number(user?.uid), formData, setLoading, toast, setDataUser, setPersonalActive);
+        
+        if(fileUploadPersonRef.current !== null) fileUploadPersonRef.current.clear();
+    };
+
+    const onErrors = () => {
+        toast.current!.show({severity:'error', summary:'Error', detail: 'There are errors in the form', life: 4000});
+    };
 
     const activeEdit = (e: any) => {
         if(e.target.id == 'personal') setPersonalActive(false);
@@ -129,9 +151,11 @@ const Profile = () => {
     const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
 
   return (
-    <Layout>
-        <div className=' w-full h-full bg-white rounded-md shadow-md border overflow-y-auto'>
-            <div>
+    <LayoutPrincipal>
+        <Spinner loading={loading} />
+        <Toast ref={toast} />
+        <div className=' w-full h-full flex justify-center pt-10 md:pt-5 p-5'>
+            <div className='w-full md:w-[50%] h-full bg-white rounded-md shadow-md border overflow-y-auto'>
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit, onErrors)}>
                         <div className='p-5 mb-5'>
@@ -149,22 +173,20 @@ const Profile = () => {
                                 <p id='personal' className='text-[#109EDA] font-bold cursor-pointer' onClick={activeEdit}>Edit</p>
                             </div>
 
-                            <div className='w-full grid grid-cols-12 mt-5'>
-                                <div className='col-span-12 grid grid-cols-12 gap-5'>
-                                    <div className='col-span-6 py-2'>
-                                        <div className='font-medium flex flex-row items-center gap-2'>
-                                            <i className='pi pi-user'></i>
-                                            <p>Name</p>
-                                        </div>
-                                        <Input type='text' id='name' name='name' readonly={personalActive} />
+                            <div className='w-full grid grid-cols-12 mt-5 gap-2'>
+                                <div className='col-span-12 md:col-span-6 py-2'>
+                                    <div className='font-medium flex flex-row items-center gap-2'>
+                                        <i className='pi pi-user'></i>
+                                        <p>Name</p>
                                     </div>
-                                    <div className='col-span-6 py-2'>
-                                        <div className='font-medium flex flex-row items-center gap-2'>
-                                            <i className='pi pi-user'></i>
-                                            <p>Lastname</p>
-                                        </div>
-                                        <Input type='text' id='lastname' name='lastname' readonly={personalActive} />
+                                    <Input type='text' id='name' name='name' readonly={personalActive} />
+                                </div>
+                                <div className='col-span-12 md:col-span-6 py-2'>
+                                    <div className='font-medium flex flex-row items-center gap-2'>
+                                        <i className='pi pi-user'></i>
+                                        <p>Lastname</p>
                                     </div>
+                                    <Input type='text' id='lastname' name='lastname' readonly={personalActive} />
                                 </div>
                                 <div className={personalActive ? 'hidden' : 'col-span-12 py-2'}>
                                     <div className='font-medium flex flex-row items-center gap-2'>
@@ -173,28 +195,26 @@ const Profile = () => {
                                     </div>
                                     <Input id='password' name='password' type='password' readonly={personalActive} />
                                 </div>
-                                <div className='col-span-12 grid grid-cols-12 gap-5'>
-                                    <div className='col-span-12 md:col-span-5 py-2'>
-                                        <div className='font-medium flex flex-row items-center gap-2'>
-                                            <i className='pi pi-at'></i>
-                                            <p>Email</p>
-                                        </div>
-                                        <Input id='email' name='email' type='email' placeholder='user@email.com' readonly={personalActive} />
+                                <div className='col-span-12 md:col-span-4 py-2'>
+                                    <div className='font-medium flex flex-row items-center gap-2'>
+                                        <i className='pi pi-at'></i>
+                                        <p>Email</p>
                                     </div>
-                                    <div className='col-span-12 md:col-span-5 py-2'>
-                                        <div className='font-medium flex flex-row items-center gap-2'>
-                                            <i className='pi pi-phone'></i>
-                                            <p>Phone</p>
-                                        </div>
-                                        <Input type='tel' id='phone' name='phone' placeholder="(999) 999-9999" readonly={personalActive} />
+                                    <Input id='email' name='email' type='email' placeholder='user@email.com' readonly={personalActive} />
+                                </div>
+                                <div className='col-span-12 md:col-span-4 py-2'>
+                                    <div className='font-medium flex flex-row items-center gap-2'>
+                                        <i className='pi pi-phone'></i>
+                                        <p>Phone</p>
                                     </div>
-                                    <div className='col-span-12 md:col-span-2 py-2'>
-                                        <div className='font-medium flex flex-row items-center gap-2'>
-                                            <i className='pi pi-question-circle'></i>
-                                            <p>State</p>
-                                        </div>
-                                        <ToggleButton id='state' name='state' checked={checked} onChange={(e) => {setChecked(e.value)}} onLabel='Active' offLabel='Inactive' onIcon="pi pi-check" offIcon="pi pi-times" disabled={personalActive} className='w-full' />
+                                    <Input type='tel' id='phone' name='phone' placeholder="(999) 999-9999" readonly={personalActive} />
+                                </div>
+                                <div className='col-span-12 md:col-span-4 py-2'>
+                                    <div className='font-medium flex flex-row items-center gap-2'>
+                                        <i className='pi pi-question-circle'></i>
+                                        <p>State</p>
                                     </div>
+                                    <ToggleButton id='state' name='state' checked={checked} onChange={(e) => {setChecked(e.value)}} onLabel='Active' offLabel='Inactive' onIcon="pi pi-check" offIcon="pi pi-times" disabled={personalActive} className='w-full' />
                                 </div>
                                 <div className='col-span-12 py-2'>
                                     <div className='font-medium flex flex-row items-center gap-2'>
@@ -243,75 +263,9 @@ const Profile = () => {
                         </div>
                     </form>
                 </FormProvider>
-
-                    {/* <div className='border-t-2 p-5 mb-5'>
-                        <div className='flex flex-row justify-between'>
-                            <p className='font-bold'>Payment methods accepted</p>
-                            <p className='text-[#109EDA] font-bold cursor-pointer'>Edit</p>
-                        </div>
-                        <div className='w-full flex flex-col'>
-                            <div className='py-2'>
-                                <div className='border-2 rounded-md mt-2 p-3 flex flex-row justify-between items-center gap-3'>
-                                    <div>
-                                        <p className='text-sm text-[#00CBA4] font-bold' >Get paid through BoatMate.</p>
-                                        <p className='text-xs text-gray-600' >Request and recieve payments from customers in the app. <Link href={''} className='text-[#109EDA] font-semibold' >Learn more</Link></p>
-
-                                    </div>
-                                    <Link href={''} className='bg-[#109EDA] border-2 border-[#109EDA] rounded-md text-white font-bold text-center px-5 py-2 hover:bg-[#149ad3] hover:border-[#149ad3]' >Set up direct deposit</Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
-
-                    {/* <div className='p-5 mb-5'>
-                        <p className='font-bold'>Reviews</p>
-                        <div className='w-full flex flex-row items-center justify-center md:gap-20 mt-5 px-5 md:px-20'>
-                            <div className='w-[40%] md:w-full'>
-                                <p className='text-[#00CBA4] font-bold'>{rating}</p>
-                                <Rating value={rating} cancel={false} readOnly offIcon={'pi pi-star-fill'} offIconProps={{style: {color: 'rgb(209, 213, 219)'}}} />
-                                <p className='text-xs'>{countRating} reviews</p>
-                            </div>
-                            <div className='w-[60%] md:w-full flex flex-col items-start'>
-                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
-                                    <p className='col-span-2'>5<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={ratingDetail['5']} showValue={false} className='col-span-6 h-[10px] w-full' />
-                                    <p className='col-span-4'>{ratingDetail['5']}%</p>
-                                </div>
-                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
-                                    <p className='col-span-2'>4<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={ratingDetail['4']} showValue={false} className='col-span-6 h-[10px] w-full' />
-                                    <p className='col-span-4'>{ratingDetail['4']}%</p>
-                                </div>
-                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
-                                    <p className='col-span-2'>3<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={ratingDetail['3']} showValue={false} className='col-span-6 h-[10px] w-full' />
-                                    <p className='col-span-4'>{ratingDetail['3']}%</p>
-                                </div>
-                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
-                                    <p className='col-span-2'>2<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={ratingDetail['2']} showValue={false} className='col-span-6 h-[10px] w-full' />
-                                    <p className='col-span-4'>{ratingDetail['2']}%</p>
-                                </div>
-                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
-                                    <p className='col-span-2'>1<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={ratingDetail['1']} showValue={false} className='col-span-6 h-[10px] w-full' />
-                                    <p className='col-span-4'>{ratingDetail['1']}%</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='border-2 rounded-md mt-5 p-3 flex flex-row justify-between items-center gap-5'>
-                            <img src="https://i.postimg.cc/SxJz8VPb/chat.png" alt="reviews" height={70} width={70} />
-                            <div>
-                                <p className='text-sm text-gray-60 font-bold'>Get reviews from past customers, even if they&apos;re not on BoatMate.</p>
-                                <p className='text-xs text-gray-600' >Tell us which customers to ask for a review, and we&apos;ll send the request for you.</p>
-
-                            </div>
-                            <Link href={`/welcome/ratings/${user.idProvider}`} className='bg-[#109EDA] border-2 border-[#109EDA] rounded-md text-white font-bold text-center px-5 py-2 hover:bg-[#149ad3] hover:border-[#149ad3] shrink-0' >Ask for reviews</Link>
-                        </div>
-                    </div> */}
             </div>
         </div>
-    </Layout>
+    </LayoutPrincipal>
   )
 }
 

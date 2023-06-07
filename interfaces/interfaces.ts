@@ -185,3 +185,22 @@ export interface ContractProvider {
     lastname:               string;
     phone:                  string;
 }
+
+export interface ContractCustomer {
+    id_contract:            number;
+    contract_date:          Date;
+    contract_state:         string;
+    contract_description:   string;
+    price:                  number;
+    service_provider_state: boolean;
+    id_provider:            number;
+    provider_name:          string;
+    provider_image:         string;
+    provider_lat:           string;
+    provider_lng:           string;
+    zip:                    string;
+    email:                  string;
+    person_name:            string;
+    lastname:               string;
+    phone:                  string;
+}

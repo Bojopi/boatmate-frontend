@@ -30,7 +30,7 @@ export const Users = () => {
         })
     }
 
-    const updateProfile = (id: number, data: any, setLoading: any, toast: any, setDataUser: any, setPersonalActive: any, setDetailActive: any) => {
+    const updateProfile = (id: number, data: any, setLoading: any, toast: any, setDataUser: any, setPersonalActive: any, setDetailActive?: any) => {
         axios.post(`/profile/${id}`, data, {
             headers: {
                 'Content-Type': 'multipart/form-data'
