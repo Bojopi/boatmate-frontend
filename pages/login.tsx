@@ -106,56 +106,56 @@ const Login: React.FC = () => {
                         <h1 className='mt-5 text-xl md:text-4xl font-semibold mr-5' style={{'color': '#373A85'}}>SIGN IN</h1>
                     </div>
                     <FormProvider {...methods}>
-                            <form onSubmit={handleSubmit(onSubmit, onErrors)} className="w-full md:mt-5">
+                        <form onSubmit={handleSubmit(onSubmit, onErrors)} className="w-full md:mt-5">
 
-                                <div className="grid grid-cols-1 gap-y-6 p-5">
-                                    <InputWrapper outerClassName="col-span-12">
-                                            <Label id='email'>Email</Label>
-                                            <Input
-                                                id='email'
-                                                name='email'
-                                                type='email'
-                                                rules={{required: "Email is required"}}
-                                            />
-                                        {errors?.email?.message && (
-                                            <ErrorMessage>{errors.email.message}</ErrorMessage>
-                                        )}
-                                    </InputWrapper>
-                                    <InputWrapper outerClassName="col-span-12">
-                                            <Label id="password">Password</Label>
-                                            <Input
-                                                id='password'
-                                                name='password'
-                                                type='password'
-                                                rules={{required: "Password is required"}}
-                                            />
-                                        {errors?.password?.message && (
-                                            <ErrorMessage>{errors.password.message}</ErrorMessage>
-                                        )}
-                                    </InputWrapper>
-                                    <p className='w-full text-center text-xs lg:text-sm font-medium text-[#373A85]'>New to BoatMate?
-                                    <Link href='/register' className='text-[#00CBA4] hover:underline'> Create account</Link>
-                                    </p>
-                                </div>
+                            <div className="grid grid-cols-1 gap-y-6 p-5">
+                                <InputWrapper outerClassName="col-span-12">
+                                        <Label id='email'>Email</Label>
+                                        <Input
+                                            id='email'
+                                            name='email'
+                                            type='email'
+                                            rules={{required: "Email is required"}}
+                                        />
+                                    {errors?.email?.message && (
+                                        <ErrorMessage>{errors.email.message}</ErrorMessage>
+                                    )}
+                                </InputWrapper>
+                                <InputWrapper outerClassName="col-span-12">
+                                        <Label id="password">Password</Label>
+                                        <Input
+                                            id='password'
+                                            name='password'
+                                            type='password'
+                                            rules={{required: "Password is required"}}
+                                        />
+                                    {errors?.password?.message && (
+                                        <ErrorMessage>{errors.password.message}</ErrorMessage>
+                                    )}
+                                </InputWrapper>
+                                <p className='w-full text-center text-xs lg:text-sm font-medium text-[#373A85]'>New to BoatMate?
+                                <Link href='/register' className='text-[#00CBA4] hover:underline'> Create account</Link>
+                                </p>
+                            </div>
 
-                                <Divider align='center'>
-                                    <p className='text-gray-400 text-sm'>OR</p>
-                                </Divider>
+                            <Divider align='center'>
+                                <p className='text-gray-400 text-sm'>OR</p>
+                            </Divider>
 
-                                <div className='w-full flex flex-row justify-center'>
-                                    <GoogleLogin onError={handleError} onSuccess={handleSuccess} />
-                                </div>
+                            <div className='w-full flex flex-row justify-center'>
+                                <GoogleLogin onError={handleError} onSuccess={handleSuccess} />
+                            </div>
 
-                                <div className="mt-4 flex items-center justify-between">
-                                    <Link
-                                        className='text-xs lg:text-sm font-medium text-[#00CBA4] hover:underline'
-                                        href={'/forgot'}>
-                                            Forgot password?
-                                    </Link>
-                                    <button type='submit' className='p-3 bg-[#109EDA] hover:bg-[#0E8FC7] text-white text-sm lg:text-base rounded-md hover:transition'>SIGN IN</button>
-                                </div>
-                            </form>
-                        </FormProvider>
+                            <div className="mt-4 flex items-center justify-between">
+                                <Link
+                                    className='text-xs lg:text-sm font-medium text-[#00CBA4] hover:underline'
+                                    href={'/forgot'}>
+                                        Forgot password?
+                                </Link>
+                                <button type='submit' className='p-3 bg-[#109EDA] hover:bg-[#0E8FC7] text-white text-sm lg:text-base rounded-md hover:transition'>SIGN IN</button>
+                            </div>
+                        </form>
+                    </FormProvider>
                 </div>
             </div>
         </GoogleOAuthProvider>

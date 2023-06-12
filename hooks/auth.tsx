@@ -58,6 +58,20 @@ export const Auth = () => {
             toast.current.show({severity:'error', summary:'Error', detail: `${err.response.data.msg}`, life: 4000});
             setLoading(false);
         })
+    };
+
+    const forgotPass = (data: any, setLoading: any, toast: any) => {
+        axios.post('/send-mail', data)
+        .then((res) => {
+            console.log(res);
+            setLoading(false);
+            toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
+        })
+        .catch((error) => {
+            console.log(error)
+            setLoading(false);
+            toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
+        })
     }
 
     return {
@@ -65,7 +79,8 @@ export const Auth = () => {
         getUserAuthenticated,
         logout,
         googleLogin,
-        createUSer
+        createUSer,
+        forgotPass
     }
 }
 

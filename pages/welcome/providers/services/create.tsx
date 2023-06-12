@@ -38,10 +38,8 @@ const Create: React.FC<RoleProps> = ({idProvider, serviceList, setServiceList, l
 
     const getServices = async () => {
         const response = await getAllServices();
-        console.log(serviceList)
         const filterList = response.data.services
         .filter((service: Service) => !serviceList.find((item: any) => Number(item.id_service) === Number(service.id_service)));
-        console.log(filterList.length)
         if(filterList.length === 0) setAllServices(true)
         setServices(filterList);
     };

@@ -16,11 +16,12 @@ const LayoutPrincipal = ({children}: any) => {
     const getUser = async () => {
         try {
             const response = await getUserAuthenticated();
+            console.log('aqui', response)
             if(response.status == 200) {
                 setUser(response.data)
             }
         } catch (error) {
-            console.log(error)
+            return
         }
     }
 

@@ -114,6 +114,19 @@ export const Users = () => {
         })
     };
 
+    const resetPassword = (data: any, setLoading: any, toast: any) => {
+        axios.post(`/reset-password`, data)
+        .then((res) => {
+            toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
+            setLoading(false);
+            router.push('/login')
+        })
+        .catch((error) => {
+            toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
+            setLoading(false);
+        })
+    }
+
 
     return {
         getAllUsers,
@@ -123,7 +136,8 @@ export const Users = () => {
         show,
         updateUser,
         deleteUser,
-        activateUser
+        activateUser,
+        resetPassword
     }
 }
 
