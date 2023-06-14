@@ -61,7 +61,7 @@ export interface Provider {
     phone:                string;
     person_name:          string;
     lastname:             string;
-    zip:                  string;
+    provider_zip:         string;
 }
 
 export interface ProviderServices {
@@ -76,6 +76,7 @@ export interface Customer {
     id_customer:    number;
     customer_lat:   string;
     customer_lng:   string;
+    customer_zip:   string;
     email:          string;
     person_name:    string;
     lastname:       string;
@@ -193,12 +194,13 @@ export interface ContractCustomer {
     contract_description:   string;
     price:                  number;
     service_provider_state: boolean;
+    service_name:           string;
     id_provider:            number;
     provider_name:          string;
     provider_image:         string;
     provider_lat:           string;
     provider_lng:           string;
-    zip:                    string;
+    provider_zip:           string;
     email:                  string;
     person_name:            string;
     lastname:               string;

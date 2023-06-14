@@ -15,6 +15,9 @@ import LayoutPrincipal from '@/components/layoutPrincipal';
 import Spinner from '@/components/spinner';
 import { Toast } from 'primereact/toast';
 import { Users } from '@/hooks/user';
+import { Button } from 'primereact/button';
+import Link from 'next/link';
+import SearchServiceComponent from '@/components/searchService';
 
 export type FormProps = {
     name: string;
@@ -153,8 +156,22 @@ const Profile = () => {
     <LayoutPrincipal>
         <Spinner loading={loading} />
         <Toast ref={toast} />
-        <div className=' w-full h-full flex justify-center pt-10 md:pt-5 p-5'>
-            <div className='w-full md:w-[50%] h-full bg-white rounded-md shadow-md border overflow-y-auto'>
+        <div className=' w-full h-full flex flex-col gap-5 pt-10 md:pt-5 p-5'>
+            <div className='w-full flex flex-col md:flex-row md:justify-between px-5'>
+                <div className='w-full md:w-[40%]'>
+                    <SearchServiceComponent></SearchServiceComponent>
+                </div>
+                <div className='flex gap-2 place-content-end border-b md:border-none'>
+                    <Link href={`/inbox/${user?.idCustomer}`}>
+                        <Button label='Inbox' text severity='secondary' className='text-black font-semibold' />
+                    </Link>
+                    <Link href={`/projects/${user?.idCustomer}`}>
+                        <Button label='Projects' text severity='secondary' className='text-black font-semibold' />
+                    </Link>
+                </div>
+            </div>
+            <p className='w-full md:w-[50%] mx-auto font-semibold'>Profile</p>
+            <div className='w-full md:w-[50%] h-full bg-white rounded-md shadow-md border overflow-y-auto mx-auto'>
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit, onErrors)}>
                         <div className='p-5 mb-5'>

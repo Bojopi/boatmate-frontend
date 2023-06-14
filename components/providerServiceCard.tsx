@@ -6,7 +6,6 @@ import { RaitingComponent } from './rating';
 import { Ratings } from '@/hooks/rating';
 import { avgRating } from '@/functions/rating';
 import { Maps } from '@/hooks/maps';
-import Link from 'next/link';
 import { Tag } from 'primereact/tag';
 import { formatDate } from '../functions/date';
 import { Contracts } from '@/hooks/contracts';

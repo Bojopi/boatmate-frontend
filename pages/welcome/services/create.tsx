@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { FormProvider, useForm } from "react-hook-form";
@@ -11,10 +11,13 @@ import { Textarea } from "@/components/react-hook-form/textarea";
 import { MultiSelect } from 'primereact/multiselect';
 import { Categories } from "@/hooks/categories";
 import { ServiceCategory } from "@/interfaces/interfaces";
+import { FileUpload } from "primereact/fileupload";
+import { Tag } from "primereact/tag";
 
 export type FormProps = {
     serviceName:        string;
     serviceDescription: string;
+    serviceImage:       string;
     categories:         any;
 }
 
@@ -31,14 +34,19 @@ const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, s
     const { getAllCategories } = Categories();
 
     const [categoryList, setCategoryList] = useState<ServiceCategory[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<any[]>([])
+    const [selectedCategory, setSelectedCategory] = useState<any[]>([]);
+
+    const [imageService, setImageService] = useState<any>(null);
 
     const [visible, setVisible] = useState(false);
+
+    const fileUploadServiceRef = useRef<any>(null);
 
     const methods = useForm<FormProps>({
         defaultValues: {
             serviceName: '',
             serviceDescription: '',
+            serviceImage: '',
             categories: [],
         }
     });
@@ -71,6 +79,7 @@ const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, s
 
     const onSubmit = (formData: FormProps) => {
         formData.categories = selectedCategory;
+        formData.serviceImage = imageService;
         setLoading(true);
         if(idService == 0) {
             createService(formData, services, setServices, setLoading, toast, setVisible);
@@ -112,6 +121,36 @@ const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, s
             </div>
         );
     }
+
+    const headerTemplate = (options: any) => {
+        const { className, chooseButton, cancelButton } = options;
+
+        return (
+            <div className={className} style={{ backgroundColor: 'transparent', display: 'flex', alignItems: 'center' }}>
+                {chooseButton}
+                {cancelButton}
+            </div>
+        );
+    };
+
+    const itemTemplateService = (file: any, props: any) => {
+        setImageService(file);
+        return (
+            <div className="flex items-center flex-wrap">
+                <div className="flex items-center" style={{ width: '40%' }}>
+                    <img alt={file.name} role="presentation" src={file.objectURL} width={100} />
+                    <span className="flex flex-col text-left ml-3">
+                        {file.name}
+                        <small>{new Date().toLocaleDateString()}</small>
+                    </span>
+                </div>
+                <Tag value={props.formatSize} severity="warning" className="px-3 py-2" />
+            </div>
+        );
+    };
+
+    const chooseOptions = { icon: 'pi pi-fw pi-images', iconOnly: true, className: 'custom-choose-btn p-button-rounded p-button-outlined' };
+    const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
 
     return (
         <>
@@ -169,6 +208,21 @@ const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, s
                             className="w-full"
                             display="chip" />
                         </InputWrapper>
+                        <div className='col-span-12'>
+                            <p className="font-medium">Service image</p>
+                            <FileUpload
+                            ref={fileUploadServiceRef}
+                            id='providerImage'
+                            name="providerImage"
+                            onClear={() => setImageService(null)}
+                            accept="image/*"
+                            maxFileSize={1000000}
+                            headerTemplate={headerTemplate}
+                            itemTemplate={itemTemplateService}
+                            chooseOptions={chooseOptions}
+                            cancelOptions={cancelOptions}
+                            emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
+                        </div>
                     </form>
                 </FormProvider>
             </Dialog>

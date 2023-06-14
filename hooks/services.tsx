@@ -98,6 +98,8 @@ export const Services = () => {
 
     const findByNameProvidersService = (data: any) => axios.post('/provider-service', data);
 
+    const getPopularServices = (zip: string) => axios.get(`/popular-services/${zip}`);
+
     return {
         getAllServices,
         activateService,
@@ -106,7 +108,8 @@ export const Services = () => {
         createService,
         updateService,
         getProvidersService,
-        findByNameProvidersService
+        findByNameProvidersService,
+        getPopularServices
     }
 }
 

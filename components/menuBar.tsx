@@ -50,7 +50,6 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, user = null, menuItem=t
                     }
                 },
                 {label: 'Profile', url: '/profile'},
-                {label: 'Applications ', url: `/applications/${user.idCustomer}`},
                 { separator: true},
                 ...menuItems
             ]

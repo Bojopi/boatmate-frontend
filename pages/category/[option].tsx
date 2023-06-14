@@ -61,7 +61,7 @@ const Index = () => {
       if(response.status == 200) {
         let services = response.data.service.service_providers.filter((item: ServiceProvider) => item.service_provider_state == true);
         if(zip != null && zip != 0) {
-          services = services.filter((item: ServiceProvider) => item.provider.zip == zip);
+          services = services.filter((item: ServiceProvider) => item.provider.provider_zip == zip);
         }
         setTitle(response.data.service.service_name);
         setSelectedService(response.data.service)
@@ -162,26 +162,31 @@ const Index = () => {
           <Messages ref={msg} />
           <div className='p-5 md:p-10'>
             <div className='w-full flex items-center justify-between search-input-group'>
-              <div className='w-[65%] md:w-[40%] p-inputgroup'>
-                <AutoComplete 
-                field='service_name' 
-                value={selectedService} 
-                suggestions={filteredServices} 
-                completeMethod={searchServices} 
-                onChange={(e: AutoCompleteChangeEvent) => setSelectedService(e.value)}
-                placeholder='Find a service'
-                className={`w-[20%] lg:w-[40%] ${inputDisabled ? 'p-invalid' : ''}`} />
-                <span className={`p-inputgroup-addon bg-white border-r-0 ${inputDisabled ? 'border-red-500' : ''}`}>
-                    <i className="pi pi-map-marker text-[#109EDA] text-sm font-bold"></i>
-                </span>
-                <InputNumber 
-                value={zip} 
-                onValueChange={(e) => setZip(e.value != undefined ? e.value : 0)} 
-                useGrouping={false} 
-                maxLength={5} 
-                placeholder='Zip code'
-                className={`input-number ${inputDisabled ? 'p-invalid': ''}`} />
-                <Button type='button' icon='pi pi-search' onClick={onClickSearch}></Button>
+              <div className='w-[65%] md:w-[40%] flex flex-col'>
+                <div className='p-inputgroup'>
+                  <AutoComplete 
+                  field='service_name' 
+                  value={selectedService} 
+                  suggestions={filteredServices} 
+                  completeMethod={searchServices} 
+                  onChange={(e: AutoCompleteChangeEvent) => setSelectedService(e.value)}
+                  placeholder='Find a service'
+                  className={`w-[20%] lg:w-[40%] ${inputDisabled ? 'p-invalid' : ''}`} />
+                  <span className={`p-inputgroup-addon bg-white border-r-0 ${inputDisabled ? 'border-red-500' : ''}`}>
+                      <i className="pi pi-map-marker text-[#109EDA] text-sm font-bold"></i>
+                  </span>
+                  <InputNumber 
+                  value={zip} 
+                  onValueChange={(e) => setZip(e.value != undefined ? e.value : 0)} 
+                  useGrouping={false} 
+                  maxLength={5} 
+                  placeholder='Zip code'
+                  className={`input-number ${inputDisabled ? 'p-invalid': ''}`} />
+                  <Button type='button' label='Search' onClick={onClickSearch}></Button>
+                </div>
+                <small id="autocomplete-help" className='text-xs text-[#495057] font-normal'>
+                    Try searching for a Marine Mechanic, Hull Cleaning or Bottom Scraping.
+                </small>
               </div>
               <Dropdown value={selectOrder} onChange={(e) => orderList(e.value)} options={order} optionLabel="option" 
                 placeholder="Order by" className="w-[30%]" showClear />
