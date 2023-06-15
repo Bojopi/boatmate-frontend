@@ -74,9 +74,9 @@ const View: React.FC<ContractCustomerProps> = ({contract}) => {
         <>
             <p className="w-auto text-[#109EDF] text-xs font-medium cursor-pointer" onClick={openModal}>See details</p>
 
-            <Dialog header={`Service: ${contract.service_name}`} visible={visible} className="w-[90%] md:w-[70%]" onHide={() => setVisible(false)} footer={footerContent}>
+            <Dialog header={`Service: ${contract && contract.service_name}`} visible={visible} className="w-[90%] md:w-[70%]" onHide={() => setVisible(false)} footer={footerContent}>
                 <div className="w-full mt-2">
-                    <div className={templateState(contract.contract_state) + ' text-[10px] p-1 w-[20%] md:w-[12%] font-medium flex justify-center items-center rounded-full'}>{contract.contract_state}</div>
+                    <div className={templateState(contract.contract_state) + ' text-[10px] p-1 w-[20%] md:w-[12%] font-medium flex justify-center items-center rounded-full'}>{contract && contract.contract_state}</div>
                     <div className="flex md:flex-row flex-col md:justify-between items-start mb-2">
                         <div className="flex gap-5 items-start">
                             <div>
@@ -88,12 +88,12 @@ const View: React.FC<ContractCustomerProps> = ({contract}) => {
                                 }
                             </div>
                             <div className="flex flex-col gap-1">
-                                <p className="text-base md:text-lg font-medium">{contract.provider_name}</p>
-                                <p className="text-sm md:text-base">{contract.email}</p>
-                                <p className="text-[#109EDF] text-xs md:text-sm">{contract.phone}</p>
+                                <p className="text-base md:text-lg font-medium">{contract && contract.provider_name}</p>
+                                <p className="text-sm md:text-base">{contract && contract.email}</p>
+                                <p className="text-[#109EDF] text-xs md:text-sm">{contract && contract.phone}</p>
                             </div>
                         </div>
-                        <p className="text-xs md:text-sm font-medium">Requested made {formatDate(String(contract.contract_date))}</p>
+                        <p className="text-xs md:text-sm font-medium">Requested made {formatDate(String(contract && contract.contract_date))}</p>
                     </div>
                     <div className="flex flex-col gap-3">
                         <div className='flex flex-row gap-2 justify-start'>
@@ -105,7 +105,7 @@ const View: React.FC<ContractCustomerProps> = ({contract}) => {
                             <p className='text-xs md:text-sm'>{address}</p>
                         </div>
                         <p className="font-medium text-sm md:text-base">About the project</p>
-                        <p className="text-sm md:text-base">{contract.contract_description}</p>
+                        <p className="text-sm md:text-base">{contract && contract.contract_description}</p>
                     </div>
                 </div>
             </Dialog>
