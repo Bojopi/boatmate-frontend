@@ -63,7 +63,7 @@ const InboxPage = () => {
           <p className='w-full md:w-[50%] mx-auto font-semibold'>Inbox</p>
           <div className='w-full md:w-[50%] border rounded-lg shadow-md mx-auto p-5 md:p-10 flex flex-col gap-5 items-center'>
             <p>No conversations yet</p>
-            <p className='w-[50%] text-center text-[#575d64]'>Once you create  a project, you'll see your messages and booking reminders-all right here.</p>
+            <p className='w-[50%] text-center text-[#575d64]'>Once you create  a project, you&apos;ll see your messages and booking reminders-all right here.</p>
             <Link href={''} className='text-[#109EDF] font-medium'>New project</Link>
           </div>
 

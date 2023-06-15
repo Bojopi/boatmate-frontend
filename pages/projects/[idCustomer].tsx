@@ -17,11 +17,14 @@ import { RaitingComponent } from '@/components/rating';
 import View from './view';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { avgRating } from '@/functions/rating';
+import SearchServiceComponent from '@/components/searchService';
 
 const ProjectsPage = () => {
     const { getContractsCustomer, updateState } = Contracts();
     const { getRatingProvider } = Ratings();
     const { getAddress } = Maps();
+
+    const [idCustomer, setIdCustomer] = useState<number>(0);
 
     const [contractsPending, setContractsPending] = useState<ContractCustomer[]>([]);
     const [contractsFinished, setContractsFinished] = useState<ContractCustomer[]>([]);
@@ -83,6 +86,7 @@ const ProjectsPage = () => {
     useEffect(() => {
       setLoading(true);
         if(router.query.idCustomer) {
+          setIdCustomer(Number(router.query.idCustomer));
           getContracts(Number(router.query.idCustomer));
         }
     }, [router.query.idCustomer]);
@@ -157,6 +161,19 @@ const ProjectsPage = () => {
         <Toast ref={toast} />
         <ConfirmDialog />
         <div className='w-full md:w-[70%] h-full p-10 m-auto flex flex-col gap-3'>
+          <div className='w-full flex flex-col md:flex-row md:justify-between px-5'>
+            <div className='w-full md:w-[50%]'>
+              <SearchServiceComponent></SearchServiceComponent>
+            </div>
+            <div className='flex gap-2 place-content-end border-b md:border-none'>
+                <Link href={`/inbox/${idCustomer}`}>
+                    <Button label='Inbox' text severity='secondary' className='text-black font-semibold' />
+                </Link>
+                <Link href={`/projects/${idCustomer}`}>
+                    <Button label='Projects' text severity='secondary' className='text-black font-semibold' />
+                </Link>
+            </div>
+          </div>
           <MenuProgressComponent activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
           {
             activeIndex === 1 ?
