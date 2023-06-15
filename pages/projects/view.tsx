@@ -81,7 +81,7 @@ const View: React.FC<ContractCustomerProps> = ({contract}) => {
                         <div className="flex gap-5 items-start">
                             <div>
                                 {
-                                    contract.provider_image != null ?
+                                    contract && contract.provider_image != null ?
                                     <img src={`${contract.provider_image}`} alt={`${contract.provider_name}`} className='w-32' />
                                     :
                                     <Avatar icon="pi pi-image" size='large' shape="circle" />
