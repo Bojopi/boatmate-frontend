@@ -3,7 +3,6 @@ import LayoutPrincipal from '@/components/layoutPrincipal'
 import { Contracts } from '@/hooks/contracts'
 import { ContractCustomer } from '@/interfaces/interfaces';
 import { useRouter } from 'next/router';
-import ProviderServiceCardComponent from '@/components/providerServiceCard';
 import Spinner from '@/components/spinner';
 import { Toast } from 'primereact/toast';
 import MenuProgressComponent from '@/components/menuProgress';
