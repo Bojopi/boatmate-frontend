@@ -93,7 +93,7 @@ const View: React.FC<ContractCustomerProps> = ({contract}) => {
                                 <p className="text-[#109EDF] text-xs md:text-sm">{contract && contract.phone}</p>
                             </div>
                         </div>
-                        <p className="text-xs md:text-sm font-medium">Requested made {formatDate(String(contract && contract.contract_date))}</p>
+                        <p className="text-xs md:text-sm font-medium">Requested made {contract && formatDate(String(contract.contract_date))}</p>
                     </div>
                     <div className="flex flex-col gap-3">
                         <div className='flex flex-row gap-2 justify-start'>
