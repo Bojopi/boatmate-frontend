@@ -76,7 +76,7 @@ const View: React.FC<ContractCustomerProps> = ({contract}) => {
 
             <Dialog header={`Service: ${contract && contract.service_name}`} visible={visible} className="w-[90%] md:w-[70%]" onHide={() => setVisible(false)} footer={footerContent}>
                 <div className="w-full mt-2">
-                    <div className={templateState(contract.contract_state) + ' text-[10px] p-1 w-[20%] md:w-[12%] font-medium flex justify-center items-center rounded-full'}>{contract && contract.contract_state}</div>
+                    <div className={templateState(contract && contract.contract_state) + ' text-[10px] p-1 w-[20%] md:w-[12%] font-medium flex justify-center items-center rounded-full'}>{contract && contract.contract_state}</div>
                     <div className="flex md:flex-row flex-col md:justify-between items-start mb-2">
                         <div className="flex gap-5 items-start">
                             <div>
