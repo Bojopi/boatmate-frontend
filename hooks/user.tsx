@@ -30,7 +30,7 @@ export const Users = () => {
         })
     }
 
-    const updateProfile = (id: number, data: any, setLoading: any, toast: any, setDataUser: any, setPersonalActive: any, setDetailActive?: any) => {
+    const updateProfile = (id: number, data: any, setLoading: any, toast: any, setDataUser: any, resetInputsForm: any) => {
         axios.post(`/profile/${id}`, data, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -39,8 +39,7 @@ export const Users = () => {
             setLoading(false);
             toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
             setDataUser();
-            setPersonalActive(true);
-            setDetailActive(true);
+            resetInputsForm();
         }).catch(error => {
             console.log(error)
             setLoading(false)

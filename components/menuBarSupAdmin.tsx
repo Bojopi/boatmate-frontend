@@ -192,10 +192,10 @@ const MenuBarSupAdmin: React.FC<MenuProps> = ({
                 </div>
                 <div className={`${user.role == 'PROVIDER' ? 'block pl-5' : 'hidden'}`}>
                     <p className='text-xs'>{user.providerName}</p>
-                    <div className='flex flex-row gap-2 justify-start'>
+                    {/* <div className='flex flex-row gap-2 justify-start'>
                         <Rating value={rating} readOnly cancel={false} onIconProps={{style: {color: 'rgb(107, 114, 128)'}}} />
                         <p className='text-sm'>{rating == 0 ? 'N/A' : rating}</p>
-                    </div>
+                    </div> */}
                     <p className='text-xs font-medium'>{address}</p>
                 </div>
             </div>

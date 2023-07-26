@@ -7,6 +7,7 @@ export type TextareaProps = {
   placeholder?: string;
   width?: string;
   readonly?: boolean;
+  onClick?: (e: any) => void;
 };
 
 export const Textarea: React.FC<TextareaProps> = ({
@@ -17,6 +18,7 @@ export const Textarea: React.FC<TextareaProps> = ({
   placeholder = "",
   width = "w-full",
   readonly = false,
+  onClick,
 }) => {
   const {register} = useFormContext();
   return (
@@ -28,6 +30,7 @@ export const Textarea: React.FC<TextareaProps> = ({
       placeholder={placeholder}
       className={`p-inputtext p-inputtextarea w-full read-only:border-none read-only:focus:shadow-none`}
       readOnly={readonly}
+      onClick={onClick}
     />
   );
 };

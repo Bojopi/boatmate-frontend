@@ -27,6 +27,7 @@ import { Button } from 'primereact/button';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Galleria } from 'primereact/galleria';
 import Edit from './providers/portofolio/edit';
+import { Providers } from '@/hooks/providers';
 
 export type FormProps = {
     name: string;
@@ -49,24 +50,27 @@ const Welcome = () => {
     const {updateProfile} = Users();
     const {getAddress} = Maps();
     const {getPortofolioProvider, deleteImagePortofolio} = Portofolios();
+    const {uploadLicense} = Providers();
 
     const [loading, setLoading] = useState<boolean>(false);
     const [checked, setChecked] = useState<boolean>(false);
 
-    const [personalActive, setPersonalActive] = useState<boolean>(true);
-    const [detailActive, setDetailActive] = useState<boolean>(true);
+    const [buttonActive, setButtonActive] = useState<boolean>(false);
+    const [listNames, setListNames] = useState<string[]>([]);
 
     const [selectedPlace, setSelectedPlace] = useState<string>('');
     const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
     const [imagePerson, setImagePerson] = useState<any>(null);
     const [imageProvider, setImageProvider] = useState<any>(null);
+    const [providerLicense, setProviderLicense] = useState<any>(null);
 
     const toast = useRef<Toast>(null);
     const galleria = useRef<any>(null);
 
     const fileUploadPersonRef = useRef<any>(null)
     const fileUploadProviderRef = useRef<any>(null)
+    const fileUploadProviderLicense = useRef<any>(null)
 
     const [user, setUser] = useState<Profile>(
         {
@@ -142,7 +146,7 @@ const Welcome = () => {
         formData.lat = String(selectedLocation.lat);
         formData.lng = String(selectedLocation.lng);
 
-        updateProfile(user.uid, formData, setLoading, toast, setDataUser, setPersonalActive, setDetailActive);
+        updateProfile(user.uid, formData, setLoading, toast, setDataUser, resetInputsForm);
         
         if(fileUploadPersonRef.current !== null) fileUploadPersonRef.current.clear();
         if(fileUploadProviderRef.current !== null) fileUploadProviderRef.current.clear();
@@ -196,15 +200,34 @@ const Welcome = () => {
         }
     }
 
-    const activeEdit = (e: any) => {
-        if(e.target.id == 'personal') setPersonalActive(false);
-        if(e.target.id == 'detail') setDetailActive(false);
-    };
+    const onClickInputs = (e: any) => {
+        setButtonActive(true);
+        e.target.readOnly = false;
+        if(listNames.length > 0) {
+            if(!listNames.includes(e.target.name)) {
+                listNames.push(e.target.name)
+            }
+        } else {
+            listNames.push(e.target.name)
+        }
+    }
 
-    const cancelEdit = (e: any) => {
-        reset();
-        if(e.target.id == 'btnPersonal') setPersonalActive(true);
-        if(e.target.id == 'btnDetail') setDetailActive(true);
+    const resetInputsForm = () => {
+        listNames.map((item: string) => {
+            document.getElementById(item)?.setAttribute('readOnly', 'true');
+        });
+        setListNames([])
+        setButtonActive(false);
+    }
+
+    const cancelEdit = () => {
+        setLoading(true);
+        setInterval(() => {
+            reset();
+            resetInputsForm();
+            setButtonActive(false);
+            setLoading(false);
+        }, 1500)
     }
 
     const headerTemplate = (options: any) => {
@@ -240,6 +263,21 @@ const Welcome = () => {
             <div className="flex items-center flex-wrap">
                 <div className="flex items-center" style={{ width: '40%' }}>
                     <img alt={file.name} role="presentation" src={file.objectURL} width={100} />
+                    <span className="flex flex-col text-left ml-3">
+                        {file.name}
+                        <small>{new Date().toLocaleDateString()}</small>
+                    </span>
+                </div>
+                <Tag value={props.formatSize} severity="warning" className="px-3 py-2" />
+            </div>
+        );
+    };
+
+    const itemTemplateLicense = (file: any, props: any) => {
+        setProviderLicense(file);
+        return (
+            <div className="flex items-center flex-wrap">
+                <div className="flex items-center" style={{ width: '40%' }}>
                     <span className="flex flex-col text-left ml-3">
                         {file.name}
                         <small>{new Date().toLocaleDateString()}</small>
@@ -290,6 +328,16 @@ const Welcome = () => {
         );
     }
 
+    const saveLicense = () => {
+        setLoading(true);
+        const data = {
+            license: providerLicense
+        }
+        uploadLicense(user.idProvider, data, toast, setLoading);
+
+        if(fileUploadProviderLicense.current !== null) fileUploadProviderLicense.current.clear();
+    }
+
 
   return (
         <>
@@ -315,17 +363,8 @@ const Welcome = () => {
                                     }
                                     <div className='flex flex-col justify-center'>
                                         <p className='font-medium'>{(user.providerName ? user.providerName : `${user.name} ${user.lastname}`).toUpperCase()}</p>
-                                        {
-                                            user.role === 'PROVIDER' ?
-                                            <div className='flex flex-row gap-2 justify-start'>
-                                                <Rating value={rating} readOnly cancel={false} onIconProps={{style: {color: '#109EDA', fontSize:'12px'}}} offIconProps={{style: {fontSize:'12px'}}} />
-                                                <Link href={`/welcome/ratings/${user.idProvider}`} className='text-[#109EDA] text-sm' >Ask for Reviews</Link>
-                                            </div>
-                                            : null
-                                        }
                                     </div>
                                 </div>
-                                <p id='personal' className='text-[#109EDA] font-bold cursor-pointer' onClick={activeEdit}>Edit</p>
                             </div>
 
                             <div className='w-full grid grid-cols-12 mt-5'>
@@ -335,14 +374,14 @@ const Welcome = () => {
                                             <i className='pi pi-user'></i>
                                             <p>Name</p>
                                         </div>
-                                        <Input type='text' id='name' name='name' readonly={personalActive} />
+                                        <Input type='text' id='name' name='name' readonly onClick={onClickInputs}  />
                                     </div>
                                     <div className='col-span-6 py-2'>
                                         <div className='font-medium flex flex-row items-center gap-2'>
                                             <i className='pi pi-user'></i>
                                             <p>Lastname</p>
                                         </div>
-                                        <Input type='text' id='lastname' name='lastname' readonly={personalActive} />
+                                        <Input type='text' id='lastname' name='lastname' readonly onClick={onClickInputs}  />
                                     </div>
                                 </div>
                                 {
@@ -353,39 +392,34 @@ const Welcome = () => {
                                                 <i className='pi pi-building'></i>
                                                 <p>Bussiness Name</p>
                                             </div>
-                                            <Input id='providerName' name='providerName' type='text' placeholder='work day' readonly={personalActive} />
+                                            <Input id='providerName' name='providerName' type='text' placeholder='work day' readonly onClick={onClickInputs}  />
                                         </div>
-                                        {
-                                            !personalActive ?
-                                            <div className='col-span-12 py-2'>
-                                                <div className='font-medium flex flex-row items-center gap-2'>
-                                                    <i className='pi pi-image'></i>
-                                                    <p>Bussiness image</p>
-                                                </div>
-                                                <FileUpload
-                                                ref={fileUploadProviderRef}
-                                                id='providerImage'
-                                                name="providerImage"
-                                                onClear={() => setImageProvider(null)}
-                                                accept="image/*"
-                                                maxFileSize={1000000}
-                                                headerTemplate={headerTemplate}
-                                                itemTemplate={itemTemplateProvider}
-                                                chooseOptions={chooseOptions}
-                                                cancelOptions={cancelOptions}
-                                                emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
+                                        <div className='col-span-12 py-2'>
+                                            <div className='font-medium flex flex-row items-center gap-2'>
+                                                <i className='pi pi-image'></i>
+                                                <p>Bussiness image</p>
                                             </div>
-                                            : null
-                                        }
+                                            <FileUpload
+                                            ref={fileUploadProviderRef}
+                                            id='providerImage'
+                                            name="providerImage"
+                                            onClear={() => setImageProvider(null)}
+                                            accept="image/*"
+                                            headerTemplate={headerTemplate}
+                                            itemTemplate={itemTemplateProvider}
+                                            chooseOptions={chooseOptions}
+                                            cancelOptions={cancelOptions}
+                                            emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
+                                        </div>
                                     </>
                                     : null
                                 }
-                                <div className={personalActive ? 'hidden' : 'col-span-12 py-2'}>
+                                <div className='col-span-12 py-2'>
                                     <div className='font-medium flex flex-row items-center gap-2'>
                                         <i className='pi pi-lock'></i>
                                         <p>Password</p>
                                     </div>
-                                    <Input id='password' name='password' type='password' readonly={personalActive} />
+                                    <Input id='password' name='password' type='password' placeholder='******' readonly onClick={onClickInputs} />
                                 </div>
                                 <div className='col-span-12 grid grid-cols-12 gap-5'>
                                     <div className='col-span-12 md:col-span-5 py-2'>
@@ -393,21 +427,14 @@ const Welcome = () => {
                                             <i className='pi pi-at'></i>
                                             <p>Email</p>
                                         </div>
-                                        <Input id='email' name='email' type='email' placeholder='user@email.com' readonly={personalActive} />
+                                        <Input id='email' name='email' type='email' placeholder='user@email.com' readonly onClick={onClickInputs} />
                                     </div>
                                     <div className='col-span-12 md:col-span-5 py-2'>
                                         <div className='font-medium flex flex-row items-center gap-2'>
                                             <i className='pi pi-phone'></i>
                                             <p>Phone</p>
                                         </div>
-                                        <Input type='tel' id='phone' name='phone' placeholder="(999) 999-9999" readonly={personalActive} />
-                                    </div>
-                                    <div className='col-span-12 md:col-span-2 py-2'>
-                                        <div className='font-medium flex flex-row items-center gap-2'>
-                                            <i className='pi pi-question-circle'></i>
-                                            <p>State</p>
-                                        </div>
-                                        <ToggleButton id='state' name='state' checked={checked} onChange={(e) => {setChecked(e.value)}} onLabel='Active' offLabel='Inactive' onIcon="pi pi-check" offIcon="pi pi-times" disabled={personalActive} className='w-full' />
+                                        <Input type='tel' id='phone' name='phone' placeholder="(999) 999-9999" readonly onClick={onClickInputs} />
                                     </div>
                                 </div>
                                 <div className='col-span-12 py-2'>
@@ -416,44 +443,30 @@ const Welcome = () => {
                                         <p>Address</p>
                                     </div>
                                     <MapComponent
-                                        readonly={personalActive}
                                         selectedLocation={selectedLocation}
                                         setSelectedLocation={setSelectedLocation}
                                         getAddress={getAddress}
                                         selectedPlace={selectedPlace}
                                         setSelectedPlace={setSelectedPlace} />
                                 </div>
-                                {
-                                    !personalActive ?
-                                    <div className='col-span-12 py-2'>
-                                        <div className='font-medium flex flex-row items-center gap-2'>
-                                            <i className='pi pi-image'></i>
-                                            <p>Profile image</p>
-                                        </div>
-                                        <FileUpload
-                                            ref={fileUploadPersonRef}
-                                            id='personImage'
-                                            name="personImage"
-                                            onClear={() => setImagePerson(null)}
-                                            accept="image/*"
-                                            maxFileSize={1000000}
-                                            headerTemplate={headerTemplate}
-                                            itemTemplate={itemTemplatePerson}
-                                            chooseOptions={chooseOptions}
-                                            cancelOptions={cancelOptions}
-                                            emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
+                                <div className='col-span-12 py-2'>
+                                    <div className='font-medium flex flex-row items-center gap-2'>
+                                        <i className='pi pi-image'></i>
+                                        <p>Profile image</p>
                                     </div>
-                                    : null
-                                }
+                                    <FileUpload
+                                        ref={fileUploadPersonRef}
+                                        id='personImage'
+                                        name="personImage"
+                                        onClear={() => setImagePerson(null)}
+                                        accept="image/*"
+                                        headerTemplate={headerTemplate}
+                                        itemTemplate={itemTemplatePerson}
+                                        chooseOptions={chooseOptions}
+                                        cancelOptions={cancelOptions}
+                                        emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
+                                </div>
                             </div>
-                            {
-                                !personalActive && (
-                                    <div className='flex flex-row items-center justify-end gap-3 mt-3'>
-                                        <button type='button' id='btnPersonal' className='px-5 py-1 bg-white border-2 border-[#373A85] text-center text-sm text-[#373A85] font-bold rounded-md' onClick={cancelEdit}>Cancel</button>
-                                        <button type='submit' className='px-5 py-1 bg-[#373A85] border-2 border-[#373A85] text-center text-sm text-white font-bold rounded-md'>Save</button>
-                                    </div>
-                                )
-                            }
                         </div>
 
                         {
@@ -461,15 +474,14 @@ const Welcome = () => {
                                 <div className='border-t-2 p-5 mb-5'>
                                     <div className='flex flex-row justify-between'>
                                         <p className='font-bold'>Your introduction</p>
-                                        <p id='detail' className='text-[#109EDA] font-bold cursor-pointer' onClick={activeEdit}>Edit</p>
                                     </div>
                                     <div className='w-full flex flex-col mt-5'>
                                         <div className='py-2'>
-                                            <Textarea id='providerDescription' name='providerDescription' readonly={detailActive} rows={2} />
+                                            <Textarea id='providerDescription' name='providerDescription' rows={2} readonly onClick={onClickInputs} />
                                         </div>
                                     </div>
                                     {
-                                        !detailActive && (
+                                        buttonActive && (
                                             <div className='flex flex-row items-center justify-end gap-3 mt-3'>
                                                 <button type='button' id='btnDetail' className='px-5 py-1 bg-white border-2 border-[#373A85] text-center text-sm text-[#373A85] font-bold rounded-md' onClick={cancelEdit}>Cancel</button>
                                                 <button type='submit' className='px-5 py-1 bg-[#373A85] border-2 border-[#373A85] text-center text-sm text-white font-bold rounded-md'>Save</button>
@@ -488,7 +500,7 @@ const Welcome = () => {
                     <div className='border-t-2 p-5 mb-5'>
                         <p className='font-bold'>Credentials</p>
                         <div className='w-full flex flex-col mt-5'>
-                            <div className='py-2'>
+                            {/* <div className='py-2'>
                                 <div className='font-medium flex flex-row items-center gap-2'>
                                     <i className='pi pi-user-plus'></i>
                                     <p>Background Check</p>
@@ -497,15 +509,27 @@ const Welcome = () => {
                                     <p className='text-sm text-gray-600' >Add a background check badge to your profile by authorizing a free background check. This will help you build customer trust and get hired more.</p>
                                     <Link href={''} className='bg-white border-2 rounded-md text-[#109EDA] font-bold text-center px-5 py-2 hover:bg-gray-50' >Start</Link>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className='py-2'>
                                 <div className='font-medium flex flex-row items-center gap-2'>
                                     <i className='pi pi-shield'></i>
                                     <p>Professional Licenses</p>
                                 </div>
-                                <div className='border-2 border-dashed rounded-md mt-2 p-3 flex flex-row justify-between items-center gap-3'>
-                                    <p className='text-sm text-gray-600' >Customers prefer to hire professionals who are licensed in their profession.</p>
-                                    <Link href={''} className='bg-white border-2 rounded-md text-[#109EDA] font-bold text-center px-5 py-2 hover:bg-gray-50' >Add</Link>
+                                <div className='border-2 border-dashed rounded-md mt-2 p-3'>
+                                    <FileUpload
+                                        ref={fileUploadProviderLicense}
+                                        id='providerLicense'
+                                        name="providerLicense"
+                                        onClear={() => setProviderLicense(null)}
+                                        accept=".pdf"
+                                        headerTemplate={headerTemplate}
+                                        itemTemplate={itemTemplateLicense}
+                                        chooseOptions={chooseOptions}
+                                        cancelOptions={cancelOptions}
+                                        emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
+                                    <div className='w-full flex justify-end mt-5'>
+                                        <Button label='Save License' outlined onClick={saveLicense} />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -599,7 +623,7 @@ const Welcome = () => {
                         </div>
                     </div> */}
 
-                    <div className='p-5 mb-5'>
+                    {/* <div className='p-5 mb-5'>
                         <p className='font-bold'>Reviews</p>
                         <div className='w-full flex flex-row items-center justify-center md:gap-20 mt-5 px-5 md:px-20'>
                             <div className='w-[40%] md:w-full'>
@@ -644,7 +668,7 @@ const Welcome = () => {
                             </div>
                             <Link href={`/welcome/ratings/${user.idProvider}`} className='bg-[#109EDA] border-2 border-[#109EDA] rounded-md text-white font-bold text-center px-5 py-2 hover:bg-[#149ad3] hover:border-[#149ad3] shrink-0' >Ask for reviews</Link>
                         </div>
-                    </div>
+                    </div> */}
                     </>
                     : null
                 }

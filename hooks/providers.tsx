@@ -95,6 +95,23 @@ export const Providers = () => {
         })
     };
 
+    const uploadLicense = (idProvider: number, data: any, toast: any, setLoading: any) => {
+        axios.post(`/provider-license/${idProvider}`, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then((res) => {
+            toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.log(error);
+            toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
+            setLoading(false);
+        })
+    }
+
     const deleteService = (idProvider: number, idService: number) => axios.delete(`/service-provider/${idProvider}/${idService}`);
 
 
@@ -106,7 +123,8 @@ export const Providers = () => {
         deleteService,
         updateServiceProvider,
         showServiceProvider,
-        addService
+        addService,
+        uploadLicense
     }
 }
 

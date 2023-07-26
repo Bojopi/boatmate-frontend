@@ -3,12 +3,13 @@ import { InputText } from "primereact/inputtext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faReply } from '@fortawesome/free-solid-svg-icons';
 import LayoutAdmin from '@/components/layoutAdmin';
+import ErrorCard from '@/components/errorCard';
 
 const Index = () => {
   return (
     <>
       <LayoutAdmin>
-        <div className='w-full min-h-[300px] flex flex-col items-center justify-start'>
+        {/* <div className='w-full min-h-[300px] flex flex-col items-center justify-start'>
           <span className="w-full p-input-icon-left">
               <i className="pi pi-search" />
               <InputText placeholder="Search" className='w-full' />
@@ -106,7 +107,11 @@ const Index = () => {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
+
+        <ErrorCard>
+          <p>After you confirm an opportunity, those direct leads will show up in sent quotes and messages.</p>
+        </ErrorCard>
       </LayoutAdmin>
     </>
   )

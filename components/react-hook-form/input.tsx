@@ -22,6 +22,7 @@ export type InputProps = {
   max?: number | string;
   step?: string;
   readonly?: boolean;
+  onClick?: (e: any) => void;
 };
 
 export const Input: React.FC<InputProps> = ({
@@ -36,6 +37,7 @@ export const Input: React.FC<InputProps> = ({
   max,
   step,
   readonly,
+  onClick,
 }) => {
   const { register } = useFormContext();
   return (
@@ -51,6 +53,7 @@ export const Input: React.FC<InputProps> = ({
       step={step}
       className={`p-inputtext w-full read-only:border-none read-only:focus:shadow-none`}
       readOnly={readonly}
+      onClick={onClick}
       // className={`form-input block ${width} border-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 sm:text-sm rounded-md`}
     />
   );
