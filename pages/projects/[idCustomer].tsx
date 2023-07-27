@@ -160,10 +160,7 @@ const ProjectsPage = () => {
         <Toast ref={toast} />
         <ConfirmDialog />
         <div className='w-full md:w-[70%] h-full p-10 m-auto flex flex-col gap-3'>
-          <div className='w-full flex flex-col md:flex-row md:justify-between px-5'>
-            <div className='w-full md:w-[50%]'>
-              <SearchServiceComponent></SearchServiceComponent>
-            </div>
+          <div className='w-full flex flex-col md:flex-row md:justify-center px-5 border-b'>
             <div className='flex gap-2 place-content-end border-b md:border-none'>
                 <Link href={`/inbox/${idCustomer}`}>
                     <Button label='Inbox' text severity='secondary' className='text-black font-semibold' />
@@ -264,6 +261,9 @@ const ProjectsPage = () => {
               })
             : null
           }
+          <div className='w-full md:w-[50%] m-auto'>
+            <SearchServiceComponent></SearchServiceComponent>
+          </div>
         </div>
     </LayoutPrincipal>
   )

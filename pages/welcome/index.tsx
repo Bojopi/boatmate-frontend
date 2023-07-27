@@ -201,6 +201,7 @@ const Welcome = () => {
     }
 
     const onClickInputs = (e: any) => {
+        console.log(listNames)
         setButtonActive(true);
         e.target.readOnly = false;
         if(listNames.length > 0) {
@@ -208,6 +209,7 @@ const Welcome = () => {
                 listNames.push(e.target.name)
             }
         } else {
+            console.log('aqui entro')
             listNames.push(e.target.name)
         }
     }
@@ -216,16 +218,16 @@ const Welcome = () => {
         listNames.map((item: string) => {
             document.getElementById(item)?.setAttribute('readOnly', 'true');
         });
-        setListNames([])
+        setListNames([]);
         setButtonActive(false);
     }
 
     const cancelEdit = () => {
+        reset();
+        resetInputsForm();
+        setButtonActive(false);
         setLoading(true);
         setInterval(() => {
-            reset();
-            resetInputsForm();
-            setButtonActive(false);
             setLoading(false);
         }, 1500)
     }

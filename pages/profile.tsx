@@ -42,7 +42,8 @@ const Profile = () => {
     const [selectedPlace, setSelectedPlace] = useState<string>('');
     const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
-    const [personalActive, setPersonalActive] = useState<boolean>(true);
+    const [buttonActive, setButtonActive] = useState<boolean>(false);
+    const [listNames, setListNames] = useState<string[]>([]);
 
     const [loading, setLoading] = useState<boolean>(false);
     const [checked, setChecked] = useState<boolean>(false);
@@ -104,7 +105,7 @@ const Profile = () => {
         formData.lat = String(selectedLocation.lat);
         formData.lng = String(selectedLocation.lng);
 
-        updateProfile(Number(user?.uid), formData, setLoading, toast, setDataUser, setPersonalActive);
+        updateProfile(Number(user?.uid), formData, setLoading, toast, setDataUser, resetInputsForm);
         
         if(fileUploadPersonRef.current !== null) fileUploadPersonRef.current.clear();
     };
@@ -112,15 +113,6 @@ const Profile = () => {
     const onErrors = () => {
         toast.current!.show({severity:'error', summary:'Error', detail: 'There are errors in the form', life: 4000});
     };
-
-    const activeEdit = (e: any) => {
-        if(e.target.id == 'personal') setPersonalActive(false);
-    };
-
-    const cancelEdit = (e: any) => {
-        reset();
-        if(e.target.id == 'btnPersonal') setPersonalActive(true);
-    }
 
     const headerTemplate = (options: any) => {
         const { className, chooseButton, cancelButton } = options;
@@ -152,15 +144,42 @@ const Profile = () => {
     const chooseOptions = { icon: 'pi pi-fw pi-images', iconOnly: true, className: 'custom-choose-btn p-button-rounded p-button-outlined' };
     const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
 
+    const onClickInputs = (e: any) => {
+        setButtonActive(true);
+        e.target.readOnly = false;
+        if(listNames.length > 0) {
+            if(!listNames.includes(e.target.name)) {
+                listNames.push(e.target.name);
+            }
+        } else {
+            listNames.push(e.target.name);
+        }
+    };
+
+    const resetInputsForm = () => {
+        listNames.map((item: string) => {
+            document.getElementById(item)?.setAttribute('readOnly', 'true');
+        });
+        setListNames([]);
+        setButtonActive(false);
+    }
+
+    const cancelEdit = () => {
+        reset();
+        resetInputsForm();
+        setButtonActive(false);
+        setLoading(true);
+        setInterval(() => {
+            setLoading(false);
+        }, 1500)
+    }
+
   return (
     <LayoutPrincipal>
         <Spinner loading={loading} />
         <Toast ref={toast} />
-        <div className=' w-full h-full flex flex-col gap-5 pt-10 md:pt-5 p-5'>
-            <div className='w-full flex flex-col md:flex-row md:justify-between px-5'>
-                <div className='w-full md:w-[40%]'>
-                    <SearchServiceComponent></SearchServiceComponent>
-                </div>
+        <div className='w-full h-full flex flex-col gap-5 pt-10 md:pt-5 p-5'>
+            <div className='w-full flex flex-col md:flex-row md:justify-center px-5 border-b'>
                 <div className='flex gap-2 place-content-end border-b md:border-none'>
                     <Link href={`/inbox/${user?.idCustomer}`}>
                         <Button label='Inbox' text severity='secondary' className='text-black font-semibold' />
@@ -186,7 +205,6 @@ const Profile = () => {
                                         <p className='font-medium'>{(`${user?.name} ${user?.lastname}`).toUpperCase()}</p>
                                     </div>
                                 </div>
-                                <p id='personal' className='text-[#109EDA] font-bold cursor-pointer' onClick={activeEdit}>Edit</p>
                             </div>
 
                             <div className='w-full grid grid-cols-12 mt-5 gap-2'>
@@ -195,42 +213,35 @@ const Profile = () => {
                                         <i className='pi pi-user'></i>
                                         <p>Name</p>
                                     </div>
-                                    <Input type='text' id='name' name='name' readonly={personalActive} />
+                                    <Input type='text' id='name' name='name' readonly onClick={onClickInputs} />
                                 </div>
                                 <div className='col-span-12 md:col-span-6 py-2'>
                                     <div className='font-medium flex flex-row items-center gap-2'>
                                         <i className='pi pi-user'></i>
                                         <p>Lastname</p>
                                     </div>
-                                    <Input type='text' id='lastname' name='lastname' readonly={personalActive} />
+                                    <Input type='text' id='lastname' name='lastname' readonly onClick={onClickInputs} />
                                 </div>
-                                <div className={personalActive ? 'hidden' : 'col-span-12 py-2'}>
+                                <div className='col-span-12 py-2'>
                                     <div className='font-medium flex flex-row items-center gap-2'>
                                         <i className='pi pi-lock'></i>
                                         <p>Password</p>
                                     </div>
-                                    <Input id='password' name='password' type='password' readonly={personalActive} />
+                                    <Input id='password' name='password' type='password' placeholder='******' readonly onClick={onClickInputs} />
                                 </div>
                                 <div className='col-span-12 md:col-span-4 py-2'>
                                     <div className='font-medium flex flex-row items-center gap-2'>
                                         <i className='pi pi-at'></i>
                                         <p>Email</p>
                                     </div>
-                                    <Input id='email' name='email' type='email' placeholder='user@email.com' readonly={personalActive} />
+                                    <Input id='email' name='email' type='email' placeholder='user@email.com' readonly onClick={onClickInputs} />
                                 </div>
                                 <div className='col-span-12 md:col-span-4 py-2'>
                                     <div className='font-medium flex flex-row items-center gap-2'>
                                         <i className='pi pi-phone'></i>
                                         <p>Phone</p>
                                     </div>
-                                    <Input type='tel' id='phone' name='phone' placeholder="(999) 999-9999" readonly={personalActive} />
-                                </div>
-                                <div className='col-span-12 md:col-span-4 py-2'>
-                                    <div className='font-medium flex flex-row items-center gap-2'>
-                                        <i className='pi pi-question-circle'></i>
-                                        <p>State</p>
-                                    </div>
-                                    <ToggleButton id='state' name='state' checked={checked} onChange={(e) => {setChecked(e.value)}} onLabel='Active' offLabel='Inactive' onIcon="pi pi-check" offIcon="pi pi-times" disabled={personalActive} className='w-full' />
+                                    <Input type='tel' id='phone' name='phone' placeholder="(999) 999-9999" readonly onClick={onClickInputs} />
                                 </div>
                                 <div className='col-span-12 py-2'>
                                     <div className='font-medium flex flex-row items-center gap-2'>
@@ -238,38 +249,33 @@ const Profile = () => {
                                         <p>Address</p>
                                     </div>
                                     <MapComponent
-                                        readonly={personalActive}
                                         selectedLocation={selectedLocation}
                                         setSelectedLocation={setSelectedLocation}
                                         getAddress={getAddress}
                                         selectedPlace={selectedPlace}
                                         setSelectedPlace={setSelectedPlace} />
                                 </div>
-                                {
-                                    !personalActive ?
-                                    <div className='col-span-12 py-2'>
-                                        <div className='font-medium flex flex-row items-center gap-2'>
-                                            <i className='pi pi-image'></i>
-                                            <p>Profile image</p>
-                                        </div>
-                                        <FileUpload
-                                            ref={fileUploadPersonRef}
-                                            id='personImage'
-                                            name="personImage"
-                                            onClear={() => setImagePerson(null)}
-                                            accept="image/*"
-                                            maxFileSize={1000000}
-                                            headerTemplate={headerTemplate}
-                                            itemTemplate={itemTemplatePerson}
-                                            chooseOptions={chooseOptions}
-                                            cancelOptions={cancelOptions}
-                                            emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
+                                <div className='col-span-12 py-2'>
+                                    <div className='font-medium flex flex-row items-center gap-2'>
+                                        <i className='pi pi-image'></i>
+                                        <p>Profile image</p>
                                     </div>
-                                    : null
-                                }
+                                    <FileUpload
+                                        ref={fileUploadPersonRef}
+                                        id='personImage'
+                                        name="personImage"
+                                        onClear={() => setImagePerson(null)}
+                                        accept="image/*"
+                                        maxFileSize={1000000}
+                                        headerTemplate={headerTemplate}
+                                        itemTemplate={itemTemplatePerson}
+                                        chooseOptions={chooseOptions}
+                                        cancelOptions={cancelOptions}
+                                        emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
+                                </div>
                             </div>
                             {
-                                !personalActive && (
+                                buttonActive && (
                                     <div className='flex flex-row items-center justify-end gap-3 mt-3'>
                                         <button type='button' id='btnPersonal' className='px-5 py-1 bg-white border-2 border-[#373A85] text-center text-sm text-[#373A85] font-bold rounded-md' onClick={cancelEdit}>Cancel</button>
                                         <button type='submit' className='px-5 py-1 bg-[#373A85] border-2 border-[#373A85] text-center text-sm text-white font-bold rounded-md'>Save</button>
@@ -279,6 +285,9 @@ const Profile = () => {
                         </div>
                     </form>
                 </FormProvider>
+            </div>
+            <div className='w-full md:w-[40%] m-auto'>
+                <SearchServiceComponent></SearchServiceComponent>
             </div>
         </div>
     </LayoutPrincipal>

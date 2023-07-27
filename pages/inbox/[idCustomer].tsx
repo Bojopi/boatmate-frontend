@@ -47,10 +47,7 @@ const InboxPage = () => {
         <Spinner loading={loading} />
         <Toast ref={toast} />
         <div className='w-full h-full flex flex-col gap-5 pt-10 md:pt-5 p-5'>
-          <div className='w-full flex flex-col md:flex-row md:justify-between px-5'>
-            <div className='w-full md:w-[40%]'>
-              <SearchServiceComponent></SearchServiceComponent>
-            </div>
+          <div className='w-full flex flex-col md:flex-row md:justify-center px-5 border-b'>
             <div className='flex gap-2 place-content-end border-b md:border-none'>
                 <Link href={`/inbox/${idCustomer}`}>
                     <Button label='Inbox' text severity='secondary' className='text-black font-semibold' />
@@ -64,7 +61,11 @@ const InboxPage = () => {
           <div className='w-full md:w-[50%] border rounded-lg shadow-md mx-auto p-5 md:p-10 flex flex-col gap-5 items-center'>
             <p>No conversations yet</p>
             <p className='w-[50%] text-center text-[#575d64]'>Once you create  a project, you&apos;ll see your messages and booking reminders-all right here.</p>
-            <Link href={''} className='text-[#109EDF] font-medium'>New project</Link>
+            <Link href={'#'} className='text-[#109EDF] font-medium'>New project</Link>
+          </div>
+
+          <div className='w-full md:w-[40%] m-auto'>
+            <SearchServiceComponent></SearchServiceComponent>
           </div>
 
           <div className='w-full md:w-[50%] mx-auto'>

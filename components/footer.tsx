@@ -23,8 +23,8 @@ export default function FooterComponent() {
                     <p className="w-full text-left font-bold text-lg">Sign up for free project cost information</p>
                     <form action="" onSubmit={submit} className="w-full grid grid-cols-1 gap-10">
                         <span className="p-float-label">
-                            <InputText id="email" value={email} onChange={(e:any) => setEmail(e.target.value)} className='w-full' />
-                            <label htmlFor="email">Email</label>
+                            <InputText id="email-subscribe" value={email} onChange={(e:any) => setEmail(e.target.value)} className='w-full' />
+                            <label htmlFor="subscribe">Email</label>
                         </span>
                         <span className="p-float-label">
                             <InputText id="zip" value={zip} onChange={(e:any) => setZip(e.target.value)} className='w-full' />
