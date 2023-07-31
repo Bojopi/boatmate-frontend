@@ -523,7 +523,7 @@ const Welcome = () => {
                                         id='providerLicense'
                                         name="providerLicense"
                                         onClear={() => setProviderLicense(null)}
-                                        accept=".pdf"
+                                        accept=".pdf,image/*"
                                         headerTemplate={headerTemplate}
                                         itemTemplate={itemTemplateLicense}
                                         chooseOptions={chooseOptions}
@@ -588,7 +588,7 @@ const Welcome = () => {
                                     }
                                  })
                                 :
-                                Array.from({length: 1}).map((item: any, i: number) => {
+                                Array.from({length: 3}).map((item: any, i: number) => {
                                     return (
                                         <div key={i} className='border-2 border-dashed rounded-md w-[100px] h-[100px] bg-gray-50 flex items-center justify-center shrink-0'>
                                             <FontAwesomeIcon icon={faMountainSun} className='text-gray-300 w-[40px]' />

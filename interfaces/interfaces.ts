@@ -62,6 +62,7 @@ export interface Provider {
     person_name:          string;
     lastname:             string;
     provider_zip:         string;
+    provider_license:     string;
 }
 
 export interface ProviderServices {

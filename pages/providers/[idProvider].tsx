@@ -2,45 +2,72 @@ import React, { useEffect, useState } from 'react'
 import LayoutPrincipal from '@/components/layoutPrincipal'
 import { Providers } from '@/hooks/providers'
 import { useRouter } from 'next/router';
-import { Provider } from '@/interfaces/interfaces';
+import { Portofolio, Provider } from '@/interfaces/interfaces';
 import Spinner from '@/components/spinner';
 import { Avatar } from 'primereact/avatar';
 import { Contracts } from '@/hooks/contracts';
 import { Maps } from '@/hooks/maps';
 import Link from 'next/link';
 import { Button } from 'primereact/button';
+import { Portofolios } from '@/hooks/portofolio';
+import { Carousel } from 'primereact/carousel';
 
 const Index = () => {
   const { show } = Providers();
+  const { getPortofolioProvider } = Portofolios();
   const { getContractsProvider } = Contracts();
   const { getAddress } = Maps();
 
   const [provider, setProvider] = useState<Provider>();
+  const [portofolio, setPortofolio] = useState<Portofolio[]>([]);
   const [count, setCount] = useState<number>(0);
   const [address, setAddress] = useState<string>('No Address');
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const responsiveOptions = [
+    {
+        breakpoint: '1199px',
+        numVisible: 1,
+        numScroll: 1
+    },
+    {
+        breakpoint: '991px',
+        numVisible: 2,
+        numScroll: 1
+    },
+    {
+        breakpoint: '767px',
+        numVisible: 1,
+        numScroll: 1
+    }
+  ];
 
   const router = useRouter();
 
   const getProvider = async (idProvider: number) => {
     try {
       const response = await show(idProvider);
-      if(response.status == 200) {
-        setProvider(response.data.provider);
+      const portofolio = await getPortofolioProvider(idProvider);
+      const ct = await getContractsProvider(idProvider);
 
-        const addr = await getAddress(
-          Number(response.data.provider.provider_lat ? response.data.provider.provider_lat : 0), 
-          Number(response.data.provider.provider_lng ? response.data.provider.provider_lng : 0));
-        
-          if(addr.status == 200) {
-            setAddress(addr.data.results[0].formatted_address);
-          }
+      if(portofolio.status == 200) {
+        setPortofolio(portofolio.data.portofolio);
       }
 
-      const ct = await getContractsProvider(idProvider);
       if(ct.status == 200) {
         setCount(ct.data.count);
+      }
+
+      if(response.status == 200) {
+        setProvider(response.data.provider);
+        const addr = await getAddress(
+          Number(response.data.provider.provider_lat ? response.data.provider.provider_lat : 0), 
+          Number(response.data.provider.provider_lng ? response.data.provider.provider_lng : 0)
+        );
+        if(addr.status == 200) {
+          setAddress(addr.data.results[0].formatted_address);
+        }
       }
       setLoading(false);
     } catch (error) {
@@ -56,10 +83,18 @@ const Index = () => {
     }
   }, [router.query.idProvider]);
 
+  const itemTemplate = (item: Portofolio) => {
+    return (
+      <div className='w-[130px] h-[130px] flex items-center justify-center mx-2'>
+        <img src={item.portofolio_image} alt={item.portofolio_description || String(item.id_portofolio)} style={{ width: '100%', display: 'block' }} />
+      </div>
+    );
+  };
+
   return (
     <LayoutPrincipal>
       <Spinner loading={loading} />
-      <div className='h-[calc(100vh-180px)] md:h-auto flex items-center justify-center p-10'>
+      <div className='h-[calc(100vh-180px)] md:h-auto flex flex-col items-center justify-center gap-5 p-10'>
         <div className='max-w-xl border shadow-md rounded-md p-5 grid grid-cols-12 gap-1 md:gap-3 items-center'>
           <div className='col-span-3'>
             {
@@ -97,7 +132,32 @@ const Index = () => {
                 <p>Request a quote</p>
               </Link>
             </Button>
+          </div>
         </div>
+
+        <div className='w-[42%] border shadow-md rounded-md p-5 grid grid-cols-12 gap-1 md:gap-3 items-center'>
+          <p className='font-bold col-span-12'>Photos</p>
+          <div className='col-span-12 w-full'>
+            {
+              portofolio.length > 0 &&
+                // <Galleria value={portofolio} style={{ maxWidth: '500px', maxHeight: '500px' }} showThumbnails={false} showIndicators 
+                // showIndicatorsOnItem={false} indicatorsPosition={'right'} item={itemTemplate} />
+                <Carousel value={portofolio} numVisible={3} numScroll={3} responsiveOptions={responsiveOptions} itemTemplate={itemTemplate} />
+            }
+          </div>
+        </div>
+
+        <div className='w-[42%] border shadow-md rounded-md p-5 grid grid-cols-12 gap-1 md:gap-3 items-center'>
+          <i className='pi pi-shield col-span-1'></i>
+          <p className='font-bold col-span-11'>Professional Licenses</p>
+          <div className='col-span-12 w-full flex items-center gap-2'>
+            <i className='pi pi-file text-[#109EDA]'></i>
+            {
+              provider?.provider_license ?
+              <Link href={provider?.provider_license} target='_blank' className='text-[#109EDA]'>Download license</Link>
+              : <p>No registered license</p>
+            }
+          </div>
         </div>
       </div>
     </LayoutPrincipal>
