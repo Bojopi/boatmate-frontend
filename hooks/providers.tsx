@@ -95,7 +95,10 @@ export const Providers = () => {
         })
     };
 
-    const uploadLicense = (idProvider: number, data: any, toast: any, setLoading: any) => {
+    const deleteService = (idProvider: number, idService: number) => axios.delete(`/service-provider/${idProvider}/${idService}`);
+
+    //licenses
+    const uploadLicense = (idProvider: number, data: any, toast: any, setLoading: any, setLicenseList: any) => {
         axios.post(`/provider-license/${idProvider}`, data, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -103,6 +106,11 @@ export const Providers = () => {
         })
         .then((res) => {
             toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
+            if(res.data.license.length > 0) {
+                setLicenseList(res.data.license)
+            } else {
+                setLicenseList([res.data.license])
+            }
             setLoading(false);
         })
         .catch((error) => {
@@ -110,9 +118,9 @@ export const Providers = () => {
             toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
             setLoading(false);
         })
-    }
+    };
 
-    const deleteService = (idProvider: number, idService: number) => axios.delete(`/service-provider/${idProvider}/${idService}`);
+    const getLicenses = (idProvider: number) => axios.get(`/provider-license/${idProvider}`);
 
 
     return {
@@ -124,7 +132,8 @@ export const Providers = () => {
         updateServiceProvider,
         showServiceProvider,
         addService,
-        uploadLicense
+        uploadLicense,
+        getLicenses
     }
 }
 

@@ -78,7 +78,7 @@ const LayoutAdmin = ({children}: any) => {
         <MenuBarSupAdmin
          user={user} setLoading={setLoading} logout={logoutSession} activeOption={activeOption} setActiveOption={setActiveOption} setActiveSideOption={setActiveSideOption} menuList={menuList}
         />
-        <div className='w-full h-screen flex flex-row items-start justify-between gap-5 px-5 pb-5 pt-24 md:pt-44 bg-neutral-100'>
+        <div className='w-full h-screen flex flex-row items-start justify-between gap-5 px-5 pb-5 pt-32 md:pt-44 bg-neutral-100'>
             <SideBarComponent user={user} activeOption={activeOption} activeSideOption={activeSideOption} setActiveSideOption={setActiveSideOption} menuList={menuList} />
             <main className='w-full min-h-[360px] max-h-full h-full overflow-auto bg-white rounded-md shadow-md'>
                {children}

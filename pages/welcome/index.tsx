@@ -5,13 +5,10 @@ import { Avatar } from 'primereact/avatar';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser, faMountainSun } from '@fortawesome/free-solid-svg-icons';
-import { ProgressBar } from 'primereact/progressbar';
-import { Rating } from 'primereact/rating';
 import { FormProvider, useForm } from 'react-hook-form';
 import { FileUpload } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
 import { Users } from '@/hooks/user';
-import { ToggleButton } from "primereact/togglebutton";
 import { Input } from '../../components/react-hook-form/input';
 import MapComponent from '@/components/map';
 import { Maps } from '@/hooks/maps';
@@ -46,14 +43,12 @@ export type FormProps = {
 
 const Welcome = () => {
     const {getUserAuthenticated} = Auth();
-    const {getRatingProvider} = Rtng();
     const {updateProfile} = Users();
     const {getAddress} = Maps();
     const {getPortofolioProvider, deleteImagePortofolio} = Portofolios();
-    const {uploadLicense} = Providers();
+    const {uploadLicense, getLicenses} = Providers();
 
     const [loading, setLoading] = useState<boolean>(false);
-    const [checked, setChecked] = useState<boolean>(false);
 
     const [buttonActive, setButtonActive] = useState<boolean>(false);
     const [listNames, setListNames] = useState<string[]>([]);
@@ -63,7 +58,10 @@ const Welcome = () => {
 
     const [imagePerson, setImagePerson] = useState<any>(null);
     const [imageProvider, setImageProvider] = useState<any>(null);
-    const [providerLicense, setProviderLicense] = useState<any>(null);
+    const [providerLicense, setProviderLicense] = useState<any[]>([]);
+
+    const [licenseList, setLicenseList] = useState<any[]>([]);
+    const [buttonLicense, setButtonLicense] = useState<boolean>(true);
 
     const toast = useRef<Toast>(null);
     const galleria = useRef<any>(null);
@@ -98,9 +96,6 @@ const Welcome = () => {
             exp:                 0,
         }
     );
-    const [rating, setRating] = useState<number>(0);
-    const [countRating, setCountRating] = useState<number>(0);
-    const [ratingDetail, setRatingDetail] = useState<any>({1: 0, 2: 0, 3: 0, 4: 0, 5: 0});
 
     const [portofolioList, setPortofolioList] = useState<Portofolio[]>([]);
     const [portofolioIndex, setPortofolioIndex] = useState<number>(0);
@@ -159,10 +154,9 @@ const Welcome = () => {
     const setDataUser = async () => {
         const response = await getUserAuthenticated();
         setUser(response.data);
-        setChecked(response.data.state);
         if(response.data.role === 'PROVIDER') {
-            getRatings(response.data.idProvider);
             getPortofolio(response.data.idProvider);
+            getLicense(response.data.idProvider);
             setSelectedLocation({
                 lat: Number(response.data.providerLat || 0),
                 lng: Number(response.data.providerLng || 0),
@@ -170,6 +164,17 @@ const Welcome = () => {
             resetMap(response.data.providerLat || 0, response.data.providerLng || 0);
         }
         reset(response.data)
+    }
+
+    const getLicense = async (idProvider: number) => {
+        try {
+            const response = await getLicenses(idProvider);
+            if(response.status == 200) {
+                setLicenseList(response.data.licenses);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const getPortofolio = async (idProvider: number) => {
@@ -182,22 +187,6 @@ const Welcome = () => {
             console.log(error)
         }
 
-    }
-
-    const getRatings = async (idProvider: number) => {
-        try {
-            const res = await getRatingProvider(idProvider);
-            setCountRating(res.data.countRating)
-            if(res.status == 200 && res.data.rating.length > 0) {
-                const ratDetail = calculateAllRatingPercentages(res.data.rating);
-                setRatingDetail(ratDetail)
-
-                const avg = avgRating(res.data.rating);
-                setRating(Number(avg))
-            }
-        } catch (error) {
-            console.log(error)
-        }
     }
 
     const onClickInputs = (e: any) => {
@@ -275,8 +264,15 @@ const Welcome = () => {
         );
     };
 
+    const onTemplateSelect = (e: any) => {
+        setButtonLicense(false);
+        let files = e.files;
+        Object.keys(files).forEach((key) => {
+            providerLicense.push(files[key])
+        });
+    };
+
     const itemTemplateLicense = (file: any, props: any) => {
-        setProviderLicense(file);
         return (
             <div className="flex items-center flex-wrap">
                 <div className="flex items-center" style={{ width: '40%' }}>
@@ -335,9 +331,10 @@ const Welcome = () => {
         const data = {
             license: providerLicense
         }
-        uploadLicense(user.idProvider, data, toast, setLoading);
+        uploadLicense(user.idProvider, data, toast, setLoading, setLicenseList);
 
         if(fileUploadProviderLicense.current !== null) fileUploadProviderLicense.current.clear();
+        setButtonLicense(true);
     }
 
 
@@ -349,7 +346,7 @@ const Welcome = () => {
         <Galleria ref={galleria} value={portofolioList} numVisible={portofolioList.length} style={{ maxWidth: '50%' }} 
                 circular fullScreen showItemNavigators showThumbnails={false} item={itemTemplate} caption={caption} activeIndex={portofolioIndex}
                 onItemChange={(e) => setPortofolioIndex(e.index)} />
-        <div className=' w-full h-full bg-white rounded-md shadow-md border overflow-y-auto'>
+        <div className=' w-full h-full rounded-md shadow-md border overflow-y-auto'>
             <div>
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit, onErrors)}>
@@ -502,35 +499,39 @@ const Welcome = () => {
                     <div className='border-t-2 p-5 mb-5'>
                         <p className='font-bold'>Credentials</p>
                         <div className='w-full flex flex-col mt-5'>
-                            {/* <div className='py-2'>
-                                <div className='font-medium flex flex-row items-center gap-2'>
-                                    <i className='pi pi-user-plus'></i>
-                                    <p>Background Check</p>
-                                </div>
-                                <div className='border-2 border-dashed rounded-md mt-2 p-3 flex flex-row justify-between items-center gap-3'>
-                                    <p className='text-sm text-gray-600' >Add a background check badge to your profile by authorizing a free background check. This will help you build customer trust and get hired more.</p>
-                                    <Link href={''} className='bg-white border-2 rounded-md text-[#109EDA] font-bold text-center px-5 py-2 hover:bg-gray-50' >Start</Link>
-                                </div>
-                            </div> */}
                             <div className='py-2'>
                                 <div className='font-medium flex flex-row items-center gap-2'>
                                     <i className='pi pi-shield'></i>
                                     <p>Professional Licenses</p>
                                 </div>
                                 <div className='border-2 border-dashed rounded-md mt-2 p-3'>
+                                    <div className='w-full mb-3'>
+                                        {
+                                            licenseList.length > 0 ?
+                                            licenseList.map((item: any, i: number) => (
+                                                <div key={i} className='flex gap-3 items-center mb-1 text-[#109EDA] hover:text-[#0d84b7]'>
+                                                    <i className={`pi ${item.license_name.includes('.pdf') ? 'pi-file-pdf' : 'pi-image'}`}></i>
+                                                    <Link href={item.license_url} target='_blank'>{item.license_name.includes('.pdf') ? 'Download PDF' : 'Open image in new tab'}</Link>
+                                                </div>
+                                            ))
+                                            : null
+                                        }
+                                    </div>
                                     <FileUpload
                                         ref={fileUploadProviderLicense}
                                         id='providerLicense'
                                         name="providerLicense"
-                                        onClear={() => setProviderLicense(null)}
+                                        onClear={() => setProviderLicense([])}
                                         accept=".pdf,image/*"
+                                        multiple
+                                        onSelect={onTemplateSelect}
                                         headerTemplate={headerTemplate}
                                         itemTemplate={itemTemplateLicense}
                                         chooseOptions={chooseOptions}
                                         cancelOptions={cancelOptions}
                                         emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
                                     <div className='w-full flex justify-end mt-5'>
-                                        <Button label='Save License' outlined onClick={saveLicense} />
+                                        <Button label='Save License' disabled={buttonLicense} outlined onClick={saveLicense} />
                                     </div>
                                 </div>
                             </div>
@@ -606,71 +607,6 @@ const Welcome = () => {
                             <Create idProvider={user.idProvider} portofolio={portofolioList} setPortofolio={setPortofolioList} setLoading={setLoading} toast={toast} />
                         </div>
                     </div>
-
-                    {/* <div className='border-t-2 p-5 mb-5'>
-                        <p className='font-bold'>Social Media</p>
-                        <div className='w-full grid grid-cols-3 gap-5 mt-5'>
-                            <Link href={''} className='py-1 bg-white border-2 flex flex-row justify-center items-center gap-5 text-gray-500 rounded-md hover:bg-gray-50'>
-                                <FontAwesomeIcon icon={faFacebookF} className='w-[10px]' />
-                                <p className='text-sm font-medium'>Add Facebook</p>
-                            </Link>
-                            <Link href={''} className='py-1 bg-white border-2 flex flex-row justify-center items-center gap-5 text-gray-500 rounded-md hover:bg-gray-50'>
-                                <FontAwesomeIcon icon={faInstagram} className='w-[15px]'  />
-                                <p className='text-sm font-medium'>Add Instagram</p>
-                            </Link>
-                            <Link href={''} className='py-1 bg-white border-2 flex flex-row justify-center items-center gap-5 text-gray-500 rounded-md hover:bg-gray-50'>
-                                <FontAwesomeIcon icon={faTwitter} className='w-[15px]' />
-                                <p className='text-sm font-medium'>Add Twitter</p>
-                            </Link>
-                        </div>
-                    </div> */}
-
-                    {/* <div className='p-5 mb-5'>
-                        <p className='font-bold'>Reviews</p>
-                        <div className='w-full flex flex-row items-center justify-center md:gap-20 mt-5 px-5 md:px-20'>
-                            <div className='w-[40%] md:w-full'>
-                                <p className='text-[#00CBA4] font-bold'>{rating}</p>
-                                <Rating value={rating} cancel={false} readOnly offIcon={'pi pi-star-fill'} offIconProps={{style: {color: 'rgb(209, 213, 219)'}}} />
-                                <p className='text-xs'>{countRating} reviews</p>
-                            </div>
-                            <div className='w-[60%] md:w-full flex flex-col items-start'>
-                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
-                                    <p className='col-span-2'>5<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={ratingDetail['5']} showValue={false} className='col-span-6 h-[10px] w-full' />
-                                    <p className='col-span-4'>{ratingDetail['5']}%</p>
-                                </div>
-                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
-                                    <p className='col-span-2'>4<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={ratingDetail['4']} showValue={false} className='col-span-6 h-[10px] w-full' />
-                                    <p className='col-span-4'>{ratingDetail['4']}%</p>
-                                </div>
-                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
-                                    <p className='col-span-2'>3<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={ratingDetail['3']} showValue={false} className='col-span-6 h-[10px] w-full' />
-                                    <p className='col-span-4'>{ratingDetail['3']}%</p>
-                                </div>
-                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
-                                    <p className='col-span-2'>2<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={ratingDetail['2']} showValue={false} className='col-span-6 h-[10px] w-full' />
-                                    <p className='col-span-4'>{ratingDetail['2']}%</p>
-                                </div>
-                                <div className='w-full grid grid-cols-12 justify-items-center items-center'>
-                                    <p className='col-span-2'>1<i className='pi pi-star-fill text-[10px] text-gray-300'></i></p>
-                                    <ProgressBar value={ratingDetail['1']} showValue={false} className='col-span-6 h-[10px] w-full' />
-                                    <p className='col-span-4'>{ratingDetail['1']}%</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='border-2 rounded-md mt-5 p-3 flex flex-row justify-between items-center gap-5'>
-                            <img src="https://i.postimg.cc/SxJz8VPb/chat.png" alt="reviews" height={70} width={70} />
-                            <div>
-                                <p className='text-sm text-gray-60 font-bold'>Get reviews from past customers, even if they&apos;re not on BoatMate.</p>
-                                <p className='text-xs text-gray-600' >Tell us which customers to ask for a review, and we&apos;ll send the request for you.</p>
-
-                            </div>
-                            <Link href={`/welcome/ratings/${user.idProvider}`} className='bg-[#109EDA] border-2 border-[#109EDA] rounded-md text-white font-bold text-center px-5 py-2 hover:bg-[#149ad3] hover:border-[#149ad3] shrink-0' >Ask for reviews</Link>
-                        </div>
-                    </div> */}
                     </>
                     : null
                 }

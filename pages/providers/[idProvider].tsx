@@ -13,13 +13,14 @@ import { Portofolios } from '@/hooks/portofolio';
 import { Carousel } from 'primereact/carousel';
 
 const Index = () => {
-  const { show } = Providers();
+  const { show, getLicenses } = Providers();
   const { getPortofolioProvider } = Portofolios();
   const { getContractsProvider } = Contracts();
   const { getAddress } = Maps();
 
   const [provider, setProvider] = useState<Provider>();
   const [portofolio, setPortofolio] = useState<Portofolio[]>([]);
+  const [licenses, setLicenses] = useState<any[]>([]);
   const [count, setCount] = useState<number>(0);
   const [address, setAddress] = useState<string>('No Address');
 
@@ -76,10 +77,22 @@ const Index = () => {
     }
   }
 
+  const getLicense = async (idProvider: number) => {
+    try {
+        const response = await getLicenses(idProvider);
+        if(response.status == 200) {
+            setLicenses(response.data.licenses);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+  }
+
   useEffect(() => {
     setLoading(true);
     if (router.query.idProvider) {
       getProvider(Number(router.query.idProvider));
+      getLicense(Number(router.query.idProvider));
     }
   }, [router.query.idProvider]);
 
@@ -94,7 +107,7 @@ const Index = () => {
   return (
     <LayoutPrincipal>
       <Spinner loading={loading} />
-      <div className='h-[calc(100vh-180px)] md:h-auto flex flex-col items-center justify-center gap-5 p-10'>
+      <div className='h-auto flex flex-col items-center justify-center gap-5 p-10'>
         <div className='max-w-xl border shadow-md rounded-md p-5 grid grid-cols-12 gap-1 md:gap-3 items-center'>
           <div className='col-span-3'>
             {
@@ -125,7 +138,7 @@ const Index = () => {
             <p className='font-medium text-sm'>Social Media</p>
             <div className='text-sm font-medium'><Link href={'#'} className='text-[#109EDA]' >Facebook</Link>, <Link href={'#'} className='text-[#109EDA]' >Instagram</Link>, <Link href={'#'} className='text-[#109EDA]' >Twitter</Link> </div>
           </div>
-          <div className='col-span-12 flex justify-end'>
+          <div className='col-span-12 flex md:justify-end'>
             <Button outlined>
               <Link href='#' className='flex items-center gap-3' >
                 <i className='pi pi-tag'></i>
@@ -135,26 +148,28 @@ const Index = () => {
           </div>
         </div>
 
-        <div className='w-[42%] border shadow-md rounded-md p-5 grid grid-cols-12 gap-1 md:gap-3 items-center'>
+        <div className='max-w-xl md:w-[42%] border shadow-md rounded-md p-5 grid grid-cols-12 gap-1 md:gap-3 items-center'>
           <p className='font-bold col-span-12'>Photos</p>
           <div className='col-span-12 w-full'>
             {
               portofolio.length > 0 &&
-                // <Galleria value={portofolio} style={{ maxWidth: '500px', maxHeight: '500px' }} showThumbnails={false} showIndicators 
-                // showIndicatorsOnItem={false} indicatorsPosition={'right'} item={itemTemplate} />
                 <Carousel value={portofolio} numVisible={3} numScroll={3} responsiveOptions={responsiveOptions} itemTemplate={itemTemplate} />
             }
           </div>
         </div>
 
-        <div className='w-[42%] border shadow-md rounded-md p-5 grid grid-cols-12 gap-1 md:gap-3 items-center'>
+        <div className='w-full md:w-[42%] border shadow-md rounded-md p-5 grid grid-cols-12 gap-1 md:gap-3 items-center'>
           <i className='pi pi-shield col-span-1'></i>
           <p className='font-bold col-span-11'>Professional Licenses</p>
-          <div className='col-span-12 w-full flex items-center gap-2'>
-            <i className='pi pi-file text-[#109EDA]'></i>
+          <div className='col-span-12 w-full text-[#109EDA]'>
             {
-              provider?.provider_license ?
-              <Link href={provider?.provider_license} target='_blank' className='text-[#109EDA]'>Download license</Link>
+              licenses.length > 0 ?
+              licenses.map((item: any, i: number) => (
+                <div key={i} className='flex gap-3 items-center mb-1 hover:text-[#0d84b7]'>
+                    <i className={`pi ${item.license_name.includes('.pdf') ? 'pi-file-pdf' : 'pi-image'}`}></i>
+                    <Link href={item.license_url} target='_blank'>{item.license_name.includes('.pdf') ? 'Download PDF' : 'Open image in new tab'}</Link>
+                </div>
+              ))
               : <p>No registered license</p>
             }
           </div>
