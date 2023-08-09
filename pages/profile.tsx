@@ -188,114 +188,117 @@ const Profile = () => {
     }
 
   return (
-    <LayoutPrincipal>
-        <Spinner loading={loading} />
-        <Toast ref={toast} />
-        <p className='w-full md:w-[60%] mx-auto font-semibold'>Profile</p>
-        <div className='w-[60%] mx-auto h-full flex gap-5 my-5'>
-            <div className='w-80 h-96 bg-white rounded-xl border border-neutral-200 flex flex-col items-center gap-10 p-5'>
-                <div className='relative'>
-                    {
-                        user?.image != null ?
-                        <img src={user.image} width={200} height={200} alt='profile' className='rounded-full' />
-                        : <FontAwesomeIcon icon={faCircleUser} className='w-10 h-10' style={{color: "#c2c2c2"}} />
-                    }
-                    <Button icon={'pi pi-pencil'} rounded className='absolute bottom-4 right-0' />
+    <div className='relative overflow-hidden'>
+        <LayoutPrincipal>
+            <Spinner loading={loading} />
+            <Toast ref={toast} />
+            <p className='w-full md:w-[60%] mx-auto font-semibold'>Profile</p>
+            <div className="w-[500px] h-[500px] left-[80%] top-[500px] absolute bg-sky-500/30 rounded-full blur-3xl -z-10" />
+            <div className='w-[60%] mx-auto h-full flex gap-5 my-5'>
+                <div className='w-80 h-96 bg-white rounded-xl border border-neutral-200 flex flex-col items-center gap-10 p-5'>
+                    <div className='relative'>
+                        {
+                            user?.image != null ?
+                            <img src={user.image} width={200} height={200} alt='profile' className='rounded-full' />
+                            : <FontAwesomeIcon icon={faCircleUser} className='w-10 h-10' style={{color: "#c2c2c2"}} />
+                        }
+                        <Button icon={'pi pi-pencil'} rounded className='absolute bottom-4 right-0' />
+                    </div>
+                    <div className='w-full flex flex-col gap-2 text-center'>
+                        <p className='font-normal text-xl text-black leading-7'>{toTitleCase(`${user?.name} ${user?.lastname}`)}</p>
+                        <p className='text-neutral-600 text-base font-normal leading-normal'>{toTitleCase(`${user?.role}`)}</p>
+                        <p className='text-sky-500 text-sm'>Change Password</p>
+                    </div>
                 </div>
-                <div className='w-full flex flex-col gap-2 text-center'>
-                    <p className='font-normal text-xl text-black leading-7'>{toTitleCase(`${user?.name} ${user?.lastname}`)}</p>
-                    <p className='text-neutral-600 text-base font-normal leading-normal'>{toTitleCase(`${user?.role}`)}</p>
-                    <p className='text-sky-500 text-sm'>Change Password</p>
-                </div>
-            </div>
-            <div className='w-full h-full bg-white overflow-y-auto mx-auto'>
-                <FormProvider {...methods}>
-                    <form onSubmit={handleSubmit(onSubmit, onErrors)}>
-                        <div className='px-5'>
-                            <div className='w-full grid grid-cols-12 mt-5 gap-2'>
-                                <div className='col-span-12 md:col-span-6 py-2'>
-                                    <div className='font-medium flex flex-row items-center gap-2'>
-                                        <i className='pi pi-user'></i>
-                                        <p>Name</p>
+                <div className='w-full h-full  overflow-y-auto mx-auto'>
+                    <FormProvider {...methods}>
+                        <form onSubmit={handleSubmit(onSubmit, onErrors)}>
+                            <div className='px-5'>
+                                <div className='w-full grid grid-cols-12 mt-5 gap-2'>
+                                    <div className='col-span-12 md:col-span-6 py-2'>
+                                        <div className='font-medium flex flex-row items-center gap-2'>
+                                            <i className='pi pi-user'></i>
+                                            <p>Name</p>
+                                        </div>
+                                        <Input type='text' id='name' name='name' readonly onClick={onClickInputs} />
                                     </div>
-                                    <Input type='text' id='name' name='name' readonly onClick={onClickInputs} />
+                                    <div className='col-span-12 md:col-span-6 py-2'>
+                                        <div className='font-medium flex flex-row items-center gap-2'>
+                                            <i className='pi pi-user'></i>
+                                            <p>Lastname</p>
+                                        </div>
+                                        <Input type='text' id='lastname' name='lastname' readonly onClick={onClickInputs} />
+                                    </div>
+                                    {/* <div className='col-span-12 py-2'>
+                                        <div className='font-medium flex flex-row items-center gap-2'>
+                                            <i className='pi pi-lock'></i>
+                                            <p>Password</p>
+                                        </div>
+                                        <Input id='password' name='password' type='password' placeholder='******' readonly onClick={onClickInputs} />
+                                    </div> */}
+                                    <div className='col-span-12 md:col-span-6 py-2'>
+                                        <div className='font-medium flex flex-row items-center gap-2'>
+                                            <i className='pi pi-at'></i>
+                                            <p>Email</p>
+                                        </div>
+                                        <Input id='email' name='email' type='email' placeholder='user@email.com' readonly onClick={onClickInputs} />
+                                    </div>
+                                    <div className='col-span-12 md:col-span-6 py-2'>
+                                        <div className='font-medium flex flex-row items-center gap-2'>
+                                            <i className='pi pi-phone'></i>
+                                            <p>Phone</p>
+                                        </div>
+                                        <Input type='tel' id='phone' name='phone' placeholder="(999) 999-9999" readonly onClick={onClickInputs} />
+                                    </div>
+                                    <div className='col-span-12 py-2'>
+                                        <div className='font-medium flex flex-row items-center gap-2'>
+                                            <i className='pi pi-map-marker'></i>
+                                            <p>Address</p>
+                                        </div>
+                                        <MapComponent
+                                            selectedLocation={selectedLocation}
+                                            setSelectedLocation={setSelectedLocation}
+                                            getAddress={getAddress}
+                                            selectedPlace={selectedPlace}
+                                            setSelectedPlace={setSelectedPlace} />
+                                    </div>
+                                    {/* <div className='col-span-12 py-2'>
+                                        <div className='font-medium flex flex-row items-center gap-2'>
+                                            <i className='pi pi-image'></i>
+                                            <p>Profile image</p>
+                                        </div>
+                                        <FileUpload
+                                            ref={fileUploadPersonRef}
+                                            id='personImage'
+                                            name="personImage"
+                                            onClear={() => setImagePerson(null)}
+                                            accept="image/*"
+                                            maxFileSize={1000000}
+                                            headerTemplate={headerTemplate}
+                                            itemTemplate={itemTemplatePerson}
+                                            chooseOptions={chooseOptions}
+                                            cancelOptions={cancelOptions}
+                                            emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
+                                    </div> */}
                                 </div>
-                                <div className='col-span-12 md:col-span-6 py-2'>
-                                    <div className='font-medium flex flex-row items-center gap-2'>
-                                        <i className='pi pi-user'></i>
-                                        <p>Lastname</p>
-                                    </div>
-                                    <Input type='text' id='lastname' name='lastname' readonly onClick={onClickInputs} />
-                                </div>
-                                {/* <div className='col-span-12 py-2'>
-                                    <div className='font-medium flex flex-row items-center gap-2'>
-                                        <i className='pi pi-lock'></i>
-                                        <p>Password</p>
-                                    </div>
-                                    <Input id='password' name='password' type='password' placeholder='******' readonly onClick={onClickInputs} />
-                                </div> */}
-                                <div className='col-span-12 md:col-span-6 py-2'>
-                                    <div className='font-medium flex flex-row items-center gap-2'>
-                                        <i className='pi pi-at'></i>
-                                        <p>Email</p>
-                                    </div>
-                                    <Input id='email' name='email' type='email' placeholder='user@email.com' readonly onClick={onClickInputs} />
-                                </div>
-                                <div className='col-span-12 md:col-span-6 py-2'>
-                                    <div className='font-medium flex flex-row items-center gap-2'>
-                                        <i className='pi pi-phone'></i>
-                                        <p>Phone</p>
-                                    </div>
-                                    <Input type='tel' id='phone' name='phone' placeholder="(999) 999-9999" readonly onClick={onClickInputs} />
-                                </div>
-                                <div className='col-span-12 py-2'>
-                                    <div className='font-medium flex flex-row items-center gap-2'>
-                                        <i className='pi pi-map-marker'></i>
-                                        <p>Address</p>
-                                    </div>
-                                    <MapComponent
-                                        selectedLocation={selectedLocation}
-                                        setSelectedLocation={setSelectedLocation}
-                                        getAddress={getAddress}
-                                        selectedPlace={selectedPlace}
-                                        setSelectedPlace={setSelectedPlace} />
-                                </div>
-                                <div className='col-span-12 py-2'>
-                                    <div className='font-medium flex flex-row items-center gap-2'>
-                                        <i className='pi pi-image'></i>
-                                        <p>Profile image</p>
-                                    </div>
-                                    <FileUpload
-                                        ref={fileUploadPersonRef}
-                                        id='personImage'
-                                        name="personImage"
-                                        onClear={() => setImagePerson(null)}
-                                        accept="image/*"
-                                        maxFileSize={1000000}
-                                        headerTemplate={headerTemplate}
-                                        itemTemplate={itemTemplatePerson}
-                                        chooseOptions={chooseOptions}
-                                        cancelOptions={cancelOptions}
-                                        emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
-                                </div>
+                                {
+                                    buttonActive && (
+                                        <div className='flex flex-row items-center justify-end gap-3 my-5'>
+                                            <Button type='button' label='Cancel' id='btnPersonal' outlined className='w-36 h-10 border-sky-500 text-sky-500 font-medium rounded-xl border-2' onClick={cancelEdit}></Button>
+                                            <Button type='submit' label='Save' className='w-36 h-10 font-medium bg-sky-500 border-sky-500 rounded-xl shadow-lg shadow-sky-300 hover:bg-sky-600 hover:border-sky-600'></Button>
+                                        </div>
+                                    )
+                                }
                             </div>
-                            {
-                                buttonActive && (
-                                    <div className='flex flex-row items-center justify-end gap-3 my-5'>
-                                        <Button type='button' label='Cancel' id='btnPersonal' outlined className='w-36 h-10 border-sky-500 text-sky-500 font-medium rounded-xl border-2' onClick={cancelEdit}></Button>
-                                        <Button type='submit' label='Save' className='w-36 h-10 font-medium bg-sky-500 border-sky-500 rounded-xl shadow-lg shadow-sky-300 hover:bg-sky-600 hover:border-sky-600'></Button>
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </form>
-                </FormProvider>
+                        </form>
+                    </FormProvider>
+                </div>
             </div>
-        </div>
-        {/* <div className='w-full md:w-[40%] m-auto'>
-            <SearchServiceComponent></SearchServiceComponent>
-        </div> */}
-    </LayoutPrincipal>
+            {/* <div className='w-full md:w-[40%] m-auto'>
+                <SearchServiceComponent></SearchServiceComponent>
+            </div> */}
+        </LayoutPrincipal>
+    </div>
   )
 }
 
