@@ -21,7 +21,7 @@ export type SearchProps = {
 const Index = () => {
 
   const { findByNameProvidersService, getAllServices } = Services();
-  const { getUserAuthenticated } = Auth();
+  // const { getUserAuthenticated } = Auth();
 
   const {zip, setZip} = useContext(SearchServiceContext);
 
@@ -75,19 +75,19 @@ const Index = () => {
     }
   }
 
-  const getUser = async () => {
-    try {
-      const currentUser = await getUserAuthenticated();
-      if(currentUser.data.idRole == 4) {
-        setDisabled(false);
-      } else {
-        setDisabled(true);
-      }
-    } catch (error) {
-      console.log(error);
-      setDisabled(true);
-    }
-  }
+  // const getUser = async () => {
+  //   try {
+  //     const currentUser = await getUserAuthenticated();
+  //     if(currentUser.data.idRole == 4) {
+  //       setDisabled(false);
+  //     } else {
+  //       setDisabled(true);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setDisabled(true);
+  //   }
+  // }
 
   useEffect(() => {
     if(disabled) {
@@ -100,7 +100,7 @@ const Index = () => {
   useEffect(() => {
     setLoading(true);
     if(router.query.option) {
-      getUser();
+      // getUser();
       getServices();
       getData(router.query.option as string);
     } else {
