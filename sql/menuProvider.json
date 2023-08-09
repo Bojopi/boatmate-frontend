@@ -11,36 +11,24 @@
         ]
     },
     {
-        "label": "Leads",
+        "label": "Inbox",
         "url": "/welcome/leads",
         "icon": "pi pi-inbox text-xl",
         "items": [
             { 
-                "label": "Messages",
+                "label": "Inbox",
                 "url": "/welcome/leads"
             },
             { 
-                "label": "Applications",
-                "url": "/welcome/applications"
-            },
-            { 
-                "label": "Opportunities",
+                "label": "Status",
                 "items": [
                     {
-                        "label": "Pending",
+                        "label": "Ongoing",
                         "url": "/welcome/pendings"
                     },
                     {
-                        "label": "Job confirmed",
+                        "label": "Job Finished",
                         "url": "/welcome/jobs/confirmed"
-                    },
-                    {
-                        "label": "Job done",
-                        "url": "/welcome/jobs/done"
-                    },
-                    {
-                        "label": "Not hired",
-                        "url": "/welcome/jobs/not-hired"
                     }
                 ]
             }

@@ -12,6 +12,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { AutoComplete, AutoCompleteChangeEvent, AutoCompleteCompleteEvent } from 'primereact/autocomplete';
 import { InputNumber } from 'primereact/inputnumber';
 import { SearchServiceContext } from '@/context/SearchServiceContext';
+import { InputText } from 'primereact/inputtext';
 
 export type SearchProps = {
   name: string;
@@ -137,21 +138,69 @@ const Index = () => {
     }
   };
 
-  const onClickSearch = () => {
-    if(selectedService != null && zip != null) {
-      setInputDisabled(false);
-      setZip(zip);
-      router.push(`/category/${selectedService.service_name.replace(' ', '-').toLowerCase()}`)
-    } else {
-      setInputDisabled(true);
+  const search = (event: AutoCompleteCompleteEvent) => {
+        setTimeout(() => {
+            let _filteredServices;
+
+            if (!event.query.trim().length) {
+                _filteredServices = [...services];
+            }
+            else {
+                _filteredServices = services.filter((service: Service) => {
+                    return service.service_name.toLowerCase().includes(event.query.toLowerCase());
+                });
+            }
+
+            setFilteredServices(_filteredServices);
+        }, 250);
     }
-  }
+
+    const onClickSearch = () => {
+        if(selectedService != null && zip != null) {
+            setInputDisabled(false);
+            setZip(zip);
+            router.push(`/category/${selectedService.service_name.replace(' ', '-').toLowerCase()}`)
+        } else {
+            setInputDisabled(true);
+        }
+    }
 
   return (
-    <>
+    <div className='relative overflow-hidden'>
         <LayoutPrincipal>
-        <Spinner loading={loading} />
-          <div
+          <Spinner loading={loading} />
+          <div className="w-[500px] h-[500px] left-[-200px] top-[-100px] absolute bg-teal-500/30 rounded-full blur-3xl -z-10" />
+          <div className="w-[500px] h-[500px] left-[80%] top-[50vh] absolute bg-sky-500/30 rounded-full blur-3xl -z-10" />
+          <div className='w-[70%] min-h-screen mx-auto z-30'>
+            <p className="text-black text-xl font-bold leading-normal">Find Top-Rated <span className="text-sky-500">{title}</span> Contractors In Your Area</p>
+            <div className='flex justify-between items-center pt-5'>
+              <AutoComplete 
+              field='service_name' 
+              value={selectedService} 
+              suggestions={filteredServices} 
+              completeMethod={search}
+              onChange={(e: AutoCompleteChangeEvent) => setSelectedService(e.value)}
+              placeholder='Search'
+              aria-describedby="autocomplete-help"
+              className={`w-96 autocomplete-input drop-shadow-md ${inputDisabled ? 'p-invalid' : ''}`} />
+              <Dropdown value={selectOrder} onChange={(e) => orderList(e.value)} options={order} optionLabel="option" 
+              placeholder="Order by: Name (a-z)" className="w-60 rounded-full text-sm input-dropwdon drop-shadow-xl" showClear />
+            </div>
+            <div className='grid grid-cols-12 gap-10 mt-14'>
+              {
+                serviceList && serviceList.length > 0 ?
+                serviceList.map((item: ServiceProvider) => {
+                  return (<div key={item.id_service_provider} className='col-span-3 h-96'><ServiceCardComponent service={item} disabled={disabled} ></ServiceCardComponent></div>)
+                })
+                : 
+                <div className='col-span-1 md:col-span-2 flex flex-col gap-3 justify-center items-center my-[25%] md:my-3'>
+                  <i className='pi pi-ban' style={{fontSize: '3rem', color: 'red'}}></i>
+                  <p className='text-xl font-bold'>No Content</p>
+                </div>
+              }
+            </div>
+          </div>
+          {/* <div
           className="w-full h-56 md:h-80 bg-no-repeat bg-cover bg-center"
           style={{'backgroundImage': "url('https://images.unsplash.com/photo-1533678819397-99457d235e42?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80')"}}
           >
@@ -204,9 +253,9 @@ const Index = () => {
                 </div>
               }
             </div>
-          </div>
+          </div> */}
         </LayoutPrincipal>
-    </>
+    </div>
   )
 }
 

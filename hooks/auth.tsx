@@ -14,7 +14,7 @@ export const Auth = () => {
                 setLoading(false);
                 toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
                 if(res.data.role == 'CUSTOMER') {
-                    router.push('/')
+                    router.push('/category/detailing')
                 } else {
                     router.push('/welcome')
                 }

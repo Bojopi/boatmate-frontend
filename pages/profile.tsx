@@ -18,6 +18,7 @@ import { Users } from '@/hooks/user';
 import { Button } from 'primereact/button';
 import Link from 'next/link';
 import SearchServiceComponent from '@/components/searchService';
+import Image from 'next/image';
 
 export type FormProps = {
     name: string;
@@ -174,39 +175,43 @@ const Profile = () => {
         }, 1500)
     }
 
+    const toTitleCase = (str: string) => {
+        const string = str
+        .toLowerCase()
+        .split(' ')
+        .map(word => {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        })
+        .join(' ');
+
+        return string;
+    }
+
   return (
     <LayoutPrincipal>
         <Spinner loading={loading} />
         <Toast ref={toast} />
-        <div className='w-full h-full flex flex-col gap-5 pt-10 md:pt-5 p-5'>
-            <div className='w-full flex flex-col md:flex-row md:justify-center px-5 border-b'>
-                <div className='flex gap-2 place-content-end border-b md:border-none'>
-                    <Link href={`/inbox/${user?.idCustomer}`}>
-                        <Button label='Inbox' text severity='secondary' className='text-black font-semibold' />
-                    </Link>
-                    <Link href={`/projects/${user?.idCustomer}`}>
-                        <Button label='Projects' text severity='secondary' className='text-black font-semibold' />
-                    </Link>
+        <p className='w-full md:w-[60%] mx-auto font-semibold'>Profile</p>
+        <div className='w-[60%] mx-auto h-full flex gap-5 my-5'>
+            <div className='w-80 h-96 bg-white rounded-xl border border-neutral-200 flex flex-col items-center gap-10 p-5'>
+                <div className='relative'>
+                    {
+                        user?.image != null ?
+                        <img src={user.image} width={200} height={200} alt='profile' className='rounded-full' />
+                        : <FontAwesomeIcon icon={faCircleUser} className='w-10 h-10' style={{color: "#c2c2c2"}} />
+                    }
+                    <Button icon={'pi pi-pencil'} rounded className='absolute bottom-4 right-0' />
+                </div>
+                <div className='w-full flex flex-col gap-2 text-center'>
+                    <p className='font-normal text-xl text-black leading-7'>{toTitleCase(`${user?.name} ${user?.lastname}`)}</p>
+                    <p className='text-neutral-600 text-base font-normal leading-normal'>{toTitleCase(`${user?.role}`)}</p>
+                    <p className='text-sky-500 text-sm'>Change Password</p>
                 </div>
             </div>
-            <p className='w-full md:w-[50%] mx-auto font-semibold'>Profile</p>
-            <div className='w-full md:w-[50%] h-full bg-white rounded-md shadow-md border overflow-y-auto mx-auto'>
+            <div className='w-full h-full bg-white overflow-y-auto mx-auto'>
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit, onErrors)}>
-                        <div className='p-5 mb-5'>
-                            <div className='flex flex-row justify-between'>
-                                <div className='flex flex-row gap-5'>
-                                    {
-                                        user?.image != null ?
-                                        <Avatar image={user.image} size='xlarge' shape="circle" />
-                                        : <FontAwesomeIcon icon={faCircleUser} className='w-8 h-8' style={{color: "#c2c2c2"}} />
-                                    }
-                                    <div className='flex flex-col justify-center'>
-                                        <p className='font-medium'>{(`${user?.name} ${user?.lastname}`).toUpperCase()}</p>
-                                    </div>
-                                </div>
-                            </div>
-
+                        <div className='px-5'>
                             <div className='w-full grid grid-cols-12 mt-5 gap-2'>
                                 <div className='col-span-12 md:col-span-6 py-2'>
                                     <div className='font-medium flex flex-row items-center gap-2'>
@@ -222,21 +227,21 @@ const Profile = () => {
                                     </div>
                                     <Input type='text' id='lastname' name='lastname' readonly onClick={onClickInputs} />
                                 </div>
-                                <div className='col-span-12 py-2'>
+                                {/* <div className='col-span-12 py-2'>
                                     <div className='font-medium flex flex-row items-center gap-2'>
                                         <i className='pi pi-lock'></i>
                                         <p>Password</p>
                                     </div>
                                     <Input id='password' name='password' type='password' placeholder='******' readonly onClick={onClickInputs} />
-                                </div>
-                                <div className='col-span-12 md:col-span-4 py-2'>
+                                </div> */}
+                                <div className='col-span-12 md:col-span-6 py-2'>
                                     <div className='font-medium flex flex-row items-center gap-2'>
                                         <i className='pi pi-at'></i>
                                         <p>Email</p>
                                     </div>
                                     <Input id='email' name='email' type='email' placeholder='user@email.com' readonly onClick={onClickInputs} />
                                 </div>
-                                <div className='col-span-12 md:col-span-4 py-2'>
+                                <div className='col-span-12 md:col-span-6 py-2'>
                                     <div className='font-medium flex flex-row items-center gap-2'>
                                         <i className='pi pi-phone'></i>
                                         <p>Phone</p>
@@ -276,9 +281,9 @@ const Profile = () => {
                             </div>
                             {
                                 buttonActive && (
-                                    <div className='flex flex-row items-center justify-end gap-3 mt-3'>
-                                        <button type='button' id='btnPersonal' className='px-5 py-1 bg-white border-2 border-[#373A85] text-center text-sm text-[#373A85] font-bold rounded-md' onClick={cancelEdit}>Cancel</button>
-                                        <button type='submit' className='px-5 py-1 bg-[#373A85] border-2 border-[#373A85] text-center text-sm text-white font-bold rounded-md'>Save</button>
+                                    <div className='flex flex-row items-center justify-end gap-3 my-5'>
+                                        <Button type='button' label='Cancel' id='btnPersonal' outlined className='w-36 h-10 border-sky-500 text-sky-500 font-medium rounded-xl border-2' onClick={cancelEdit}></Button>
+                                        <Button type='submit' label='Save' className='w-36 h-10 font-medium bg-sky-500 border-sky-500 rounded-xl shadow-lg shadow-sky-300 hover:bg-sky-600 hover:border-sky-600'></Button>
                                     </div>
                                 )
                             }
@@ -286,10 +291,10 @@ const Profile = () => {
                     </form>
                 </FormProvider>
             </div>
-            <div className='w-full md:w-[40%] m-auto'>
-                <SearchServiceComponent></SearchServiceComponent>
-            </div>
         </div>
+        {/* <div className='w-full md:w-[40%] m-auto'>
+            <SearchServiceComponent></SearchServiceComponent>
+        </div> */}
     </LayoutPrincipal>
   )
 }

@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Poppins';
+  src: url('../assets/Poppins/Poppins-Regular.ttf');
+}
+
+* :not(.pi) {
+  font-family: 'Poppins' !important;
+}
 
 .p-menubar-button {
   display: none !important;
@@ -66,4 +74,34 @@
   .container-group-categories {
     column-count: 3;
   }
+}
+
+
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.autocomplete-input input, .number-input input {
+    width: 100% !important;
+    border-radius: 50px !important;
+    padding: 10px 15px !important;
+    font-size: 14px !important;
+    line-height: 1px !important;
+}
+
+.p-menubar .p-menubar-custom, .p-menubar .p-menubar-end {
+  margin: 0 !important;
+}
+
+.input-dropwdon .p-dropdown-label.p-placeholder {
+  font-size: 14px !important;
+  padding: 10px 15px !important;
+}
+
+.input-dropwdon .p-dropdown-trigger {
+  color: rgb(14, 165, 233) !important;
 }

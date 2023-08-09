@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import LayoutPrincipal from '@/components/layoutPrincipal'
 import { Providers } from '@/hooks/providers'
 import { useRouter } from 'next/router';
@@ -8,23 +8,29 @@ import { Avatar } from 'primereact/avatar';
 import { Contracts } from '@/hooks/contracts';
 import { Maps } from '@/hooks/maps';
 import Link from 'next/link';
-import { Button } from 'primereact/button';
 import { Portofolios } from '@/hooks/portofolio';
 import { Carousel } from 'primereact/carousel';
+import Create from './create';
+import { Toast } from 'primereact/toast';
+import { Auth } from '@/hooks/auth';
 
 const Index = () => {
-  const { show, getLicenses } = Providers();
+  const { getOneServiceProvider, getLicenses } = Providers();
   const { getPortofolioProvider } = Portofolios();
   const { getContractsProvider } = Contracts();
   const { getAddress } = Maps();
+  const { getUserAuthenticated } = Auth();
 
   const [provider, setProvider] = useState<Provider>();
   const [portofolio, setPortofolio] = useState<Portofolio[]>([]);
   const [licenses, setLicenses] = useState<any[]>([]);
   const [count, setCount] = useState<number>(0);
   const [address, setAddress] = useState<string>('No Address');
+  const [customerId, setCustomerId] = useState<number>(0);
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const toast = useRef<Toast>(null);
 
   const responsiveOptions = [
     {
@@ -46,25 +52,27 @@ const Index = () => {
 
   const router = useRouter();
 
-  const getProvider = async (idProvider: number) => {
+  const getProvider = async (idServiceProvider: number) => {
     try {
-      const response = await show(idProvider);
-      const portofolio = await getPortofolioProvider(idProvider);
-      const ct = await getContractsProvider(idProvider);
-
-      if(portofolio.status == 200) {
-        setPortofolio(portofolio.data.portofolio);
-      }
-
-      if(ct.status == 200) {
-        setCount(ct.data.count);
-      }
+      const response = await getOneServiceProvider(idServiceProvider);
 
       if(response.status == 200) {
-        setProvider(response.data.provider);
+        getLicense(response.data.service.id_provider);
+        const portofolio = await getPortofolioProvider(response.data.service.id_provider);
+        const ct = await getContractsProvider(response.data.service.id_provider);
+
+        if(portofolio.status == 200) {
+          setPortofolio(portofolio.data.portofolio);
+        }
+  
+        if(ct.status == 200) {
+          setCount(ct.data.count);
+        }
+
+        setProvider(response.data.service);
         const addr = await getAddress(
-          Number(response.data.provider.provider_lat ? response.data.provider.provider_lat : 0), 
-          Number(response.data.provider.provider_lng ? response.data.provider.provider_lng : 0)
+          Number(response.data.service.provider_lat ? response.data.service.provider_lat : 0), 
+          Number(response.data.service.provider_lng ? response.data.service.provider_lng : 0)
         );
         if(addr.status == 200) {
           setAddress(addr.data.results[0].formatted_address);
@@ -88,13 +96,22 @@ const Index = () => {
     }
   }
 
+  const getUser = async () => {
+    try {
+      const response = await getUserAuthenticated();
+      setCustomerId(response.data.idCustomer)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     setLoading(true);
-    if (router.query.idProvider) {
-      getProvider(Number(router.query.idProvider));
-      getLicense(Number(router.query.idProvider));
+    if (router.query.idServiceProvider) {
+      getUser();
+      getProvider(Number(router.query.idServiceProvider));
     }
-  }, [router.query.idProvider]);
+  }, [router.query.idServiceProvider]);
 
   const itemTemplate = (item: Portofolio) => {
     return (
@@ -106,6 +123,7 @@ const Index = () => {
 
   return (
     <LayoutPrincipal>
+      <Toast ref={toast} />
       <Spinner loading={loading} />
       <div className='h-auto flex flex-col items-center justify-center gap-5 p-10'>
         <div className='max-w-xl border shadow-md rounded-md p-5 grid grid-cols-12 gap-1 md:gap-3 items-center'>
@@ -139,12 +157,7 @@ const Index = () => {
             <div className='text-sm font-medium'><Link href={'#'} className='text-[#109EDA]' >Facebook</Link>, <Link href={'#'} className='text-[#109EDA]' >Instagram</Link>, <Link href={'#'} className='text-[#109EDA]' >Twitter</Link> </div>
           </div>
           <div className='col-span-12 flex md:justify-end'>
-            <Button outlined>
-              <Link href='#' className='flex items-center gap-3' >
-                <i className='pi pi-tag'></i>
-                <p>Request a quote</p>
-              </Link>
-            </Button>
+            <Create idCustomer={customerId} idServiceProvider={Number(router.query.idServiceProvider)} toast={toast}/>
           </div>
         </div>
 

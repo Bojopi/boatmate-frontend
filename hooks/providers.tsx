@@ -41,6 +41,8 @@ export const Providers = () => {
     //Services
 
     const getServicesProvider = (idProvider: number) => axios.get(`/service-provider/${idProvider}`);
+    
+    const getOneServiceProvider = (idServiceProvider: number) => axios.get(`/one-service-provider/${idServiceProvider}`);
 
     const showServiceProvider = (idProvider: number, idService: number) => axios.get(`service-provider/${idProvider}/${idService}`);
 
@@ -133,7 +135,8 @@ export const Providers = () => {
         showServiceProvider,
         addService,
         uploadLicense,
-        getLicenses
+        getLicenses,
+        getOneServiceProvider
     }
 }
 

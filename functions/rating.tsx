@@ -4,7 +4,7 @@ export const avgRating = (list: any) => {
     list.map((item: any) => {
         sum += item.rating
     })
-    const average = (sum / list.length).toFixed();
+    const average = (sum / list.length);
     return average;
 }
 

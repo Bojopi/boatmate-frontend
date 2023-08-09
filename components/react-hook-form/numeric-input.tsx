@@ -1,3 +1,4 @@
+import { InputNumber } from "primereact/inputnumber";
 import {useFormContext} from "react-hook-form";
 export type NumericInputProps = {
   id: string;
@@ -14,7 +15,7 @@ export const NumericInput: React.FC<NumericInputProps> = ({
   rules,
   step = 0.01,
   width = "w-full",
-  placeholder = "",
+  placeholder = "00.00",
 }) => {
   const {register} = useFormContext();
   return (
@@ -25,7 +26,7 @@ export const NumericInput: React.FC<NumericInputProps> = ({
       id={id}
       step={step}
       placeholder={placeholder}
-      className={`form-input block ${width} border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-700 flex-grow-1 focus:border-blue-500 focus:ring-0 sm:text-sm rounded-md`}
+      className={`text-6xl ${width} text-center border-none outline-none`}
     />
   );
 };

@@ -46,6 +46,20 @@ export const Contracts = () => {
 
     const updateState = (idContract: number, data: any) => axios.post(`/state-contract/${idContract}`, data);
    
+    const createContract = (idCustomer: number, data: any, setLoading: any, toast: any, setVisible: any) => {
+        axios.post(`/contract/${idCustomer}`, data)
+        .then((res) => {
+            console.log(res)
+            toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
+            setVisible(false);
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.log('Error:', error);
+            toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
+            setLoading(false);
+        })
+    }
     // const updateState = (idContract: number, data: any, contracts: any, setContracts: any, setLoading: any, toast: any) => {
     //     axios.post(`/state-contract/${idContract}`, data)
     //     .then((res) => {
@@ -77,6 +91,7 @@ export const Contracts = () => {
         getContractsProvider,
         getContractsCustomer,
         updateState,
+        createContract
     }
 }
 

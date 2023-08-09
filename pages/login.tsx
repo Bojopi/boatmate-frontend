@@ -13,7 +13,7 @@ import Spinner from '../components/spinner';
 import { Divider } from 'primereact/divider';
 
 import { Auth } from '@/hooks/auth';
-import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from '@react-oauth/google'
+import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { useRouter } from 'next/router';
 
 
