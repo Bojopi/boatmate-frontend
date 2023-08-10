@@ -64,14 +64,14 @@ const Profile = () => {
 
     const setDataUser = async () => {
         const response = await getUserAuthenticated();
-        setUser(response.data);
-        setChecked(response.data.state);
+        setUser(response.data.user);
+        setChecked(response.data.user.state);
         setSelectedLocation({
-            lat: Number(response.data.customerLat || 0),
-            lng: Number(response.data.customerLng || 0),
+            lat: Number(response.data.user.customerLat || 0),
+            lng: Number(response.data.user.customerLng || 0),
         })
-        resetMap(response.data.providerLat || 0, response.data.providerLng || 0);
-        reset(response.data)
+        resetMap(response.data.user.providerLat || 0, response.data.user.providerLng || 0);
+        reset(response.data.user)
         setLoading(false)
     }
 

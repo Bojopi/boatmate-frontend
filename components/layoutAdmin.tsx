@@ -53,11 +53,11 @@ const LayoutAdmin = ({children}: any) => {
 
     const setDataUser = async () => {
         const response = await getUserAuthenticated();
-        setUser(response.data);
+        setUser(response.data.user);
 
-        if(response.data.role === 'ADMIN' || response.data.role === "SUPERADMIN") {
+        if(response.data.user.role === 'ADMIN' || response.data.user.role === "SUPERADMIN") {
             setMenuList(MenuAdmin);
-        } else if(response.data.role === "PROVIDER") {
+        } else if(response.data.user.role === "PROVIDER") {
             setMenuList(MenuProvider);
         }
     }

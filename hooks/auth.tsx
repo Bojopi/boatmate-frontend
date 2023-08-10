@@ -11,6 +11,7 @@ export const Auth = () => {
         axios
             .post('/auth', data)
             .then((res) => {
+                console.log(res)
                 setLoading(false);
                 toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
                 if(res.data.role == 'CUSTOMER') {
@@ -26,7 +27,7 @@ export const Auth = () => {
             })
     };
 
-    const getUserAuthenticated = () => axios.get('/profile')
+    const getUserAuthenticated = () => axios.get('/profile');
 
     const logout = (setLoading: any) => {
         axios.post('/logout', {})

@@ -8,8 +8,46 @@ import Layout from './layouts/index';
 import { MenuProvider } from '@/context/MenuContext';
 import { FormProvider } from '@/context/FormContext';
 import { SearchServiceProvider } from '@/context/SearchServiceContext';
+import { io } from 'socket.io-client';
+import {useEffect, useState} from 'react';
+import { Auth } from '@/hooks/auth';
 
 export default function App({ Component, pageProps }: AppProps) {
+  const { getUserAuthenticated } = Auth();
+
+  const [userToken, setUserToken] = useState<string>('');
+
+  const socket = io('https://boatmate.com', {
+    auth: {token: userToken},
+  });
+
+  const getToken = async () => {
+    try {
+      const response = await getUserAuthenticated();
+      if(response.status == 200) {
+        setUserToken(response.data.tokenUser);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getToken();
+    if(userToken != '') {
+      socket.on('connect', () => {
+      });
+      socket.on('test', (data) => {
+          console.log(data)
+      })
+      socket.on('connect_error', (err) => {
+          console.log('connect error: ', err)
+      })
+      socket.on('contract-create', (data) => {
+          console.log('contract-info: ', data)
+      })
+    }
+  }, [userToken])
 
   return (
     <>

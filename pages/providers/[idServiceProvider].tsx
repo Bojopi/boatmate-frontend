@@ -102,7 +102,7 @@ const Index = () => {
   const getUser = async () => {
     try {
       const response = await getUserAuthenticated();
-      setCustomerId(response.data.idCustomer)
+      setCustomerId(response.data.user.idCustomer)
     } catch (error) {
       console.log(error)
     }

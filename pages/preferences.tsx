@@ -47,7 +47,7 @@ const Preferences = () => {
 
     const setDataUser = async () => {
         const response = await getUserAuthenticated();
-        setUser(response.data);
+        setUser(response.data.user);
     }
 
     const setRole = async (e: any) => {

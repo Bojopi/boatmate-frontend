@@ -153,17 +153,17 @@ const Welcome = () => {
 
     const setDataUser = async () => {
         const response = await getUserAuthenticated();
-        setUser(response.data);
-        if(response.data.role === 'PROVIDER') {
-            getPortofolio(response.data.idProvider);
-            getLicense(response.data.idProvider);
+        setUser(response.data.user);
+        if(response.data.user.role === 'PROVIDER') {
+            getPortofolio(response.data.user.idProvider);
+            getLicense(response.data.user.idProvider);
             setSelectedLocation({
-                lat: Number(response.data.providerLat || 0),
-                lng: Number(response.data.providerLng || 0),
+                lat: Number(response.data.user.providerLat || 0),
+                lng: Number(response.data.user.providerLng || 0),
             })
-            resetMap(response.data.providerLat || 0, response.data.providerLng || 0);
+            resetMap(response.data.user.providerLat || 0, response.data.user.providerLng || 0);
         }
-        reset(response.data)
+        reset(response.data.user)
     }
 
     const getLicense = async (idProvider: number) => {

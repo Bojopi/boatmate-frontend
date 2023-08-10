@@ -17,7 +17,7 @@ const LayoutPrincipal = ({children}: any) => {
         try {
             const response = await getUserAuthenticated();
             if(response.status == 200) {
-                setUser(response.data)
+                setUser(response.data.user)
             }
         } catch (error) {
             return
