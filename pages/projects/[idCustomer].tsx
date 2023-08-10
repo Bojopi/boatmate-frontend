@@ -152,7 +152,7 @@ const ProjectsPage = () => {
               {
                 contractFilter.length > 0 ?
                 contractFilter.map((item: ContractCustomer, i: number) => (
-                    <div className='border border-neutral-200 rounded-xl p-4'>
+                    <div key={i} className='border border-neutral-200 rounded-xl p-4'>
                       <div className='flex items-start gap-5'>
                         {
                           item.provider_image != null ?
