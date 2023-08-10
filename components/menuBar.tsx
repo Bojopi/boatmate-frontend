@@ -98,7 +98,7 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, user = null, menuItem=t
         setMenus(items);
     }
 
-    const start = <Link href={menuItem ? '/' : '/pro'} className='flex flex-row items-end'>
+    const start = <Link href={menuItem ? user && user.idCustomer ? '/category/detailing'  : '/' : '/pro'} className='flex flex-row items-end'>
         <img
         alt="logo"
         src="https://i.postimg.cc/jSW0kv3s/Logo-Boat-Mate-horizontal.png"
