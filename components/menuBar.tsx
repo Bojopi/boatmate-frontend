@@ -53,21 +53,27 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, user = null, menuItem=t
                     }
                 },
                 {label: 'Profile', url: '/profile'},
+                {label: 'Inbox', url: `/inbox/${user.idCustomer}`},
+                {label: 'Projects', url: '/profile'},
                 { separator: true},
                 ...menuItems,
-                // { separator: true},
-                // { 
-                //     template: (item: any, options: any) => {
-                //         return (
-                //             <button onClick={(e) => options.onClick(e)} className='w-full flex align-items-center'>
-                //                 <Avatar image="https://primefaces.org/cdn/primereact/images/avatar/amyelsner.png" className="mr-2" shape="circle" />
-                //                 <div className="flex flex-column align">
-                //                     <span className="font-bold">Amy Elsner</span>
-                //                     <span className="text-sm">Agent</span>
-                //                 </div>
-                //             </button>
-                //         )
-                // }}
+                { separator: true},
+                { 
+                    template: (item: any, options: any) => {
+                        return (
+                            <div className='w-full flex items-center p-2'>
+                                {
+                                    user?.image != null ?
+                                    <Avatar image={user.image} className="mr-2 w-8 h-8" shape="circle" />
+                                    : <FontAwesomeIcon icon={faCircleUser} className='w-8 h-8' style={{color: "#c2c2c2"}} />
+                                }
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-bold">{user.name} {user.lastname}</span>
+                                    <span className="text-xs" style={{textTransform: 'capitalize'}}>{(user.role).toLowerCase()}</span>
+                                </div>
+                            </div>
+                        )
+                }}
             ]
         } else {
             items = [
@@ -163,7 +169,12 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, user = null, menuItem=t
 
     return (
         <div className="fixed w-full z-10">
-            <Menubar id='menubar' model={menuList} start={start} end={end} className="bg-transparent border-none z-10 lg:px-[15%] py-4 md:py-6 flex items-center justify-between text-sm font-medium" style={{'borderRadius': 0}} />
+            {
+                user ?
+                <Menubar id='menubar' start={start} end={end} className="bg-transparent border-none z-10 lg:px-[15%] py-4 md:py-6 flex items-center justify-between text-sm font-medium" style={{'borderRadius': 0}} />
+                :
+                <Menubar id='menubar' model={menuList} start={start} end={end} className="bg-transparent border-none z-10 lg:px-[15%] py-4 md:py-6 flex items-center justify-between text-sm font-medium" style={{'borderRadius': 0}} />
+            }
         </div>
     )
 };

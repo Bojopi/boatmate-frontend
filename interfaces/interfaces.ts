@@ -193,7 +193,7 @@ export interface ContractCustomer {
     contract_date:          Date;
     contract_state:         string;
     contract_description:   string;
-    price:                  number;
+    contract_price:         number;
     service_provider_state: boolean;
     service_name:           string;
     id_provider:            number;

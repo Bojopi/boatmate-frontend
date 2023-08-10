@@ -1,18 +1,13 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import LayoutPrincipal from '@/components/layoutPrincipal';
 import { useRouter } from 'next/router';
-import { Button } from 'primereact/button';
 import { Services } from '@/hooks/services';
 import { Service, ServiceProvider } from '@/interfaces/interfaces';
 import Spinner from '@/components/spinner';
 import ServiceCardComponent from '@/components/serviceCard';
-import { Auth } from '@/hooks/auth';
-import { Messages } from 'primereact/messages';
 import { Dropdown } from 'primereact/dropdown';
 import { AutoComplete, AutoCompleteChangeEvent, AutoCompleteCompleteEvent } from 'primereact/autocomplete';
-import { InputNumber } from 'primereact/inputnumber';
 import { SearchServiceContext } from '@/context/SearchServiceContext';
-import { InputText } from 'primereact/inputtext';
 
 export type SearchProps = {
   name: string;
@@ -21,7 +16,6 @@ export type SearchProps = {
 const Index = () => {
 
   const { findByNameProvidersService, getAllServices } = Services();
-  // const { getUserAuthenticated } = Auth();
 
   const {zip, setZip} = useContext(SearchServiceContext);
 
@@ -75,20 +69,6 @@ const Index = () => {
     }
   }
 
-  // const getUser = async () => {
-  //   try {
-  //     const currentUser = await getUserAuthenticated();
-  //     if(currentUser.data.idRole == 4) {
-  //       setDisabled(false);
-  //     } else {
-  //       setDisabled(true);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setDisabled(true);
-  //   }
-  // }
-
   useEffect(() => {
     if(disabled) {
       msg.current.show(
@@ -100,7 +80,6 @@ const Index = () => {
   useEffect(() => {
     setLoading(true);
     if(router.query.option) {
-      // getUser();
       getServices();
       getData(router.query.option as string);
     } else {
@@ -108,22 +87,6 @@ const Index = () => {
       setLoading(false);
     }
   }, [router.query.option, zip]);
-
-
-  const searchServices = (e: AutoCompleteCompleteEvent) => {
-    let _filteredServices;
-
-    if (!e.query.trim().length) {
-        _filteredServices = [...services];
-    }
-    else {
-        _filteredServices = services.filter((service) => {
-            return service.service_name.toLowerCase().startsWith(e.query.toLowerCase());
-        });
-    }
-
-    setFilteredServices(_filteredServices);
-  }
 
   const orderList = (orderBy: any) => {
     let filter = [...serviceList];
@@ -153,16 +116,6 @@ const Index = () => {
 
             setFilteredServices(_filteredServices);
         }, 250);
-    }
-
-    const onClickSearch = () => {
-        if(selectedService != null && zip != null) {
-            setInputDisabled(false);
-            setZip(zip);
-            router.push(`/category/${selectedService.service_name.replace(' ', '-').toLowerCase()}`)
-        } else {
-            setInputDisabled(true);
-        }
     }
 
   return (
