@@ -124,7 +124,7 @@ const Index = () => {
           <Spinner loading={loading} />
           <div className="w-[500px] h-[500px] left-[-200px] top-[-100px] absolute bg-teal-500/30 rounded-full blur-3xl -z-10" />
           <div className="w-[500px] h-[500px] left-[80%] top-[50vh] absolute bg-sky-500/30 rounded-full blur-3xl -z-10" />
-          <div className='w-[70%] min-h-screen mx-auto z-30'>
+          <div className='w-[70%] min-h-screen mx-auto mt-32 z-30'>
             <p className="text-black text-xl font-bold leading-normal">Find Top-Rated <span className="text-sky-500">{title}</span> Contractors In Your Area</p>
             <div className='flex justify-between items-center pt-5'>
               <AutoComplete 
@@ -146,7 +146,7 @@ const Index = () => {
                   return (<div key={item.id_service_provider} className='col-span-3 h-96'><ServiceCardComponent service={item} disabled={disabled} ></ServiceCardComponent></div>)
                 })
                 : 
-                <div className='col-span-1 md:col-span-2 flex flex-col gap-3 justify-center items-center my-[25%] md:my-3'>
+                <div className='col-span-12 flex flex-col gap-3 justify-center items-center my-[25%] md:my-3'>
                   <i className='pi pi-ban' style={{fontSize: '3rem', color: 'red'}}></i>
                   <p className='text-xl font-bold'>No Content</p>
                 </div>

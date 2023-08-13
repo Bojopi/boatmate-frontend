@@ -79,7 +79,7 @@ const MapComponent: React.FC<InputProps> = ({readonly = false, height='400px', s
         onLoad={autocomplete => setAutocomplete(autocomplete)}
         onPlaceChanged={onPlaceChanged}
       >
-        <input type="text" className='p-inputtext w-full read-only:border-none read-only:focus:shadow-none' readOnly={readonly} value={selectedPlace} onChange={(e: any) => {setSelectedPlace(e.target.value)}} placeholder="Search for a location" />
+        <input type="text" className='p-inputtext w-full text-sm rounded-xl border-neutral-200 read-only:focus:shadow-none' readOnly={readonly} value={selectedPlace} onChange={(e: any) => {setSelectedPlace(e.target.value)}} placeholder="Search for a location" />
       </Autocomplete>
       <div className={readonly ? 'hidden' : 'block'}>
         <GoogleMap

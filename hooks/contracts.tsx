@@ -40,6 +40,8 @@ export const Contracts = () => {
         })
     };
 
+    const hiredServices = () => axios.get('/hired-services');
+
     const getContractsProvider = (idProvider: number) => axios.get(`/contract-provider/${idProvider}`);
     
     const getContractsCustomer = (idCustomer: number) => axios.get(`/contract-customer/${idCustomer}`);
@@ -60,29 +62,6 @@ export const Contracts = () => {
             setLoading(false);
         })
     }
-    // const updateState = (idContract: number, data: any, contracts: any, setContracts: any, setLoading: any, toast: any) => {
-    //     axios.post(`/state-contract/${idContract}`, data)
-    //     .then((res) => {
-    //         const newData = res.data.contract[1][0];
-    //         const newList = contracts.map((item: any) => {
-    //             if(item.id_contract == idContract) {
-    //                 return {
-    //                     ...item,
-    //                     contract_state: newData.contract_state
-    //                 }
-    //             }
-    //             return item;
-    //         })
-    //         setContracts(newList);
-    //         setLoading(false);
-    //         toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
-    //     })
-    //     .catch((error) => {
-    //         console.log('Error:', error);
-    //         toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
-    //         setLoading(false);
-    //     })
-    // }
 
 
     return {
@@ -91,7 +70,8 @@ export const Contracts = () => {
         getContractsProvider,
         getContractsCustomer,
         updateState,
-        createContract
+        createContract,
+        hiredServices
     }
 }
 

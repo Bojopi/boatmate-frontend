@@ -3,11 +3,16 @@ import { axios } from "@/config/axios";
 
 export const Ratings = () => {
 
-    const getAllRatigns = (setRatings: any, setFilterRating: any, setLoading: any) => {
+    const getAllRatigns = (setRatings: any, setFilterRating: any, setLoading: any, filter?: boolean) => {
         axios.get('/ratings')
         .then((res) => {
             setRatings(res.data.ratings);
             setFilterRating(res.data.ratings);
+            if(filter) {
+                const filterList = res.data.ratings.slice(0, 10).filter((item: any) => item.rating > 3);
+                setRatings(filterList);
+                setFilterRating(filterList);
+            }
             setLoading(false);
         })
         .catch((error) => {

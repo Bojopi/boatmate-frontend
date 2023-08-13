@@ -145,6 +145,12 @@ export interface Portofolio {
     providerId:             number;
 }
 
+export interface Gallery {
+    id_gallery:          number;
+    gallery_image:       string;
+    contractId:          number;
+}
+
 export interface Ratings {
     id_rating:                    number;
     rating:                       number;
@@ -178,14 +184,17 @@ export interface ServiceProvider {
 export interface ContractProvider {
     id_contract:            number;
     contract_date:          Date;
+    contract_date_finished: Date;
     contract_state:         string;
     contract_description:   string;
-    price:                  number;
+    contract_price:         number;
     service_provider_state: boolean;
     email:                  string;
     person_name:            string;
+    person_image:           string;
     lastname:               string;
     phone:                  string;
+    service_name:           string;
 }
 
 export interface ContractCustomer {
@@ -206,4 +215,17 @@ export interface ContractCustomer {
     person_name:            string;
     lastname:               string;
     phone:                  string;
+}
+
+export interface Hired {
+    id_contract:         number;
+    contract_count:      string;
+    id_service:          number;
+    service_name:        string;
+    service_description: null | string;
+    service_image:       null | string;
+    provider_lat:        string;
+    provider_lng:        string;
+    provider_zip:        string;
+    count?:              number;
 }

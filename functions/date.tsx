@@ -15,3 +15,8 @@ export const formatDateDash = (date: string) => {
     const newDate = format(new Date(date), 'dd/MM/yyyy', {locale: enUS})
     return newDate
 }
+
+export const formatDateHour = (date: string) => {
+    const newDate = format(new Date(date), 'dd MMMM, yyyy hh:mm a', {locale: enUS})
+    return newDate
+}

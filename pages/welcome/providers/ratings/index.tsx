@@ -1,195 +1,204 @@
 import LayoutAdmin from '@/components/layoutAdmin'
-import React, {useState, useEffect, useRef} from 'react'
-import { DataView } from 'primereact/dataview';
-import { useRouter } from 'next/router';
+import { Auth } from '@/hooks/auth'
+import { Contracts } from '@/hooks/contracts'
+import { ContractProvider, Profile, Ratings as RatingInterface } from '@/interfaces/interfaces'
+import { FilterMatchMode, FilterOperator } from 'primereact/api'
+import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column'
+import { DataTable, DataTableFilterMeta } from 'primereact/datatable'
+import { InputText } from 'primereact/inputtext'
+import React, { useEffect, useState, useRef } from 'react'
+import { formatDateHour } from '@/functions/date'
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
+import Link from 'next/link'
+import Spinner from '@/components/spinner';
 import { Toast } from 'primereact/toast';
-import Link from 'next/link';
-import { BackAnimated } from '@/components/buttons/animated';
-import { Ratings } from '@/interfaces/interfaces';
-import { Ratings as Rtng } from '@/hooks/rating';
-import { Avatar } from 'primereact/avatar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleUser } from '@fortawesome/free-regular-svg-icons';
-import { Rating as RatingComponent } from 'primereact/rating';
-import { formatDate } from '@/functions/date';
-import { Button } from 'primereact/button';
-import { Calendar } from 'primereact/calendar';
-import { isSameDay, isWithinInterval, setHours, setMinutes, setSeconds, toDate } from 'date-fns';
-import Edit from './edit';
+import { Tooltip } from 'primereact/tooltip';
+import { Ratings } from '@/hooks/rating'
+import { Avatar } from 'primereact/avatar'
+import { Rating } from 'primereact/rating'
 
-const RatingIndex: React.FC = () => {
-    const { getAllRatigns, getRatingProvider, changeVisible } = Rtng();
+const Index = () => {
+    const { getRatingProvider, changeVisible } = Ratings();
+    const { getUserAuthenticated } = Auth();
 
-    const router = useRouter();
-
-    const [ratings, setRatings] = useState<Ratings[]>([]);
-    const [filterRating, setFilterRating] = useState<Ratings[]>([]);
-
-    const [dateIni, setDateIni] = useState<Date | null>(null);
-    const [dateEnd, setDateEnd] = useState<Date | null>(null);
+    const [ratings, setRatings] = useState<RatingInterface[]>([]);
+    const [selectedRating, setSelectedRating] = useState<RatingInterface[] | any>(null);
+    const [user, setUser] = useState<Profile>(
+        {
+            uid:                 0,
+            email:               '',
+            state:               false,
+            google:               false,
+            idPerson:            0,
+            name:                '',
+            lastname:            '',
+            phone:               '',
+            image:               '',
+            idRole:              0,
+            role:                '',
+            idProvider:          0,
+            providerName:        '',
+            providerImage:       '',
+            providerDescription: '',
+            providerLat:         '',
+            providerLng:         '',
+            idCustomer:          '',
+            customerLat:         '',
+            customerLng:         '',
+            iat:                 0,
+            exp:                 0,
+        }
+    );
 
     const [loading, setLoading] = useState<boolean>(false);
-    const toast = useRef<Toast>(null);
+    const toast = useRef<Toast>(null)
+
+    const [filters, setFilters] = useState<DataTableFilterMeta | any>({
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        person_name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        service_name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        review: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        rating_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS}]}
+    });
+
+    const getUserAuth = async () => {
+        try {
+            const response = await getUserAuthenticated();
+            if(response.status == 200) {
+                setUser(response.data.user)
+                getRatings(response.data.user.idProvider);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const getRatings = async (idProvider: number) => {
+        try {
+            const response = await getRatingProvider(idProvider);
+            if(response.status == 200) {
+                const ratingList = response.data.rating;
+                setRatings(ratingList);
+                setLoading(false)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     useEffect(() => {
         setLoading(true);
-        if(router.query.idProvider) {
-            getRatings(Number(router.query.idProvider));
-        } else {
-            getAllRatigns(setRatings, setFilterRating, setLoading);
-        }
-    }, [router.query.idProvider]);
+        getUserAuth();
+    }, []);
 
-    const getRatings = async (idProvider: number) => {
-        const response = await getRatingProvider(idProvider);
-        if(response.status == 200) {
-            setRatings(response.data.rating);
-            setFilterRating(response.data.rating);
-            setLoading(false);
+    const changeVisibility = (idRating: number, state: boolean) => {
+        setLoading(true);
+        const data = {provider_visible: state}
+        changeVisible(idRating, data, ratings, setRatings, toast, setLoading);
+    }
+
+    const formatStatusView = (state: boolean) => {
+        if(state) {
+            return 'Visible'
+        } else {
+            return 'Hidden'
         }
     }
 
-    const filterRatings = (initDate: Date, endDate: Date) => {
+    const onGlobalFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        let _filters = { ...filters };
 
-        const init = new Date(initDate)
-        const end = setSeconds(setMinutes(setHours(new Date(endDate), 23), 59), 59);
+        _filters['global'].value = value;
 
-        if(initDate != null && endDate != null) {
-            const listRatings = ratings.filter((item: Ratings) => {
-                const date = new Date(item.rating_date)
-                return isWithinInterval(toDate(date), {start: toDate(init), end: toDate(end)})
-            })
+        setFilters(_filters);
+    };
 
-            setFilterRating(listRatings)
-        } else if(initDate || endDate) {
-            const listRatings = ratings.filter((item: Ratings) => {
-                const date = new Date(item.rating_date)
-                return isSameDay(toDate(date), toDate(init || end))
-            })
+    const renderHeader = () => {
+        const value = filters['global'] ? filters['global'].value : '';
 
-            setFilterRating(listRatings)
-        } else {
-            setFilterRating(ratings)
-        }
-    }
-
-    const itemTemplate = (rating: Ratings) => {
         return (
-            <div className="w-full p-3">
-                <div className="w-full border border-gray-300 rounded-md shadow-md">
-                    <div className="w-full flex flex-col gap-3 p-5">
-                        <div className='w-full flex justify-start items-center gap-5'>
-                        {
-                            rating.person_image != null ?
-                                <Avatar image={rating.person_image} shape="circle" className='w-8 h-8' />
-                                :
-                                <FontAwesomeIcon icon={faCircleUser} className='w-8 h-8' style={{color: "#c2c2c2"}} />
-                        }
-                            <p className='font-medium'>{rating.person_name} {rating.lastname}</p>
-                        </div>
-                        <div className='w-full flex justify-between items-center'>
-                            <p className='w-1/2'>{rating.service_name}</p>
-                            <p className='w-1/2 pl-5 border-l-2'>{rating.provider_name}</p>
-                        </div>
-                        <div className="w-full text-sm">
-                            <p className='font-medium'>Review:</p>
-                            <p>{rating.review}</p>
-                        </div>
-                        <div className='w-full flex justify-end'>
-                            <RatingComponent value={rating.rating} readOnly cancel={false} />
-                        </div>
-                        <div className="w-full flex items-center justify-between">
-                            <p className='text-sm'>Date: {formatDate(String(rating.rating_date))}</p>
-                            <div className='flex items-center justify-end gap-3'>
-                                {
-                                    rating.provider_visible ?
-                                    <Edit type='ratingprov' idRating={Number(rating.id_rating)} ratings={ratings} setRatings={setRatings} toast={toast} setLoading={setLoading} />
-                                    : null
-                                }
-                                <Button 
-                                type='button' 
-                                icon={rating.provider_visible ? 'pi pi-eye' : 'pi pi-eye-slash'} 
-                                rounded 
-                                className={rating.provider_visible ? 'p-button-primary' : 'p-button-secondary'}
-                                tooltip='Change visibility' 
-                                tooltipOptions={{position: 'top'}}
-                                disabled={loading}
-                                onClick={() => {
-                                    const data = {
-                                        provider_visible: !rating.provider_visible
-                                    }
-                                    setLoading(true);
-                                    changeVisible(Number(rating.id_rating), data, filterRating, setFilterRating, toast, setLoading);
-                                }} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div className='w-full flex justify-end'>
+                <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Search user" className='text-sm rounded-2xl px-6 py-3 opacity-60 shadow-lg text-gray-900/50' />
             </div>
         );
     };
 
-    const header = () => {
+    const customerBodyTemplate = (rowData: RatingInterface) => {
         return (
-            <div className='flex justify-between items-center py-2 gap-5'>
-                <p className='uppercase font-bold text-xs md:text-base'>Ratings</p>
-                <div className='flex items-center gap-1 md:gap-3'>
-                    <span className="p-float-label">
-                        <Calendar inputId="start_date" value={dateIni} onChange={(e: any) => setDateIni(e.value)} />
-                        <label htmlFor="start_date" className='text-sm'>Start date</label>
-                    </span>
-                    <span className="p-float-label">
-                        <Calendar inputId="end_date" value={dateEnd} onChange={(e: any) => setDateEnd(e.value)} />
-                        <label htmlFor="end_date" className='text-sm'>End date</label>
-                    </span>
-                    <Button type='button' icon='pi pi-search' text onClick={() => filterRatings(dateIni!, dateEnd!)} />
-                </div>
+            <div className='flex items-center gap-2'>
+                {
+                    rowData.person_image != null ?
+                    <img src={`${rowData.person_image}`} alt={`${rowData.person_name}`} className='w-10 h-10 rounded-full' />
+                    :
+                    <Avatar icon="pi pi-image" size='large' shape="circle" />
+                }
+                <p>{rowData.person_name} {rowData.lastname}</p>
             </div>
-        )
+        );
     };
-
-    const paginator = {
-        layout: 'RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
-        RowsPerPageDropdown: () => {
-            return (
-                <div className="flex">
+    
+    const ratingBodyTemplate = (rowData: RatingInterface) => {
+        return (
+            <Rating value={rowData.rating} cancel={false} readOnly />
+        );
+    };
+    
+    const viewBodyTemplate = (rowData: RatingInterface) => {
+        return (
+            <div className={`px-3 py-0.5 rounded-md justify-center items-center gap-2.5 inline-flex ${rowData.provider_visible ? 'bg-green-100' : 'bg-red-100'}`}>
+                <p className={`text-xs font-semibold ${rowData.provider_visible ? 'text-green-800' : 'text-red-800'}`}>{formatStatusView(rowData.provider_visible)}</p>
+            </div>
+        );
+    };
+    
+    const dateBodyTemplate = (rowData: RatingInterface) => {
+        return (
+            <p className='text-xs'>{formatDateHour(String(rowData.rating_date))}</p>
+        );
+    };
+    
+    const actionsBodyTemplate = (rowData: RatingInterface) => {
+        return (
+            <div className='flex items-center justify-between'>
+                <Tooltip target=".view-btn" className='text-xs' />
+                <Link href={''} onClick={() => changeVisibility(rowData.id_rating, !rowData.provider_visible)} data-pr-tooltip={`${rowData.provider_visible ? 'Hide' : 'Show'}`} data-pr-position='top' className='w-8 h-8 rounded-md border border-gray-900/50 flex items-center justify-center view-btn'>
                     {
-                        router.query.idProvider ?
-                        <Link href={'/welcome/providers'} >
-                            <BackAnimated></BackAnimated>
-                        </Link>
-                        : null
+                        rowData.provider_visible ?
+                        <AiFillEyeInvisible className='w-4 h-4'/>
+                        :
+                        <AiFillEye className='w-4 h-4'/>
                     }
-                </div>
-            );
-        },
-        CurrentPageReport: (options: any) => {
-            return (
-                <span style={{ color: 'var(--text-color)', userSelect: 'none', width: '120px', textAlign: 'center' }}>
-                    {options.first} - {options.last} of {options.totalRecords}
-                </span>
-            );
-        }
+                </Link>
+            </div>
+        );
     };
 
   return (
     <LayoutAdmin>
+        <Spinner loading={loading} />
         <Toast ref={toast} />
-        <div className='w-full h-full'>
-            <DataView
-            value={filterRating}
-            loading={loading}
-            itemTemplate={itemTemplate}
-            paginator
-            paginatorTemplate={paginator}
-            rows={10}
-            layout={'grid'}
-            header={header()}
-            emptyMessage={'No ratings found'}
-            className='min-h-full' />
+        <div className='w-full p-5'>
+            <h1 className='text-gray-900/75 text-xl font-semibold leading-loose'>Reviews</h1>
+            <div className="text-gray-900/50 text-sm font-normal leading-none mt-3">Explore Customer Ratings and Reviews.</div>
+            <div className='mt-5'>
+                <DataTable value={ratings} rows={8} header={renderHeader} filters={filters} onFilter={(e) => setFilters(e.filters)} selection={selectedRating} 
+                        globalFilterFields={['person_name', 'service_name', 'review', 'rating_date']} onSelectionChange={(e) => setSelectedRating(e.value)} selectionMode="checkbox" dataKey="id_rating"
+                        stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="No ratings found." tableStyle={{ minWidth: '50rem' }}
+                        paginator rowsPerPageOptions={[5, 10, 25, 50]} removableSort className='text-sm'>
+                    <Column selectionMode="multiple" headerStyle={{ width: '1%' }}></Column>
+                    <Column field="person_name" header="User" body={customerBodyTemplate} sortable style={{ width: '20%' }}></Column>
+                    <Column field="service_name" header="Service" sortable style={{ width: '10%' }}></Column>
+                    <Column field="rating" header="Rating" body={ratingBodyTemplate} sortable style={{ width: '4%' }}></Column>
+                    <Column field="review" header="Review" sortable style={{ width: '30%' }}></Column>
+                    <Column field="rating_date" header="Date" body={dateBodyTemplate} sortable style={{ width: '15%' }}></Column>
+                    <Column field="provider_visible" header="State View" body={viewBodyTemplate} sortable style={{ width: '10%' }}></Column>
+                    <Column field="actions" body={actionsBodyTemplate} style={{ width: '10%' }}></Column>
+                </DataTable>
+            </div>
         </div>
     </LayoutAdmin>
   )
 }
 
-export default RatingIndex
+export default Index

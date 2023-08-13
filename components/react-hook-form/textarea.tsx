@@ -28,7 +28,7 @@ export const Textarea: React.FC<TextareaProps> = ({
       name={name}
       rows={rows}
       placeholder={placeholder}
-      className={`p-inputtext p-inputtextarea w-full read-only:border-none read-only:focus:shadow-none`}
+      className={`p-inputtext p-inputtextarea w-full text-sm rounded-xl border-neutral-200 read-only:focus:shadow-none`}
       readOnly={readonly}
       onClick={onClick}
     />

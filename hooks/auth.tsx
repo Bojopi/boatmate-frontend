@@ -16,8 +16,10 @@ export const Auth = () => {
                 toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
                 if(res.data.role == 'CUSTOMER') {
                     router.push('/category/detailing')
+                } else if(res.data.role == 'PROVIDER') {
+                    router.push('/welcome/providers/projects/requests')
                 } else {
-                    router.push('/welcome')
+                    router.push('/welcome/profile')
                 }
             })
             .catch(error => {

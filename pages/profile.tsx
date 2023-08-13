@@ -38,7 +38,32 @@ const Profile = () => {
     const {getAddress} = Maps();
     const {updateProfile} = Users();
 
-    const [user, setUser] = useState<Profile>();
+    const [user, setUser] = useState<Profile>(
+        {
+            uid:                 0,
+            email:               '',
+            state:               false,
+            google:               false,
+            idPerson:            0,
+            name:                '',
+            lastname:            '',
+            phone:               '',
+            image:               '',
+            idRole:              0,
+            role:                '',
+            idProvider:          0,
+            providerName:        '',
+            providerImage:       '',
+            providerDescription: '',
+            providerLat:         '',
+            providerLng:         '',
+            idCustomer:          '',
+            customerLat:         '',
+            customerLng:         '',
+            iat:                 0,
+            exp:                 0,
+        }
+    );
 
     const [selectedPlace, setSelectedPlace] = useState<string>('');
     const [selectedLocation, setSelectedLocation] = useState<any>(null);
@@ -49,6 +74,7 @@ const Profile = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [checked, setChecked] = useState<boolean>(false);
 
+    const [imageProfile, setImageProfile] = useState<string>('');
     const [imagePerson, setImagePerson] = useState<any>(null);
 
     const fileUploadPersonRef = useRef<any>(null);
@@ -65,7 +91,7 @@ const Profile = () => {
     const setDataUser = async () => {
         const response = await getUserAuthenticated();
         setUser(response.data.user);
-        setChecked(response.data.user.state);
+        setImageProfile(response.data.user.image);
         setSelectedLocation({
             lat: Number(response.data.user.customerLat || 0),
             lng: Number(response.data.user.customerLng || 0),
@@ -115,36 +141,6 @@ const Profile = () => {
         toast.current!.show({severity:'error', summary:'Error', detail: 'There are errors in the form', life: 4000});
     };
 
-    const headerTemplate = (options: any) => {
-        const { className, chooseButton, cancelButton } = options;
-
-        return (
-            <div className={className} style={{ backgroundColor: 'transparent', display: 'flex', alignItems: 'center' }}>
-                {chooseButton}
-                {cancelButton}
-            </div>
-        );
-    };
-
-    const itemTemplatePerson = (file: any, props: any) => {
-        setImagePerson(file);
-        return (
-            <div className="flex items-center flex-wrap">
-                <div className="flex items-center" style={{ width: '40%' }}>
-                    <img alt={file.name} role="presentation" src={file.objectURL} width={100} />
-                    <span className="flex flex-col text-left ml-3">
-                        {file.name}
-                        <small>{new Date().toLocaleDateString()}</small>
-                    </span>
-                </div>
-                <Tag value={props.formatSize} severity="warning" className="px-3 py-2" />
-            </div>
-        );
-    };
-
-    const chooseOptions = { icon: 'pi pi-fw pi-images', iconOnly: true, className: 'custom-choose-btn p-button-rounded p-button-outlined' };
-    const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
-
     const onClickInputs = (e: any) => {
         setButtonActive(true);
         e.target.readOnly = false;
@@ -168,6 +164,8 @@ const Profile = () => {
     const cancelEdit = () => {
         reset();
         resetInputsForm();
+        setImageProfile(user.image);
+        setImagePerson(null);
         setButtonActive(false);
         setLoading(true);
         setInterval(() => {
@@ -187,6 +185,22 @@ const Profile = () => {
         return string;
     }
 
+    const handleImageChange = (event: any) => {
+        const selectedImage = event.target.files[0];
+        if (selectedImage) {
+            setImageProfile(URL.createObjectURL(selectedImage));
+            setImagePerson(selectedImage);
+            setButtonActive(true);
+        }
+    };
+
+    const handleEditButtonClick = () => {
+        const fileInput = document.getElementById('image-input');
+        if (fileInput) {
+            fileInput.click();
+        }
+    };
+
   return (
     <div className='relative overflow-hidden'>
         <LayoutPrincipal>
@@ -198,11 +212,18 @@ const Profile = () => {
                 <div className='w-80 h-96 bg-white rounded-xl border border-neutral-200 flex flex-col items-center gap-10 p-5'>
                     <div className='relative'>
                         {
-                            user?.image != null ?
-                            <img src={user.image} width={200} height={200} alt='profile' className='rounded-full' />
+                            imageProfile != null || imageProfile != '' ?
+                            <img src={imageProfile} width={200} height={200} alt='profile' className='rounded-full' />
                             : <FontAwesomeIcon icon={faCircleUser} className='w-10 h-10' style={{color: "#c2c2c2"}} />
                         }
-                        <Button icon={'pi pi-pencil'} rounded className='absolute bottom-4 right-0' />
+                        <input
+                            type='file'
+                            id='image-input'
+                            accept='image/*'
+                            style={{ display: 'none' }}
+                            onChange={handleImageChange}
+                        />
+                        <Button type='button' icon={'pi pi-pencil'} rounded className='absolute bottom-4 right-0' onClick={handleEditButtonClick} />
                     </div>
                     <div className='w-full flex flex-col gap-2 text-center'>
                         <p className='font-normal text-xl text-black leading-7'>{toTitleCase(`${user?.name} ${user?.lastname}`)}</p>
@@ -216,17 +237,11 @@ const Profile = () => {
                             <div className='px-5'>
                                 <div className='w-full grid grid-cols-12 mt-5 gap-2'>
                                     <div className='col-span-12 md:col-span-6 py-2'>
-                                        <div className='font-medium flex flex-row items-center gap-2'>
-                                            <i className='pi pi-user'></i>
-                                            <p>Name</p>
-                                        </div>
+                                        <p>First Name</p>
                                         <Input type='text' id='name' name='name' readonly onClick={onClickInputs} />
                                     </div>
                                     <div className='col-span-12 md:col-span-6 py-2'>
-                                        <div className='font-medium flex flex-row items-center gap-2'>
-                                            <i className='pi pi-user'></i>
-                                            <p>Lastname</p>
-                                        </div>
+                                        <p>Lastname</p>
                                         <Input type='text' id='lastname' name='lastname' readonly onClick={onClickInputs} />
                                     </div>
                                     {/* <div className='col-span-12 py-2'>
@@ -237,24 +252,15 @@ const Profile = () => {
                                         <Input id='password' name='password' type='password' placeholder='******' readonly onClick={onClickInputs} />
                                     </div> */}
                                     <div className='col-span-12 md:col-span-6 py-2'>
-                                        <div className='font-medium flex flex-row items-center gap-2'>
-                                            <i className='pi pi-at'></i>
-                                            <p>Email</p>
-                                        </div>
+                                        <p>Email</p>
                                         <Input id='email' name='email' type='email' placeholder='user@email.com' readonly onClick={onClickInputs} />
                                     </div>
                                     <div className='col-span-12 md:col-span-6 py-2'>
-                                        <div className='font-medium flex flex-row items-center gap-2'>
-                                            <i className='pi pi-phone'></i>
-                                            <p>Phone</p>
-                                        </div>
+                                        <p>Phone Number</p>
                                         <Input type='tel' id='phone' name='phone' placeholder="(999) 999-9999" readonly onClick={onClickInputs} />
                                     </div>
                                     <div className='col-span-12 py-2'>
-                                        <div className='font-medium flex flex-row items-center gap-2'>
-                                            <i className='pi pi-map-marker'></i>
-                                            <p>Address</p>
-                                        </div>
+                                        <p>Address</p>
                                         <MapComponent
                                             selectedLocation={selectedLocation}
                                             setSelectedLocation={setSelectedLocation}

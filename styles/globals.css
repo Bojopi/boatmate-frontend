@@ -136,3 +136,28 @@
 .active-inbox #svg-gear {
   fill: #109EDA !important;
 }
+
+.sidebar-logo-img img {
+  height: 100% !important;
+  object-fit: cover;
+}
+
+.menu-options:hover svg {
+  fill: white;
+}
+
+.sidebar-slide-transition {
+  transition: width 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  width: 320px !important;
+  opacity: 1;
+}
+
+.sidebar-slide-hidden {
+  transition: width 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  width: 0px !important;
+  opacity: 0;
+}
+
+.p-dialog-header .p-dialog-title {
+  font-size: 15px !important;
+}

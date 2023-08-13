@@ -42,7 +42,7 @@ const LayoutPrincipal = ({children}: any) => {
                 <link rel="icon" type="image/png" href="/Biggest_BoatMate-removebg-preview.ico" />
             </Head>
             <MenuBar linkMenu='Join Our Pro Network' urlMenu='/pro' user={user} setLoading={setLoading} logout={logoutSession}/>
-            <main className='w-full pt-8 md:pt-20 lg:pt-28'>
+            <main className='w-full h-full'>
                 {children}
             </main>
             <FooterComponent />

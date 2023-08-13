@@ -1,24 +1,28 @@
 import { Auth } from '@/hooks/auth';
 import { googleLogout } from '@react-oauth/google'
 import React, {useState, useEffect} from 'react'
-import MenuBarSupAdmin from './menuBarSupAdmin';
 import Head from 'next/head';
-import SideBarComponent from './sideBar';
-import FooterComponentAdmin from './footerAdmin';
 import { Profile } from '@/interfaces/interfaces';
 import {useContext} from 'react';
 import { MenuContext } from '@/context/MenuContext';
 import MenuAdmin from '@/sql/menuAdmin.json';
 import MenuProvider from '@/sql/menuProvider.json';
+import { Sidebar } from 'flowbite-react';
+import {BsInbox, BsStar} from 'react-icons/bs'
+import {AiOutlineDashboard} from 'react-icons/ai'
+import {PiWallet, PiWrench} from 'react-icons/pi'
+import {MdOutlineLogout} from 'react-icons/md'
+import { Avatar } from 'primereact/avatar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { Badge } from 'primereact/badge';
 
 const LayoutAdmin = ({children}: any) => {
     const {getUserAuthenticated, logout} = Auth();
 
-    const {activeOption, setActiveOption, activeSideOption, setActiveSideOption} = useContext(MenuContext);
-
     const [loading, setLoading] = useState<boolean>(false);
 
-    const [menuList, setMenuList] = useState<any[]>([]);
+    const [sidebarVisible, setSidebarVisible] = useState<boolean>(true);
 
     const [user, setUser] = useState<Profile>(
         {
@@ -51,14 +55,16 @@ const LayoutAdmin = ({children}: any) => {
         setDataUser();
     }, []);
 
+    const toggleSidebar = () => {
+        setSidebarVisible(!sidebarVisible);
+    };
+
     const setDataUser = async () => {
         const response = await getUserAuthenticated();
         setUser(response.data.user);
 
         if(response.data.user.role === 'ADMIN' || response.data.user.role === "SUPERADMIN") {
-            setMenuList(MenuAdmin);
         } else if(response.data.user.role === "PROVIDER") {
-            setMenuList(MenuProvider);
         }
     }
 
@@ -75,16 +81,109 @@ const LayoutAdmin = ({children}: any) => {
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" type="image/png" href="/Biggest_BoatMate-removebg-preview.ico" />
         </Head>
-        <MenuBarSupAdmin
-         user={user} setLoading={setLoading} logout={logoutSession} activeOption={activeOption} setActiveOption={setActiveOption} setActiveSideOption={setActiveSideOption} menuList={menuList}
-        />
-        <div className='w-full h-screen flex flex-row items-start justify-between gap-5 px-5 pb-5 pt-32 md:pt-44 bg-neutral-100'>
-            <SideBarComponent user={user} activeOption={activeOption} activeSideOption={activeSideOption} setActiveSideOption={setActiveSideOption} menuList={menuList} />
-            <main className='w-full min-h-[360px] max-h-full h-full overflow-auto bg-white rounded-md shadow-md'>
-               {children}
-            </main>
+        <div className='w-full flex items-start'>
+            <Sidebar aria-label='sidebar' className={`h-screen bg-white shadow-2xl ${sidebarVisible ? 'sidebar-slide-transition' : 'sidebar-slide-hidden'}`}>
+                <Sidebar.Logo
+                href='#'
+                img='https://i.postimg.cc/jSW0kv3s/Logo-Boat-Mate-horizontal.png'
+                className='sidebar-logo-img h-12'
+                imgAlt='logo'
+                ></Sidebar.Logo>
+                <Sidebar.Items className='h-[90%] flex flex-col justify-between'>
+                    <Sidebar.ItemGroup>
+                        <Sidebar.Item className='p-0'>
+                            <div className='flex items-center gap-3'>
+                                {
+                                    user.providerImage != null ?
+                                        <Avatar image={user.providerImage} shape="circle" size='large' />
+                                        :
+                                        <FontAwesomeIcon icon={faCircleUser} className='w-8 h-8' style={{color: "#c2c2c2"}} />
+                                }
+                                <div>
+                                    <p>{user.providerName}</p>
+                                    <p className='text-xs'>{user.name}</p>
+                                </div>
+                            </div>
+                        </Sidebar.Item>
+                        <Sidebar.Item className='p-0'>
+                            <div className="relative w-full">
+                                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                    </svg>
+                                </div>
+                                <input type="search" id="default-search" className="block w-full  pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-sky-500 focus:border-sky-500" placeholder="Search" required />
+                            </div>
+                        </Sidebar.Item>
+                        <Sidebar.Item
+                        href='#'
+                        className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
+                        icon={AiOutlineDashboard}
+                        >
+                            <p>Dashboard</p>
+                        </Sidebar.Item>
+                        <Sidebar.Collapse
+                        label='Projects'
+                        icon={BsInbox}
+                        className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
+                        >
+                            <Sidebar.Item href={'/welcome/providers/projects/requests'} className='hover:bg-sky-500/50 hover:text-white'>
+                                <p>Requests</p>
+                            </Sidebar.Item>
+                            <Sidebar.Item href={'/welcome/providers/projects/inprogress'} className='hover:bg-sky-500/50 hover:text-white'>
+                                <p>In Progress</p>
+                            </Sidebar.Item>
+                            <Sidebar.Item href={'/welcome/providers/projects/finished'} className='hover:bg-sky-500/50 hover:text-white'>
+                                <p>Finished</p>
+                            </Sidebar.Item>
+                        </Sidebar.Collapse>
+                        <Sidebar.Item
+                        href={`/welcome/providers/ratings/${user.idProvider}`}
+                        icon={BsStar}
+                        className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
+                        >
+                            <p>Reviews</p>
+                        </Sidebar.Item>
+                        {/* <Sidebar.Item
+                        href='#'
+                        icon={PiWallet}
+                        className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
+                        >
+                            <p>Invoices</p>
+                        </Sidebar.Item> */}
+                    </Sidebar.ItemGroup>
+                    <Sidebar.ItemGroup>
+                        <Sidebar.Item
+                        href={'/welcome/profile'}
+                        icon={PiWrench}
+                        className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
+                        >
+                            <p>Settings</p>
+                        </Sidebar.Item>
+                        <Sidebar.Item
+                        href={''}
+                        icon={MdOutlineLogout}
+                        className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
+                        onClick={logoutSession}
+                        >
+                            <p>Log out</p>
+                        </Sidebar.Item>
+                    </Sidebar.ItemGroup>
+                </Sidebar.Items>
+            </Sidebar>
+            <div className='w-full h-screen flex flex-col'>
+                <div className='w-full h-14 bg-white shadow-lg flex items-center justify-between px-5'>
+                    <i className='pi pi-bars cursor-pointer' onClick={toggleSidebar}></i>
+                    <div className='pi pi-overlay-bagde relative cursor-pointer'>
+                        <Badge severity={'warning'} className='absolute top-0 right-0'></Badge>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9h8m-8 4h6m-5 5H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-3l-3 3l-3-3z"/></svg>
+                    </div>
+                </div>
+                <main className='w-full h-full overflow-y-auto'>
+                    {children}
+                </main>
+            </div>
         </div>
-        <FooterComponentAdmin user={user} />
         </>
      );
 }

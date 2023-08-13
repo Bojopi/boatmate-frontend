@@ -25,7 +25,7 @@ export type PortofolioProps = {
     idProvider: number;
 }
 
-const Create: React.FC<PortofolioProps> = ({portofolio, setPortofolio, setLoading, toast, idProvider}) => {
+const CreateMethodPayment: React.FC<PortofolioProps> = ({portofolio, setPortofolio, setLoading, toast, idProvider}) => {
     const {postImagesPortofolio} = Portofolios();
 
     const [visible, setVisible] = useState(false);
@@ -74,7 +74,8 @@ const Create: React.FC<PortofolioProps> = ({portofolio, setPortofolio, setLoadin
     const footerContent = (
         <div>
             <Button type="button" label="Cancel" icon="pi pi-times" onClick={closeModal} className="p-button-text" />
-            <Button type="button" label="Save" icon="pi pi-check" onClick={handleSubmit(onSubmit)} className="p-button-success" autoFocus />
+            <Button type="button" label="Save" icon="pi pi-check" onClick={() => console.log('method')} className="p-button-success" autoFocus />
+            {/* <Button type="button" label="Save" icon="pi pi-check" onClick={handleSubmit(onSubmit)} className="p-button-success" autoFocus /> */}
         </div>
     );
 
@@ -130,8 +131,8 @@ const Create: React.FC<PortofolioProps> = ({portofolio, setPortofolio, setLoadin
                 <Button type="button" label="Update Files" outlined icon="pi pi-upload" onClick={openModal} />
             }
 
-            <Dialog header="New Portofolio" visible={visible} className="w-[90vw] md:w-[50vw]" onHide={() => setVisible(false)} footer={footerContent}>
-                <FormProvider {...methods}>
+            <Dialog header="Method Payment Accepted" visible={visible} className="w-[90vw] md:w-[50vw]" onHide={() => setVisible(false)} footer={footerContent}>
+                {/* <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-1 lg:grid-cols-12 p-5 gap-3'>
                         <InputWrapper outerClassName="col-span-12">
                             <Label id="portofolioDescription">Portofolio description</Label>
@@ -166,10 +167,10 @@ const Create: React.FC<PortofolioProps> = ({portofolio, setPortofolio, setLoadin
                             emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
                         </div>
                     </form>
-                </FormProvider>
+                </FormProvider> */}
             </Dialog>
         </>
     )
 }
 
-export default Create
+export default CreateMethodPayment
