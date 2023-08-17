@@ -576,7 +576,7 @@ const Welcome = () => {
                                                     <p className='font-medium text-sm md:text-base'>Description</p>
                                                     <p className='text-xs md:text-sm line-clamp-5'>{item.portofolio_description}</p>
                                                     <div className='absolute bottom-0 flex items-center'>
-                                                        <Edit idPortofolio={item.id_portofolio} portofolio={portofolioList} setPortofolio={setPortofolioList} setLoading={setLoading} toast={toast} />
+                                                        <Edit idPortofolio={item.id_portofolio} portofolio={portofolioList} setPortofolio={setPortofolioList} loading={loading} setLoading={setLoading} toast={toast} />
                                                         <Button icon='pi pi-trash' text className='text-white' onClick={() => confirmDelete(item.id_portofolio)} />
                                                         <Button  icon="pi pi-external-link" text className='text-white' onClick={() => {
                                                             setPortofolioIndex(i)
@@ -604,7 +604,7 @@ const Welcome = () => {
                                 <p className='text-xs text-gray-600' >Include photos of your work (before and after), team, workspace, or equipment.</p>
 
                             </div>
-                            <Create idProvider={user.idProvider} portofolio={portofolioList} setPortofolio={setPortofolioList} setLoading={setLoading} toast={toast} />
+                            <Create idProvider={user.idProvider} portofolio={portofolioList} setPortofolio={setPortofolioList} loading={loading} setLoading={setLoading} toast={toast} />
                         </div>
                     </div>
                     </>
