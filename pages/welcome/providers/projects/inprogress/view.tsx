@@ -145,7 +145,7 @@ const View: React.FC<ContractProviderProps> = ({contract, contracts, setContract
                         }
                     </div>
                     <div className="mt-8">
-                        <p className="text-gray-900/50 text-sm">Requested made {formatDate(String(contract && contract.contract_date))}</p>
+                        <p className="text-gray-900/50 text-sm">Requested made {contract ? formatDate(String(contract.contract_date)) : 'no date'}</p>
                     </div>
                 </div>
             </Dialog>

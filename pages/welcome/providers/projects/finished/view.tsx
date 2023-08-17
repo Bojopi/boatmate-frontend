@@ -123,8 +123,8 @@ const View: React.FC<ContractProviderProps> = ({contract, contracts, setContract
                         }
                     </div>
                     <div className="mt-8 flex items-center justify-between">
-                        <p className="text-gray-900/50 text-sm">Requested made {formatDate(String(contract.contract_date))}</p>
-                        <p className="text-gray-900/50 text-sm">Outcome date {formatDate(String(contract.contract_date_finished))}</p>
+                        <p className="text-gray-900/50 text-sm">Requested made {contract ? formatDate(String(contract.contract_date)) : 'no date'}</p>
+                        <p className="text-gray-900/50 text-sm">Outcome date {contract ? formatDate(String(contract.contract_date_finished)) : 'no date'}</p>
                     </div>
                 </div>
             </Dialog>
