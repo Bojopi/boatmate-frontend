@@ -1,32 +1,72 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { InputText } from 'primereact/inputtext';
-import { Categories } from '@/hooks/categories';
 import LayoutAdmin from '@/components/layoutAdmin';
-import { Category } from '@/interfaces/interfaces';
-import Create from './create';
+import { Auth } from '@/hooks/auth';
+import { Category, Profile } from '@/interfaces/interfaces';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { Column } from 'primereact/column';
+import { DataTable, DataTableFilterMeta } from 'primereact/datatable';
+import { InputText } from 'primereact/inputtext';
+import React, { useEffect, useState, useRef } from 'react';
+import Spinner from '@/components/spinner';
 import { Toast } from 'primereact/toast';
+import { Menu } from 'primereact/menu';
+import { Button } from 'primereact/button';
+import { Categories } from '@/hooks/categories';
+import Create from './create';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { ButtonDelete } from '@/components/buttons/icons';
+// import View from './view'
 
-const CategoriesIndex: React.FC = () => {
+const Index = () => {
     const { getAllCategories, deleteCategory } = Categories();
-    
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [filters, setFilters] = useState<any | null>(null);
+    const { getUserAuthenticated } = Auth();
 
-    const [globalFilterValue, setGlobalFilterValue] = useState<string>('');
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<Category[] | any>(null);
+    const [user, setUser] = useState<Profile>(
+        {
+            uid:                 0,
+            email:               '',
+            state:               false,
+            google:               false,
+            idPerson:            0,
+            name:                '',
+            lastname:            '',
+            phone:               '',
+            image:               '',
+            idRole:              0,
+            role:                '',
+            idProvider:          0,
+            providerName:        '',
+            providerImage:       '',
+            providerDescription: '',
+            providerLat:         '',
+            providerLng:         '',
+            idCustomer:          '',
+            customerLat:         '',
+            customerLng:         '',
+            iat:                 0,
+            exp:                 0,
+        }
+    );
 
     const [loading, setLoading] = useState<boolean>(false);
+    const toast = useRef<Toast>(null)
+    const menuComponent = useRef<Menu>(null);
 
-    const toast = useRef<Toast>(null);
+    const [filters, setFilters] = useState<DataTableFilterMeta | any>({
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        category_name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    });
 
-    useEffect(() => {
-        getCategories();
-        initFilters();
-    }, []);
+    const getUserAuth = async () => {
+        try {
+            const response = await getUserAuthenticated();
+            if(response.status == 200) {
+                setUser(response.data.user);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const getCategories = async () => {
         const response = await getAllCategories();
@@ -36,43 +76,52 @@ const CategoriesIndex: React.FC = () => {
         setLoading(false);
     }
 
-    const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
+    useEffect(() => {
+        setLoading(true);
+        getUserAuth();
+        getCategories();
+    }, []);
+
+
+    const onGlobalFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
         let _filters = { ...filters };
 
         _filters['global'].value = value;
 
         setFilters(_filters);
-        setGlobalFilterValue(value);
-    };
-
-    const initFilters = () => {
-        setFilters({
-            global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-            category_name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        });
-        setGlobalFilterValue('');
     };
 
     const renderHeader = () => {
+        const value = filters['global'] ? filters['global'].value : '';
+
         return (
-            <div className="flex justify-between">
-                <Create idCategory={0} categories={categories} setCategories={setCategories} toast={toast} setLoading={setLoading} />
-                <span className="p-input-icon-left">
-                    <i className="pi pi-search" />
-                    <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
-                </span>
+            <div className='w-full flex justify-between'>
+                <Create idCategory={0} categories={categories} setCategories={setCategories} toast={toast} loading={loading} setLoading={setLoading} />
+                <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Search category" className='text-sm rounded-2xl px-6 py-3 opacity-60 shadow-lg text-gray-900/50' />
             </div>
         );
     };
-
-    const header = renderHeader();
-
+    
+    const emptyMessageTemplate = () => {
+        return (
+            <div className='w-full flex justify-center'>
+                <p>No categories found.</p>
+            </div>
+        );
+    };
+    
     const actionsBodyTemplate = (rowData: Category) => {
         return (
-            <div className="flex items-center gap-2">
-                <Create idCategory={Number(rowData.id_category)} categories={categories} setCategories={setCategories} toast={toast} setLoading={setLoading}  />
-                <ButtonDelete
+            <div className='flex items-center justify-between'>
+                <Create idCategory={Number(rowData.id_category)} categories={categories} setCategories={setCategories} toast={toast} loading={loading} setLoading={setLoading}  />
+                <Button 
+                type="button" 
+                icon='pi pi-trash' 
+                outlined 
+                tooltip='Delete' 
+                tooltipOptions={{position: 'top' }}
+                className='w-8 h-8 rounded-md text-gray-900/50 border border-gray-900/50 flex items-center justify-center view-btn'
                 onClick={() => confirmDelete(Number(rowData.id_category))}
                 />
             </div>
@@ -102,21 +151,25 @@ const CategoriesIndex: React.FC = () => {
         });
     };
 
-
   return (
     <LayoutAdmin>
+        <Spinner loading={loading} />
         <Toast ref={toast} />
         <ConfirmDialog />
-        <div className='w-full '>
-            <DataTable value={categories!} paginator rows={10} loading={loading} dataKey="id_category" 
-                    filters={filters!} globalFilterFields={['category_name']} header={header}
-                    emptyMessage="No categories found.">
-                <Column field="category_name" header="Category Name" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-                <Column header='Actions' body={actionsBodyTemplate} style={{ width: '10rem', textAlign: 'center' }} />
-            </DataTable>
+        <div className='w-full p-5'>
+            <h1 className='text-gray-900/75 text-xl font-semibold leading-loose'>Categories</h1>
+            <div className='mt-5'>
+                <DataTable value={categories} rows={8} header={renderHeader} filters={filters} onFilter={(e) => setFilters(e.filters)}
+                        globalFilterFields={['category_name']} dataKey="id_category"
+                        stateStorage="session" stateKey="dt-state-demo-local" emptyMessage={emptyMessageTemplate} tableStyle={{ minWidth: '50rem' }}
+                        paginator rowsPerPageOptions={[5, 10, 25, 50]} removableSort className='text-sm'>
+                    <Column field="category_name" header="Category Name" sortable style={{ width: '90%' }}></Column>
+                    <Column field="actions" body={actionsBodyTemplate} style={{ width: '10%' }}></Column>
+                </DataTable>
+            </div>
         </div>
     </LayoutAdmin>
   )
 }
 
-export default CategoriesIndex
+export default Index

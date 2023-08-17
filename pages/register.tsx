@@ -14,6 +14,8 @@ import Spinner from '../components/spinner';
 import MapComponent from '@/components/map';
 import { Maps } from '@/hooks/maps';
 import { Auth } from '@/hooks/auth';
+import { Button } from 'primereact/button';
+import MenuBar from '@/components/menuBar';
 
 
 export type FormProps = {
@@ -162,7 +164,8 @@ const Register: React.FC = () => {
         }
 
         if(activeIndex === 0) {
-            if(isValid && selectedLocation != null) {
+            if(isValid ) {
+            // if(isValid && selectedLocation != null) {
                 return false;
             } else {
                 return true;
@@ -185,49 +188,50 @@ const Register: React.FC = () => {
         } else if(activeIndex === 2) {
             return (
                 <div className='w-full flex justify-between'>
-                    <button
-                        type='button'
-                        className='p-3 text-xs md:text-base bg-gray-400 hover:bg-gray-600 text-white rounded-md hover:transition disabled:bg-gray-300'
-                        onClick={backStep}>
-                            Back Step
-                    </button>
-                    <button
-                        type='button'
-                        className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-300'
-                        disabled={validForm()}
-                        onClick={handleOnSubmit}>
-                            SIGN UP
-                    </button>
+                    <Button 
+                    type='button' 
+                    onClick={backStep}
+                    label='Back Step' 
+                    icon='pi pi-angle-left' 
+                    severity='secondary'
+                    text 
+                    className='w-auto p-3 text-sm lg:text-base rounded-xl' />
+                    <Button 
+                    type='button'
+                    onClick={handleOnSubmit}
+                    disabled={validForm()}
+                    label='Sign Up' 
+                    className='w-[50%] p-3 border-none bg-gradient-to-r from-sky-600 to-sky-300 hover:to-sky-400 shadow-lg shadow-sky-300/50 text-white text-sm lg:text-base rounded-xl' />
                 </div>
             )
         } else if(activeIndex === 0) {
             return (
                 <div className='w-full flex justify-end'>
-                    <button
-                        type='button'
-                        className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-300'
-                        onClick={nextStep}
-                        disabled={validForm()}>
-                            Next Step
-                    </button>
+                    <Button 
+                    type='button' 
+                    onClick={nextStep}
+                    disabled={validForm()}
+                    label='Next Step' 
+                    className='w-full p-3 border-none bg-gradient-to-r from-sky-600 to-sky-300 hover:to-sky-400 shadow-lg shadow-sky-300/50 text-white text-sm lg:text-base rounded-xl' />
                 </div>
             )
         } else {
            return (
                 <div className='w-full flex justify-between'>
-                    <button
-                        type='button'
-                        className='p-3 text-xs md:text-base bg-gray-400 hover:bg-gray-600 text-white rounded-md hover:transition disabled:bg-gray-400'
-                        onClick={backStep}>
-                            Back Step
-                    </button>
-                    <button
-                        type='button'
-                        className='p-3 text-xs md:text-base bg-[#109EDA] hover:bg-[#0E8FC7] text-white rounded-md hover:transition disabled:bg-gray-400'
-                        onClick={nextStep}
-                        disabled={validForm()}>
-                            Next Step
-                    </button>
+                    <Button 
+                    type='button' 
+                    onClick={backStep}
+                    label='Back Step' 
+                    icon='pi pi-angle-left' 
+                    severity='secondary'
+                    text 
+                    className='w-auto p-3 text-sm lg:text-base rounded-xl' />
+                    <Button 
+                    type='button' 
+                    onClick={nextStep}
+                    disabled={validForm()}
+                    label='Next Step' 
+                    className='w-[50%] p-3 border-none bg-gradient-to-r from-sky-600 to-sky-300 hover:to-sky-400 shadow-lg shadow-sky-300/50 text-white text-sm lg:text-base rounded-xl' />
                 </div>
            )
         }
@@ -241,153 +245,158 @@ const Register: React.FC = () => {
     <>
         <Spinner loading={loading} />
         <Toast ref={toast} />
-        <div
-            className="w-full h-1/3 shadow-md md:h-screen absolute top-0 left-0 bg-no-repeat bg-cover bg-center"
-            style={{'backgroundImage': "url('https://i.postimg.cc/qv8LyXWs/tomas-malik-FHAHn-F9-C0-Sw-unsplash.jpg')"}}>
-        </div>
-        <div className="container h-screen mx-auto flex justify-center items-center">
-            <div className='bg-white z-10 w-11/12 md:w-1/2 rounded-lg md:rounded-none shadow-2xl py-4 md:py-5 px-5 md:px-10 flex flex-col items-center'>
-                <div className='w-full flex justify-between'>
-                    <img
-                        src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
-                        alt="logo"
-                        className='w-16 md:w-20'
-                    />
-                    <h1 className='mt-2 md:mt-5 text-xl md:text-2xl font-semibold mr-5' style={{'color': '#373A85'}}>SIGN UP</h1>
-                </div>
-                <div className='w-full mt-4'>
-                    <Steps model={items} activeIndex={activeIndex} readOnly={true} />
-                </div>
-                <div className='w-full'>
-                    <FormProvider {...methods}>
-                        <form className="w-full">
-                            {
-                                activeIndex === 0 ?
-                                <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
-                                    <InputWrapper outerClassName="md:col-span-6">
-                                            <Label id='personName'>Name *</Label>
-                                            <Input
-                                                id='personName'
-                                                name='personName'
-                                                type='text'
-                                                rules={{required: "Name is required"}}
-                                            />
-                                        {errors?.personName?.message && (
-                                            <ErrorMessage>{errors.personName.message}</ErrorMessage>
-                                        )}
-                                    </InputWrapper>
-                                    <InputWrapper outerClassName="md:col-span-6">
-                                            <Label id='lastname'>Lastname *</Label>
-                                            <Input
-                                                id='lastname'
-                                                name='lastname'
-                                                type='text'
-                                                rules={{required: "Lastname is required"}}
-                                            />
-                                        {errors?.lastname?.message && (
-                                            <ErrorMessage>{errors.lastname.message}</ErrorMessage>
-                                        )}
-                                    </InputWrapper>
-                                    <InputWrapper outerClassName="md:col-span-12">
-                                            <Label id='phone'>Phone *</Label>
-                                            <Input
-                                                id='phone'
-                                                name='phone'
-                                                type='tel'
-                                                rules={{
-                                                    required: "Phone is required",
-                                                    pattern: /^\s*(?:\+?(\d{1,3}))?([-. (]*(\d{3})[-. )]*)?((\d{3})[-. ]*(\d{2,4})(?:[-.x ]*(\d+))?)\s*$/gm
-                                                }}
-                                            />
-                                        {errors?.phone?.message && (
-                                            <ErrorMessage>{errors.phone.message}</ErrorMessage>
-                                        )}
-                                    </InputWrapper>
-                                    <div className='md:col-span-12'>
-                                        <Label>Address *</Label>
-                                        <MapComponent height='250px' getAddress={getAddress} selectedLocation={selectedLocation} selectedPlace={selectedPlace} setSelectedLocation={setSelectedLocation} setSelectedPlace={setSelectedPlace} setZip={setZip} />
-                                    </div>
-                                </div>
-                                : activeIndex == 1 ?
-                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
-                                    <InputWrapper outerClassName="md:col-span-12">
-                                            <Label id='email'>Email *</Label>
-                                            <Input
-                                                id='email'
-                                                name='email'
-                                                type='email'
-                                                rules={{
-                                                    required: "Email is required",
-                                                    pattern: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]{3}$/g
-                                                }}
-                                            />
-                                        {errors?.email?.message && (
-                                            <ErrorMessage>{errors.email.message}</ErrorMessage>
-                                        )}
-                                    </InputWrapper>
-                                    <InputWrapper outerClassName="md:col-span-12">
-                                            <Label id='password'>Password *</Label>
-                                            <div className="p-password p-component p-inputwrapper p-input-icon-right">
-                                                <input
-                                                    type={togglePass ? 'text' : 'password'}
-                                                    name="password"
-                                                    id="password"
-                                                    value={password}
-                                                    onChange={changePass}
-                                                    pattern={`/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@$\-_]).{10,}$/g`}
-                                                    required
-                                                    className='p-inputtext p-component p-password-input w-full'
-                                                    />
-                                                <i id='pass' className={togglePass ? 'pi pi-eye-slash cursor-pointer': 'pi pi-eye cursor-pointer'} onClick={showPass}></i>
-                                            </div>
-                                        <ul className='w-full grid grid-cols-1 md:grid-cols-2 md:gap-x-5 md:gap-y-2 text-xs'>
-                                            <li><i className={password.match(/[a-z]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One letter (a-z)</li>
-                                            <li><i className={password.match(/[A-Z]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One letter (A-Z)</li>
-                                            <li><i className={password.match(/.{10,}/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> 10 characters minimum</li>
-                                            <li><i className={password.match(/\d/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One number (0-9)</li>
-                                            <li><i className={password.match(/[!@$\-_]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One special character</li>
-                                        </ul>
-                                    </InputWrapper>
-                                    <InputWrapper outerClassName="md:col-span-12">
-                                            <Label id='c_password'>Confirm Password *</Label>
-                                            <div className="p-password p-component p-inputwrapper p-input-icon-right">
-                                                <input
-                                                    type={toggleConfirmPass ? 'text' : 'password'}
-                                                    name="confirmPassword"
-                                                    id="confirmPassword"
-                                                    value={confirmPassword}
-                                                    onChange={changePass}
-                                                    pattern={`/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@$\-_]).{10,}$/g`}
-                                                    required
-                                                    className='p-inputtext p-component p-password-input w-full'
-                                                    />
-                                                <i id='confpass' className={toggleConfirmPass ? 'pi pi-eye-slash cursor-pointer': 'pi pi-eye cursor-pointer'} onClick={showPass}></i>
-                                            </div>
-                                            <p className={errorMatch && confirmPassword != '' ? 'w-full text-sm text-red-500' : 'hidden'}>The passwords do not match</p>
-                                    </InputWrapper>
-                                </div>
-                                : activeIndex == 2 ?
-                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
-                                    <h1 className='md:col-span-12 mt-5 text-lg md:text-2xl font-semibold text-center' style={{'color': '#373A85'}}>Which best describes your role?</h1>
-                                    <div className='md:col-span-12 w-full flex flex-row items-center justify-center gap-3 md:gap-20'>
-                                        <div id='customer' className={`flex flex-col items-center gap-5 p-5 rounded-md shadow-md border hover:bg-green-100 cursor-pointer ${isSelected == '4' ? 'bg-green-100' : 'bg-white'}`} onClick={selectedRole}>
-                                            <img id='customer' src="https://i.postimg.cc/Zn2fvXhV/sailor.png" width={100} height={100} alt="sailor" />
-                                            <p id='customer' className='font-extrabold text-[#373A85]'>BOAT OWNER</p>
-                                        </div>
-                                        <div id='provider' className={`flex flex-col items-center gap-5 p-5 rounded-md shadow-md border hover:bg-green-100 cursor-pointer ${isSelected == '3' ? 'bg-green-100' : 'bg-white'}`} onClick={selectedRole}>
-                                            <img id='provider' src="https://i.postimg.cc/L8h5v7Lm/cargo-ship.png" width={100} height={100} alt="provider" />
-                                            <p id='provider' className='font-extrabold text-[#373A85]'>PROVIDER</p>
+        <MenuBar linkMenu='Join Our Pro Network' urlMenu='/pro' setLoading={setLoading}/>
+        <div className='w-full max-h-screen pt-24 flex items-center justify-center'>
+            <div className='w-[75%] h-[600px] border rounded-lg shadow-xl grid grid-cols-2 items-center overflow-hidden'>
+                <div className='col-span-1 h-full p-5 flex flex-col'>
+                    <p className='text-indigo-900 text-xl font-medium leading-9'>Sign Up</p>
+                    <div className='w-[60%] mx-auto'>
+                        <Steps model={items} activeIndex={activeIndex} readOnly={true} className='steps-signup' />
+                    </div>
+                    <div className='w-full h-full mt-3'>
+                        <FormProvider {...methods}>
+                            <form className="w-full h-full flex flex-col justify-between">
+                                {
+                                    activeIndex === 0 ?
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <InputWrapper outerClassName="col-span-1">
+                                                <Input
+                                                    id='personName'
+                                                    name='personName'
+                                                    type='text'
+                                                    placeholder='First Name *'
+                                                    rules={{required: "Name is required"}}
+                                                />
+                                            {errors?.personName?.message && (
+                                                <ErrorMessage>{errors.personName.message}</ErrorMessage>
+                                            )}
+                                        </InputWrapper>
+                                        <InputWrapper outerClassName="col-span-1">
+                                                <Input
+                                                    id='lastname'
+                                                    name='lastname'
+                                                    type='text'
+                                                    placeholder='Last Name *'
+                                                    rules={{required: "Lastname is required"}}
+                                                />
+                                            {errors?.lastname?.message && (
+                                                <ErrorMessage>{errors.lastname.message}</ErrorMessage>
+                                            )}
+                                        </InputWrapper>
+                                        <InputWrapper outerClassName="col-span-2">
+                                                <Input
+                                                    id='phone'
+                                                    name='phone'
+                                                    type='tel'
+                                                    placeholder='Phone *'
+                                                    rules={{
+                                                        required: "Phone is required",
+                                                        pattern: /^\s*(?:\+?(\d{1,3}))?([-. (]*(\d{3})[-. )]*)?((\d{3})[-. ]*(\d{2,4})(?:[-.x ]*(\d+))?)\s*$/gm
+                                                    }}
+                                                />
+                                            {errors?.phone?.message && (
+                                                <ErrorMessage>{errors.phone.message}</ErrorMessage>
+                                            )}
+                                        </InputWrapper>
+                                        <div className='col-span-2'>
+                                            <MapComponent height='250px' getAddress={getAddress} selectedLocation={selectedLocation} selectedPlace={selectedPlace} setSelectedLocation={setSelectedLocation} setSelectedPlace={setSelectedPlace} setZip={setZip} />
                                         </div>
                                     </div>
+                                    : activeIndex == 1 ?
+                                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+                                        <InputWrapper outerClassName="md:col-span-12">
+                                                <Label id='email'>Email *</Label>
+                                                <Input
+                                                    id='email'
+                                                    name='email'
+                                                    type='email'
+                                                    rules={{
+                                                        required: "Email is required",
+                                                        pattern: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]{3}$/g
+                                                    }}
+                                                />
+                                            {errors?.email?.message && (
+                                                <ErrorMessage>{errors.email.message}</ErrorMessage>
+                                            )}
+                                        </InputWrapper>
+                                        <InputWrapper outerClassName="md:col-span-12">
+                                                <Label id='password'>Password *</Label>
+                                                <div className="p-password p-component p-inputwrapper p-input-icon-right">
+                                                    <input
+                                                        type={togglePass ? 'text' : 'password'}
+                                                        name="password"
+                                                        id="password"
+                                                        value={password}
+                                                        onChange={changePass}
+                                                        pattern={`/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@$\-_]).{10,}$/g`}
+                                                        required
+                                                        className='p-inputtext p-component p-password-input w-full'
+                                                        />
+                                                    <i id='pass' className={togglePass ? 'pi pi-eye-slash cursor-pointer': 'pi pi-eye cursor-pointer'} onClick={showPass}></i>
+                                                </div>
+                                            <ul className='w-full grid grid-cols-1 md:grid-cols-2 md:gap-x-5 md:gap-y-2 text-xs'>
+                                                <li><i className={password.match(/[a-z]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One letter (a-z)</li>
+                                                <li><i className={password.match(/[A-Z]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One letter (A-Z)</li>
+                                                <li><i className={password.match(/.{10,}/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> 10 characters minimum</li>
+                                                <li><i className={password.match(/\d/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One number (0-9)</li>
+                                                <li><i className={password.match(/[!@$\-_]/gm) != null ? "pi pi-check text-green-500": 'pi pi-times text-red-500'} style={{'fontSize': '12px'}}></i> One special character</li>
+                                            </ul>
+                                        </InputWrapper>
+                                        <InputWrapper outerClassName="md:col-span-12">
+                                                <Label id='c_password'>Confirm Password *</Label>
+                                                <div className="p-password p-component p-inputwrapper p-input-icon-right">
+                                                    <input
+                                                        type={toggleConfirmPass ? 'text' : 'password'}
+                                                        name="confirmPassword"
+                                                        id="confirmPassword"
+                                                        value={confirmPassword}
+                                                        onChange={changePass}
+                                                        pattern={`/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@$\-_]).{10,}$/g`}
+                                                        required
+                                                        className='p-inputtext p-component p-password-input w-full'
+                                                        />
+                                                    <i id='confpass' className={toggleConfirmPass ? 'pi pi-eye-slash cursor-pointer': 'pi pi-eye cursor-pointer'} onClick={showPass}></i>
+                                                </div>
+                                                <p className={errorMatch && confirmPassword != '' ? 'w-full text-sm text-red-500' : 'hidden'}>The passwords do not match</p>
+                                        </InputWrapper>
+                                    </div>
+                                    : activeIndex == 2 ?
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 h-full items-center px-3">
+                                        <div id='customer' className={`col-span-1 flex flex-col items-center gap-5 p-5 rounded-md shadow-lg shadow-gray-300/30 hover:shadow-sky-300/30 cursor-pointer ${isSelected == '4' ? 'border border-sky-500 shadow-xl shadow-sky-300/30' : 'border-none'}`} onClick={selectedRole}>
+                                            <div className='w-36 h-36 rounded-full overflow-hidden flex items-center justify-center'>
+                                                <img 
+                                                id='customer' 
+                                                src="https://s3-alpha-sig.figma.com/img/ddd5/77e1/14855842f8a56f007586b8285e9d0847?Expires=1693180800&Signature=dC2L0D7cgdZooQQFXKX8-waC2jEhK~cB-dzAhrE0XvrE0If7a~nu8hU9C8biDadeHKHWFrqa~ZNm1ZPQ9cmFUy5yBF4pgxX-udRrM5MpKMkH~R5H0-4xpLMuCT8AhaxCCFWpCBGK86ImEufpxOuViuyVVPJvP6Y4aZiH4W~Hr6~-ATyES1AF3srA~UAXbsv7vxW58lzzpZ4vssqY05F2JNhgCr3skEyzbvMA-ZpwTR6omtj36zfr1e7vrfH1Z~eTr0evMI1WhIv7z0usnJWiDd5BY5RkFCNkFLR~6qeyyuV-9NZ0lKmxT1Mc-P6nklT0LNTt0deY4KSsrzyxZq5LKQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" 
+                                                alt="sailor"
+                                                className='w-full h-full object-cover' />
+                                            </div>
+                                            <p id='customer' className='font-extrabold'>BOAT OWNER</p>
+                                        </div>
+                                        <div id='provider' className={`col-span-1 flex flex-col items-center gap-5 p-5 rounded-md shadow-lg shadow-gray-300/30 hover:shadow-sky-300/30 cursor-pointer ${isSelected == '3' ? 'border border-sky-500 shadow-xl shadow-sky-300/30' : 'border-none'}`} onClick={selectedRole}>
+                                            <div className='w-36 h-36 rounded-full overflow-hidden flex items-center justify-center'>
+                                                <img 
+                                                id='provider' 
+                                                src="https://s3-alpha-sig.figma.com/img/1a9a/fc2f/184b5b79b23f05c4cd45ec775514c43b?Expires=1693180800&Signature=dESmJYDeD8IZ3e2Eowj-xI2heHR7HZStGMvX6Af12wSKVnlFHJZkU4Ou7XO7wbLXE5-oORow020ZDMVnh-GpFP3A~79ht0VAH1dEDmskCrtCCfKyy9IfBMh5SHQPRyiN2m-tJ~A106~ScQw2dB~WRUmDZpgXXszxfy~z8~O6iDjASoJD03SQg03kdMo7zngZhppAYV-mLOo~c2qXDWoEwOPckixW0IdZVGgotKs1Y5PNLMrOAl1xa-8FJFEdyJtxB7aAlZor5USqIMBBvUCYkrWn8j86BugZuK5jR3FtUJ9r4mSzxmC5if-s2CudJ3UAUIk0XzJTzMr1PyO5QckIQg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+                                                alt="provider"
+                                                className='w-full h-full object-cover' />
+                                            </div>
+                                            <p id='provider' className='font-extrabold'>PROVIDER</p>
+                                        </div>
+                                    </div>
+                                    : null
+                                }
+                                <div>
+                                    {renderButton()}
                                 </div>
-                                : null
-                            }
-                            <p className='w-full text-center text-xs md:text-sm font-medium text-[#373A85] mt-3'>Already have an account? <Link href={'/login'} className='text-[#00CBA4] hover:underline'>Sign in now</Link></p>
-                            <div className="mt-4">
-                                {renderButton()}
-                            </div>
-                        </form>
-                    </FormProvider>
+                            </form>
+                        </FormProvider>
+                    </div>
+                </div>
+                <div className='col-span-1 h-full flex items-center justify-center overflow-hidden'>
+                    <img 
+                    src="https://s3-alpha-sig.figma.com/img/1a3f/69d3/e2ffbce11a16ded3bbb8c0e28b7f75eb?Expires=1693180800&Signature=RsM1Ob-BGifavlrAyEqnuV54WWx~Zy6~HuWMKsbgov4R-8pEkliRV9bZMVJ85nBNWfIIeR7B9wP03~DEIjJmz-WQLZLl07CXZHRqZ8YyvnRLaPlH3H-Qf8eyMLzMSDu76BcZGfuVasv2921gvs-FqykDuQXpJwWwDJpFGmCO-nAXGDq7zhRnpi0bO--~It2UOfhNbJC3jmZL0P5FGZi1Hu5cqvL16jIcT1mLYQJtlWPnMVOYgx3Qk3HTjC6pHKQB6cbB1pyOBiIOguRQGidXdS4qkoX78POxwOtbfNzO7ZvCrf9L6McbYQECjDWc~RPl69YI7AgTs9JWdFZMyIuyBg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" 
+                    alt="boat"
+                    className='w-full object-cover' />
                 </div>
             </div>
         </div>

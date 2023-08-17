@@ -6,17 +6,18 @@ export const Providers = () => {
 
     const router = useRouter();
 
-    const getAllProviders = (setProviders: any, setLoading: any) => {
-        axios.get('/providers')
-        .then((res) => {
-            setProviders(res.data.providers);
-            setLoading(false);
-        })
-        .catch(error => {
-            console.log('Error:', error)
-            return error.response.data.msg
-        })
-    }
+    const getAllProviders = () => axios.get('/providers')
+    // const getAllProviders = (setProviders: any, setLoading: any) => {
+    //     axios.get('/providers')
+    //     .then((res) => {
+    //         setProviders(res.data.providers);
+    //         setLoading(false);
+    //     })
+    //     .catch(error => {
+    //         console.log('Error:', error)
+    //         return error.response.data.msg
+    //     })
+    // }
 
     const show = (idProvider: number) => axios.get(`/provider/${idProvider}`);
 

@@ -1,172 +1,208 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
-import { DataTable } from 'primereact/datatable';
-import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column';
-import { Users } from '@/hooks/user';
-import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
-import { Tag } from 'primereact/tag';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-import { Avatar } from 'primereact/avatar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import LayoutAdmin from '@/components/layoutAdmin';
-import { ButtonCreate } from '@/components/buttons/link';
+import { Auth } from '@/hooks/auth';
+import { Profile, User } from '@/interfaces/interfaces';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { Column } from 'primereact/column';
+import { DataTable, DataTableFilterMeta } from 'primereact/datatable';
+import { InputText } from 'primereact/inputtext';
+import React, { useEffect, useState, useRef } from 'react';
+import Spinner from '@/components/spinner';
 import { Toast } from 'primereact/toast';
+import { Menu } from 'primereact/menu';
+import { Button } from 'primereact/button';
+import { Avatar } from 'primereact/avatar';
+import { Users } from '@/hooks/user';
+import Link from 'next/link';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { ButtonDelete, ButtonEdit } from '@/components/buttons/icons';
-import { User } from '../../../interfaces/interfaces';
+import { Tooltip } from 'primereact/tooltip';
+// import View from './view'
 
-const UsersIndex: React.FC = () => {
+const Index = () => {
     const {getAllUsers, deleteUser, activateUser} = Users();
+    const { getUserAuthenticated } = Auth();
 
-    const [users, setUsers] = useState<User[] | null>(null);
-    const [filters, setFilters] = useState<any | null>(null);
-
-    const [globalFilterValue, setGlobalFilterValue] = useState<string>('');
-
-    const [statuses] = useState<string[]>(['Active', 'Inactive']);
-    const [roles] = useState<string[]>(['ADMIN', 'SUPERADMIN', 'PROVIDER', 'CUSTOMER']);
+    const [users, setUsers] = useState<User[]>([]);
+    const [user, setUser] = useState<Profile>(
+        {
+            uid:                 0,
+            email:               '',
+            state:               false,
+            google:               false,
+            idPerson:            0,
+            name:                '',
+            lastname:            '',
+            phone:               '',
+            image:               '',
+            idRole:              0,
+            role:                '',
+            idProvider:          0,
+            providerName:        '',
+            providerImage:       '',
+            providerDescription: '',
+            providerLat:         '',
+            providerLng:         '',
+            idCustomer:          '',
+            customerLat:         '',
+            customerLng:         '',
+            iat:                 0,
+            exp:                 0,
+        }
+    );
 
     const [loading, setLoading] = useState<boolean>(false);
+    const toast = useRef<Toast>(null)
+    const menuComponent = useRef<Menu>(null);
 
-    const toast = useRef<Toast>(null);
+    const items = (idProvider: number) => {
+        return (
+            [
+                {
+                    label: 'Services',
+                    url: `/welcome/providers/services/${idProvider}`,
+                    icon: 'pi pi-th-large'
+                },
+                {
+                    label: 'Ratings',
+                    url: `/welcome/providers/ratings/${idProvider}`,
+                    icon: 'pi pi-comments'
+                },
+                {
+                    label: 'Portofolio',
+                    url: `/welcome/providers/portofolio/${idProvider}`,
+                    icon: 'pi pi-cloud-upload'
+                }
+            ]
+        )
+    }
+
+    const [filters, setFilters] = useState<DataTableFilterMeta | any>({
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        "person.person_name": { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        'person.lastname': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        "role.description_role": { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        email: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        phone: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        profile_state: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    });
+
+    const getUserAuth = async () => {
+        try {
+            const response = await getUserAuthenticated();
+            if(response.status == 200) {
+                setUser(response.data.user);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
         setLoading(true);
+        getUserAuth();
         getAllUsers(setUsers, setLoading);
-        initFilters();
     }, []);
 
-    const getSeverity = (state: boolean) => {
-        switch (state) {
-            case false:
-                return 'danger';
-
-            case true:
-                return 'success';
+    const formatStatus = (state: boolean) => {
+        if(state) {
+            return 'Active'
+        } else {
+            return 'Inactive'
         }
-    };
+    }
 
     const getSeverityRoles = (role: string) => {
         switch (role) {
             case "ADMIN":
-                return 'bg-[#0ea5e9]';
+                return 'text-[#373A85]';
 
             case "SUPERADMIN":
-                return 'bg-[#eab308]';
+                return 'text-[#373A85]';
 
             case "PROVIDER":
-                return 'bg-[#a855f7]';
+                return 'text-[#00CBA4]';
 
             case "CUSTOMER":
-                return 'bg-[#f43f5e]';
+                return 'text-[#109EDA]';
         }
     };
 
-    const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
+    const onGlobalFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
         let _filters = { ...filters };
 
         _filters['global'].value = value;
 
         setFilters(_filters);
-        setGlobalFilterValue(value);
-    };
-
-    const initFilters = () => {
-        setFilters({
-            global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-            "person.person_name": { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            'person.lastname': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            "role.description_role": { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-            email: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            state: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] }
-        });
-        setGlobalFilterValue('');
     };
 
     const renderHeader = () => {
+        const value = filters['global'] ? filters['global'].value : '';
+
         return (
-            <div className="flex justify-between">
-                <ButtonCreate href={'/welcome/users/create'}>
+            <div className='w-full flex items-center justify-between'>
+                <Link 
+                href={'/welcome/users/create'}
+                className="px-5 py-2.5 bg-emerald-400 rounded-md border border-emerald-400 text-white text-sm" >
                     Create User
-                </ButtonCreate>
-                <span className="p-input-icon-left">
-                    <i className="pi pi-search" />
-                    <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
-                </span>
+                </Link>
+                <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Search user" className='text-sm rounded-2xl px-6 py-3 opacity-60 shadow-lg text-gray-900/50' />
             </div>
         );
     };
-
-    const header = renderHeader();
-
-    const userBodyTemplate = (rowData: User) => {
-        const user = rowData.person;
-
+    
+    const emptyMessageTemplate = () => {
         return (
-            <div className="flex items-center gap-2">
-                {
-                user.person_image != null ?
-                    <Avatar image={user.person_image} shape="circle" />
-                    :
-                    <FontAwesomeIcon icon={faCircleUser} className='w-8 h-8' style={{color: "#c2c2c2"}} />
-                }
-                <span>{user.person_name}</span>
+            <div className='w-full flex justify-center'>
+                <p>No users found.</p>
             </div>
         );
     };
-
+    
     const statusBodyTemplate = (rowData: User) => {
-        if(rowData.profile_state) {
-            return <Tag value={'Active'} rounded severity={getSeverity(rowData.profile_state)} />;
-        } else {
-            return <Tag value={'Inactive'} rounded severity={getSeverity(rowData.profile_state)} />;
-        }
+        return (
+            <div className={`px-3 py-0.5 rounded-md justify-center items-center gap-2.5 inline-flex ${rowData.profile_state ? 'bg-green-100' : 'bg-red-100'}`}>
+                <p className={`text-xs font-semibold ${rowData.profile_state ? 'text-green-800' : 'text-red-800'}`}>{formatStatus(rowData.profile_state)}</p>
+            </div>
+        );
     };
-
-    const statusFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
-        return <Dropdown value={options.value} options={statuses} onChange={(e: DropdownChangeEvent) => options.filterCallback(e.value, options.index)} itemTemplate={statusItemTemplate} placeholder="Select One" className="p-column-filter" showClear />;
+    
+    const roleBodyTemplate = (rowData: User) => {
+        return (
+            <p className={`text-xs font-semibold ${getSeverityRoles(rowData.role.role_description)}`}>{rowData.role.role_description}</p>
+        );
     };
-
-    const statusItemTemplate = (option: string) => {
-        if(option == 'Active') {
-            return <Tag value={option} severity={getSeverity(true)} />;
-        } else {
-            return <Tag value={option} severity={getSeverity(false)} />;
-        }
-    };
-
-    const rolesBodyTemplate = (rowData: User) => {
-        return <Tag value={rowData.role.role_description} className={getSeverityRoles(rowData.role.role_description)} />;
-    };
-
-    const rolesFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
-        return <Dropdown value={options.value} options={roles} onChange={(e: DropdownChangeEvent) => options.filterCallback(e.value, options.index)} itemTemplate={rolesItemTemplate} placeholder="Select One" className="p-column-filter" showClear />;
-    };
-
-    const rolesItemTemplate = (option: string) => {
-        return <Tag value={option} className={getSeverityRoles(option)} />;
-    };
-
+    
     const actionsBodyTemplate = (rowData: User) => {
         return (
-            <div className="flex items-center gap-2">
-            {
+            <div className='flex items-center justify-between gap-3'>
+                {
                 rowData.profile_state ?
                 <>
-                    <ButtonEdit href={`/welcome/users/edit/${rowData.id_profile}`} />
-                    <ButtonDelete onClick={() => confirmDelete(Number(rowData.id_profile))} />
-                    </>
+                    <Tooltip target=".edit-tooltip" />
+                    <Link 
+                    data-pr-tooltip='Edit'
+                    data-pr-position="top"
+                    href={`/welcome/users/edit/${rowData.id_profile}`}
+                    className='w-8 h-8 rounded-md text-gray-900/50 border border-gray-900/50 flex items-center justify-center view-btn edit-tooltip'>
+                        <i className='pi pi-pencil'></i>
+                    </Link>
+                    <Button 
+                    type='button'
+                    outlined
+                    icon='pi pi-trash'
+                    tooltip='Delete'
+                    tooltipOptions={{position: 'top'}}
+                    className='w-8 h-8 rounded-md text-gray-900/50 border border-gray-900/50 flex items-center justify-center view-btn'
+                    onClick={() => confirmDelete(Number(rowData.id_profile))} />
+                </>
                 :
                 <Button
                 type="button"
                 icon="pi pi-check-square"
-                className="p-button-help"
-                text
+                outlined
                 tooltip='Activate user'
                 tooltipOptions={{position: 'top'}}
+                className='w-8 h-8 rounded-md text-gray-900/50 border border-gray-900/50 flex items-center justify-center view-btn'
                 onClick={() => confirmActivate(Number(rowData.id_profile))}
                 />
             }
@@ -213,27 +249,35 @@ const UsersIndex: React.FC = () => {
             reject
         });
     };
-
+    
+    const phoneBodyTemplate = (rowData: User) => {
+        return <p className={`w-full ${rowData.person.phone == null || rowData.person.phone == '' ? 'text-gray-900/50' : 'text-gray-900'}`}>{rowData.person.phone || 'No phone number'}</p>;
+    };
 
   return (
     <LayoutAdmin>
-    <Toast ref={toast} />
-    <ConfirmDialog />
-    <div className='w-full h-full'>
-        <DataTable value={users!} paginator rows={10} loading={loading} dataKey="id_profile"
-                filters={filters!} globalFilterFields={['person.person_name', 'person.lastname', 'role.description_role', 'email', 'state']} header={header}
-                emptyMessage="No users found."
-                className='min-h-full'>
-            <Column field="person.person_name" header="Name" body={userBodyTemplate} filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} />
-            <Column field="person.lastname" header="Lastname" filter filterPlaceholder="Search by lastname" style={{ minWidth: '12rem' }} />
-            <Column field="role.description_role" header="Role" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={rolesBodyTemplate} filter filterElement={rolesFilterTemplate} />
-            <Column field="email" header="Email" filter filterPlaceholder="Search by email" style={{ minWidth: '12rem' }} />
-            <Column field="state" header="State" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
-            <Column header='Actions' body={actionsBodyTemplate} style={{ width: '10rem', textAlign: 'center' }} />
-        </DataTable>
-    </div>
+        <Spinner loading={loading} />
+        <Toast ref={toast} />
+        <ConfirmDialog />
+        <div className='w-full p-5'>
+            <h1 className='text-gray-900/75 text-xl font-semibold leading-loose'>Users</h1>
+            <div className='mt-5'>
+                <DataTable value={users} rows={8} header={renderHeader} filters={filters} onFilter={(e) => setFilters(e.filters)}
+                        globalFilterFields={["person.person_name", 'person.lastname', "role.description_role", 'email', 'phone',  'profile_state']} dataKey="id_profile"
+                        stateStorage="session" stateKey="dt-state-demo-local" emptyMessage={emptyMessageTemplate} tableStyle={{ minWidth: '50rem' }}
+                        paginator rowsPerPageOptions={[5, 10, 25, 50]} removableSort className='text-sm'>
+                    <Column field="person.person_name" header="First Name" sortable style={{ width: '20%' }}></Column>
+                    <Column field='person.lastname' header="Last Name" sortable style={{ width: '20%' }}></Column>
+                    <Column field="role.description_role" header="User role" body={roleBodyTemplate} sortable style={{ width: '25%' }}></Column>
+                    <Column field="email" header="Email" sortable style={{ width: '15%' }}></Column>
+                    <Column field="phone" header="Phone Number" body={phoneBodyTemplate} sortable style={{ width: '5%' }}></Column>
+                    <Column field="profile_state" header="Status" body={statusBodyTemplate} sortable style={{ width: '10%' }}></Column>
+                    <Column field="actions" body={actionsBodyTemplate} style={{ width: '5%' }}></Column>
+                </DataTable>
+            </div>
+        </div>
     </LayoutAdmin>
   )
 }
 
-export default UsersIndex
+export default Index

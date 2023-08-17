@@ -1,9 +1,8 @@
 import LayoutAdmin from '@/components/layoutAdmin'
 import { Auth } from '@/hooks/auth'
-import { Contracts } from '@/hooks/contracts'
-import { ContractProvider, Profile, Ratings as RatingInterface } from '@/interfaces/interfaces'
+import { Profile, Ratings as RatingInterface } from '@/interfaces/interfaces'
 import { FilterMatchMode, FilterOperator } from 'primereact/api'
-import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column'
+import { Column } from 'primereact/column'
 import { DataTable, DataTableFilterMeta } from 'primereact/datatable'
 import { InputText } from 'primereact/inputtext'
 import React, { useEffect, useState, useRef } from 'react'
@@ -16,13 +15,20 @@ import { Tooltip } from 'primereact/tooltip';
 import { Ratings } from '@/hooks/rating'
 import { Avatar } from 'primereact/avatar'
 import { Rating } from 'primereact/rating'
+import { useRouter } from 'next/router'
+import { BreadCrumb } from 'primereact/breadcrumb';
+import { generateBreadcrumbItems } from '@/functions/breadcrumb'
 
 const Index = () => {
-    const { getRatingProvider, changeVisible } = Ratings();
+    const { getRatingProvider, changeVisible, getAllRatigns } = Ratings();
     const { getUserAuthenticated } = Auth();
 
+    const router = useRouter();
+
+    // const [itemsBreadCrumb, setItemsBreadCrumb] = useState<any[]>([]);
+
     const [ratings, setRatings] = useState<RatingInterface[]>([]);
-    const [selectedRating, setSelectedRating] = useState<RatingInterface[] | any>(null);
+    const [filterRating, setFilterRating] = useState<RatingInterface[]>([]);
     const [user, setUser] = useState<Profile>(
         {
             uid:                 0,
@@ -50,6 +56,7 @@ const Index = () => {
         }
     );
 
+    const [hiddenBread, setHiddenBread] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
     const toast = useRef<Toast>(null)
 
@@ -61,17 +68,28 @@ const Index = () => {
         rating_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS}]}
     });
 
+    const home = {icon: 'pi pi-home'}
+
+    const breadcrumbItems = [
+        ...generateBreadcrumbItems(router.asPath)
+    ];
+
     const getUserAuth = async () => {
         try {
             const response = await getUserAuthenticated();
             if(response.status == 200) {
                 setUser(response.data.user)
-                getRatings(response.data.user.idProvider);
+                if(response.data.user.role != 'PROVIDER') {
+                    getAllRatigns(setRatings, setFilterRating, setLoading);
+                } else {
+                    getRatings(response.data.user.idProvider);
+                }
+                setLoading(false);
             }
         } catch (error) {
             console.log(error)
         }
-    }
+    };
 
     const getRatings = async (idProvider: number) => {
         try {
@@ -84,12 +102,19 @@ const Index = () => {
         } catch (error) {
             console.log(error);
         }
-    }
+    };
 
     useEffect(() => {
         setLoading(true);
-        getUserAuth();
-    }, []);
+        if(router.query.idProvider) {
+            getRatings(Number(router.query.idProvider))
+            if(user && user.role != 'PROVIDER') {
+                setHiddenBread(false);
+            }
+        } else {
+            getUserAuth();
+        }
+    }, [router.query.idProvider]);
 
     const changeVisibility = (idRating: number, state: boolean) => {
         setLoading(true);
@@ -120,6 +145,14 @@ const Index = () => {
         return (
             <div className='w-full flex justify-end'>
                 <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Search user" className='text-sm rounded-2xl px-6 py-3 opacity-60 shadow-lg text-gray-900/50' />
+            </div>
+        );
+    };
+
+    const emptyMessageTemplate = () => {
+        return (
+            <div className='w-full flex justify-center'>
+                <p>No ratings found.</p>
             </div>
         );
     };
@@ -179,14 +212,14 @@ const Index = () => {
         <Spinner loading={loading} />
         <Toast ref={toast} />
         <div className='w-full p-5'>
+            <BreadCrumb model={breadcrumbItems} home={home} hidden={hiddenBread} className='border-none' />
             <h1 className='text-gray-900/75 text-xl font-semibold leading-loose'>Reviews</h1>
             <div className="text-gray-900/50 text-sm font-normal leading-none mt-3">Explore Customer Ratings and Reviews.</div>
             <div className='mt-5'>
-                <DataTable value={ratings} rows={8} header={renderHeader} filters={filters} onFilter={(e) => setFilters(e.filters)} selection={selectedRating} 
-                        globalFilterFields={['person_name', 'service_name', 'review', 'rating_date']} onSelectionChange={(e) => setSelectedRating(e.value)} selectionMode="checkbox" dataKey="id_rating"
-                        stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="No ratings found." tableStyle={{ minWidth: '50rem' }}
+                <DataTable value={ratings} rows={8} header={renderHeader} filters={filters} onFilter={(e) => setFilters(e.filters)}
+                        globalFilterFields={['person_name', 'service_name', 'review', 'rating_date']} dataKey="id_rating"
+                        stateStorage="session" stateKey="dt-state-demo-local" emptyMessage={emptyMessageTemplate} tableStyle={{ minWidth: '50rem' }}
                         paginator rowsPerPageOptions={[5, 10, 25, 50]} removableSort className='text-sm'>
-                    <Column selectionMode="multiple" headerStyle={{ width: '1%' }}></Column>
                     <Column field="person_name" header="User" body={customerBodyTemplate} sortable style={{ width: '20%' }}></Column>
                     <Column field="service_name" header="Service" sortable style={{ width: '10%' }}></Column>
                     <Column field="rating" header="Rating" body={ratingBodyTemplate} sortable style={{ width: '4%' }}></Column>

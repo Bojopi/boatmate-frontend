@@ -16,11 +16,12 @@ export type CategoryProps = {
     categories: any;
     setCategories: any;
     toast: any;
+    loading: boolean;
     setLoading: any;
     idCategory: number;
 }
 
-const Create: React.FC<CategoryProps> = ({idCategory = 0, categories, setCategories, setLoading, toast}) => {
+const Create: React.FC<CategoryProps> = ({idCategory = 0, categories, setCategories, loading, setLoading, toast}) => {
     const { show, createCategory, updateCategory } = Categories();
 
     const [visible, setVisible] = useState(false);
@@ -42,6 +43,7 @@ const Create: React.FC<CategoryProps> = ({idCategory = 0, categories, setCategor
         if(response.status === 200) {
             response.data.category.categoryName = response.data.category.category_name;
             reset(response.data.category);
+            setVisible(true);
         }
     }
 
@@ -58,9 +60,10 @@ const Create: React.FC<CategoryProps> = ({idCategory = 0, categories, setCategor
 
     const openModal = async () => {
         reset();
-        setVisible(true);
         if (idCategory != 0) {
             resetAsyncForm(Number(idCategory));
+        } else {
+            setVisible(true);
         }
     };
 
@@ -70,9 +73,20 @@ const Create: React.FC<CategoryProps> = ({idCategory = 0, categories, setCategor
     }
 
     const footerContent = (
-        <div>
-            <Button type="button" label="Cancel" icon="pi pi-times" onClick={closeModal} className="p-button-text" />
-            <Button type="button" label="Save" icon="pi pi-check" onClick={handleSubmit(onSubmit)} className="p-button-success" autoFocus />
+        <div className='w-full flex items-center justify-end'>
+            <Button type="button" label="Cancel" icon="pi pi-times" severity="danger" disabled={loading} onClick={closeModal} className="p-button-text" />
+            {
+                loading ?
+                    <Button type="button" className="p-button-success flex items-center" disabled>
+                        <svg className="mr-3 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span className="font-medium"> Processing... </span>
+                    </Button>
+                :
+                    <Button type="button" label="Save" icon="pi pi-check" onClick={handleSubmit(onSubmit)} className="p-button-success" autoFocus />
+            }
         </div>
     );
 
@@ -80,9 +94,20 @@ const Create: React.FC<CategoryProps> = ({idCategory = 0, categories, setCategor
         <>
             {
                 idCategory === 0 ?
-                <Button type="button" label="Create Category"  className="p-button-success" outlined icon="pi pi-plus" onClick={openModal} />
+                <Button 
+                type="button" 
+                label="Add Category"  
+                className="px-5 py-2.5 bg-emerald-400 rounded-md border border-emerald-400 text-white text-sm"
+                onClick={openModal} />
                 : 
-                <Button type="button" icon="pi pi-pencil" text tooltip='Edit' tooltipOptions={{position: 'top'}} onClick={openModal}
+                <Button 
+                type="button" 
+                icon="pi pi-pencil" 
+                outlined
+                tooltip='Edit' 
+                tooltipOptions={{position: 'top'}} 
+                className='w-8 h-8 rounded-md text-gray-900/50 border border-gray-900/50 flex items-center justify-center view-btn'
+                onClick={openModal}
                 />
             }
 

@@ -206,7 +206,7 @@ const Profile = () => {
         <LayoutPrincipal>
             <Spinner loading={loading} />
             <Toast ref={toast} />
-            <p className='w-full md:w-[60%] mx-auto font-semibold'>Profile</p>
+            <p className='w-full md:w-[60%] mx-auto mt-28 font-semibold'>Profile</p>
             <div className="w-[500px] h-[500px] left-[80%] top-[500px] absolute bg-sky-500/30 rounded-full blur-3xl -z-10" />
             <div className='w-[60%] mx-auto h-full flex gap-5 my-5'>
                 <div className='w-80 h-96 bg-white rounded-xl border border-neutral-200 flex flex-col items-center gap-10 p-5'>

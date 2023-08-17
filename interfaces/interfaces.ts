@@ -1,3 +1,25 @@
+export interface GeneralUser {
+    id_profile:           number;
+    email:                string;
+    id_role:              number;
+    role_description:     string;
+    role_state:           boolean;
+    person_name:          string;
+    lastname:             string;
+    phone:                string;
+    person_image:         string;
+    provider_name?:        string;
+    provider_image?:       string;
+    provider_description?: string;
+    provider_lat?:         string;
+    provider_lng?:         string;
+    provider_zip?:         string;
+    profile_state?:        boolean;
+    customer_lat?:          string;
+    customer_lng?:          string;
+    customer_zip?:          null;
+}
+
 export interface User {
     id_profile:    number;
     email:         string;

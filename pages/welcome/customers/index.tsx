@@ -1,38 +1,89 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
-import { DataTable } from 'primereact/datatable';
-import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column';
-import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
-import { Customers } from '@/hooks/customers';
 import LayoutAdmin from '@/components/layoutAdmin';
-import { Customer } from '@/interfaces/interfaces';
+import { Auth } from '@/hooks/auth';
+import { Customer, Profile } from '@/interfaces/interfaces';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { Column } from 'primereact/column';
+import { DataTable, DataTableFilterMeta } from 'primereact/datatable';
+import { InputText } from 'primereact/inputtext';
+import React, { useEffect, useState, useRef } from 'react';
+import Spinner from '@/components/spinner';
 import { Toast } from 'primereact/toast';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { Tag } from 'primereact/tag';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-import { Users } from '@/hooks/user';
+import { Customers } from '@/hooks/customers';
 
-const CustomersIndex: React.FC = () => {
+const Index = () => {
     const { getAllCustomers } = Customers();
-    const {activateUser} = Users();
+    const { getUserAuthenticated } = Auth();
 
-    const [customers, setCustomers] = useState<Customer[] | null>(null);
-    const [filters, setFilters] = useState<any | null>(null);
-
-    const [globalFilterValue, setGlobalFilterValue] = useState<string>('');
-
-    const [statuses] = useState<string[]>(['Active', 'Inactive']);
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [user, setUser] = useState<Profile>(
+        {
+            uid:                 0,
+            email:               '',
+            state:               false,
+            google:               false,
+            idPerson:            0,
+            name:                '',
+            lastname:            '',
+            phone:               '',
+            image:               '',
+            idRole:              0,
+            role:                '',
+            idProvider:          0,
+            providerName:        '',
+            providerImage:       '',
+            providerDescription: '',
+            providerLat:         '',
+            providerLng:         '',
+            idCustomer:          '',
+            customerLat:         '',
+            customerLng:         '',
+            iat:                 0,
+            exp:                 0,
+        }
+    );
 
     const [loading, setLoading] = useState<boolean>(false);
+    const toast = useRef<Toast>(null)
 
-    const toast = useRef<Toast>(null);
+    const items = (idProvider: number) => {
+        return (
+            [
+                {
+                    label: 'Services',
+                    url: `/welcome/providers/services/${idProvider}`,
+                    icon: 'pi pi-th-large'
+                },
+                {
+                    label: 'Ratings',
+                    url: `/welcome/providers/ratings/${idProvider}`,
+                    icon: 'pi pi-comments'
+                },
+                {
+                    label: 'Portofolio',
+                    url: `/welcome/providers/portofolio/${idProvider}`,
+                    icon: 'pi pi-cloud-upload'
+                }
+            ]
+        )
+    }
 
-    useEffect(() => {
-        setLoading(true)
-        getCustomers();
-        initFilters();
-    }, []);
+    const [filters, setFilters] = useState<DataTableFilterMeta | any>({
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        person_name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        email: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        phone: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    });
+
+    const getUserAuth = async () => {
+        try {
+            const response = await getUserAuthenticated();
+            if(response.status == 200) {
+                setUser(response.data.user);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const getCustomers = async () => {
         const response = await getAllCustomers();
@@ -40,137 +91,85 @@ const CustomersIndex: React.FC = () => {
         setLoading(false);
     }
 
-    const getSeverity = (state: boolean) => {
-        switch (state) {
-            case false:
-                return 'danger';
+    useEffect(() => {
+        setLoading(true);
+        getUserAuth();
+        getCustomers();
+    }, []);
 
-            case true:
-                return 'success';
+    const formatStatus = (state: boolean) => {
+        if(state) {
+            return 'Active'
+        } else {
+            return 'Inactive'
         }
-    };
+    }
 
-    const clearFilter = () => {
-        initFilters();
-    };
-
-    const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
+    const onGlobalFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
         let _filters = { ...filters };
 
         _filters['global'].value = value;
 
         setFilters(_filters);
-        setGlobalFilterValue(value);
-    };
-
-    const initFilters = () => {
-        setFilters({
-            global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-            person_name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            email: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            phone: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        });
-        setGlobalFilterValue('');
     };
 
     const renderHeader = () => {
+        const value = filters['global'] ? filters['global'].value : '';
+
         return (
-            <div className="flex justify-between">
-                <Button type="button" icon="pi pi-filter-slash" className='p-button-success' label="Clear" outlined onClick={clearFilter} />
-                <span className="p-input-icon-left">
-                    <i className="pi pi-search" />
-                    <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
-                </span>
+            <div className='w-full flex justify-end'>
+                <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Search user" className='text-sm rounded-2xl px-6 py-3 opacity-60 shadow-lg text-gray-900/50' />
+            </div>
+        );
+    };
+    
+    const emptyMessageTemplate = () => {
+        return (
+            <div className='w-full flex justify-center'>
+                <p>No customers found.</p>
+            </div>
+        );
+    };
+    
+    const statusBodyTemplate = (rowData: Customer) => {
+        return (
+            <div className={`px-3 py-0.5 rounded-md justify-center items-center gap-2.5 inline-flex ${rowData.profile_state ? 'bg-green-100' : 'bg-red-100'}`}>
+                <p className={`text-xs font-semibold ${rowData.profile_state ? 'text-green-800' : 'text-red-800'}`}>{formatStatus(rowData.profile_state)}</p>
             </div>
         );
     };
 
-    const header = renderHeader();
-
-    const statusBodyTemplate = (rowData: Customer) => {
-        if(rowData.profile_state) {
-            return <Tag value={'Active'} rounded severity={getSeverity(rowData.profile_state)} />;
-        } else {
-            return <Tag value={'Inactive'} rounded severity={getSeverity(rowData.profile_state)} />;
-        }
-    };
-
-    const statusFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
-        return <Dropdown value={options.value} options={statuses} onChange={(e: DropdownChangeEvent) => options.filterCallback(e.value, options.index)} itemTemplate={statusItemTemplate} placeholder="Select One" className="p-column-filter" showClear />;
-    };
-
-    const statusItemTemplate = (option: string) => {
-        if(option == 'Active') {
-            return <Tag value={option} severity={getSeverity(true)} />;
-        } else {
-            return <Tag value={option} severity={getSeverity(false)} />;
-        }
+    const phoneBodyTemplate = (rowData: Customer) => {
+        return <p className={`w-full line-clamp-3 ${rowData.phone == null || rowData.phone == '' ? 'text-gray-900/50' : 'text-gray-900'}`}>{rowData.phone || 'No phone'}</p>;
     };
 
     const customerBodyTemplate = (rowData: Customer) => {
-
         return (
-            <div className="flex items-center gap-2">
-                <span>{rowData.person_name} {rowData.lastname}</span>
-            </div>
+            <p>{rowData.lastname}, {rowData.person_name}</p>
         );
     };
-
-    const actionsBodyTemplate = (rowData: Customer) => {
-        return (
-            <div className="flex items-center gap-2">
-            {
-                !rowData.profile_state ?
-                    <Button
-                    type="button"
-                    icon="pi pi-check-square"
-                    className="p-button-help"
-                    text
-                    tooltip='Activate user'
-                    tooltipOptions={{position: 'top'}}
-                    onClick={() => confirmActivate(Number(rowData.id_profile))}
-                    />
-                : null
-            }
-            </div>
-        );
-    };
-
-    const confirmActivate = (idCustomer: number) => {
-        const accept = async () => {
-            setLoading(true)
-            activateUser(idCustomer, customers, setCustomers, toast, setLoading);
-        }
-        const reject = () => {toast.current!.show({severity:'info', summary:'Info', detail: 'Operation rejected', life: 4000});}
-        confirmDialog({
-            message: 'Do you want to activate this profile?',
-            header: 'Activate Confirmation',
-            icon: 'pi pi-info-circle',
-            acceptClassName: 'p-button-danger',
-            accept,
-            reject
-        });
-    };
-
 
   return (
     <LayoutAdmin>
+        <Spinner loading={loading} />
         <Toast ref={toast} />
-        <ConfirmDialog />
-        <div className='w-full h-full'>
-            <DataTable value={customers!} paginator rows={10} loading={loading} dataKey="id_customer"
-                    filters={filters!} globalFilterFields={['person_name', 'email', 'phone']} header={header}
-                    emptyMessage="No customers found." className='min-h-full'>
-                <Column field="person_name" header="Customer Name" body={customerBodyTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-                <Column field="email" header="Email" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-                <Column field="phone" header="Phone Number" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-                <Column field="state" header="State" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
-                {/* <Column header='Actions' body={actionsBodyTemplate} style={{ width: '10rem', textAlign: 'center' }} /> */}
-            </DataTable>
+        <div className='w-full p-5'>
+            <h1 className='text-gray-900/75 text-xl font-semibold leading-loose'>Customers</h1>
+            <div className='mt-5'>
+                <DataTable value={customers} rows={8} header={renderHeader} filters={filters} onFilter={(e) => setFilters(e.filters)}
+                        globalFilterFields={['person_name', 'email', 'phone']} dataKey="id_customer"
+                        stateStorage="session" stateKey="dt-state-demo-local" emptyMessage={emptyMessageTemplate} tableStyle={{ minWidth: '50rem' }}
+                        paginator rowsPerPageOptions={[5, 10, 25, 50]} removableSort className='text-sm'>
+                    <Column field="person_name" header="Customer Name" body={customerBodyTemplate} sortable style={{ width: '25%' }}></Column>
+                    <Column field="email" header="Email" sortable style={{ width: '25%' }}></Column>
+                    <Column header='phone' body={phoneBodyTemplate} style={{ width: '25%' }} />
+                    <Column field="profile_state" header="Status" body={statusBodyTemplate} sortable style={{ width: '25%' }}></Column>
+                </DataTable>
+            </div>
         </div>
     </LayoutAdmin>
   )
 }
 
-export default CustomersIndex
+export default Index

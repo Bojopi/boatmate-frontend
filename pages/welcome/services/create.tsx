@@ -25,11 +25,12 @@ export type ServiceProps = {
     services: any;
     setServices: any;
     toast: any;
+    loading: boolean;
     setLoading: any;
     idService: number;
 }
 
-const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, setLoading, toast}) => {
+const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, loading, setLoading, toast}) => {
     const { show, createService, updateService } = Services();
     const { getAllCategories } = Categories();
 
@@ -66,6 +67,8 @@ const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, s
             setSelectedCategory(response.data.service.service_categories.map((category: ServiceCategory) => category.category))
 
             reset(response.data.service);
+            setLoading(false);
+            setVisible(true);
         }
     }
 
@@ -74,6 +77,7 @@ const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, s
         if(response.status === 200) {
             setCategoryList(response.data.categories);
             setLoading(false);
+            setVisible(true);
         }
     }
 
@@ -91,10 +95,10 @@ const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, s
     const onErrors = () => {};
 
     const openModal = async () => {
+        setLoading(true);
         reset();
         setSelectedCategory([]);
         getCategories();
-        setVisible(true);
         if (idService != 0) {
             resetAsyncForm(Number(idService));
         }
@@ -106,9 +110,20 @@ const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, s
     }
 
     const footerContent = (
-        <div>
-            <Button type="button" label="Cancel" icon="pi pi-times" onClick={closeModal} className="p-button-text" />
-            <Button type="button" label="Save" icon="pi pi-check" onClick={handleSubmit(onSubmit)} className="p-button-success" autoFocus />
+        <div className='w-full flex items-center justify-end'>
+            <Button type="button" label="Cancel" icon="pi pi-times" disabled={loading} severity="danger" onClick={closeModal} className="p-button-text" />
+            {
+                loading ?
+                    <Button type="button" className="p-button-success flex items-center" disabled>
+                        <svg className="mr-3 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span className="font-medium"> Processing... </span>
+                    </Button>
+                :
+                    <Button type="button" label="Save" icon="pi pi-check" onClick={handleSubmit(onSubmit)} className="p-button-success" autoFocus />
+            }
         </div>
     );
 
@@ -156,9 +171,20 @@ const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, s
         <>
             {
                 idService === 0 ?
-                <Button type="button" label="Create Service"  className="p-button-success" outlined icon="pi pi-plus" onClick={openModal} />
+                <Button 
+                type="button" 
+                label="Add Service"
+                className="px-5 py-2.5 bg-emerald-400 rounded-md border border-emerald-400 text-white text-sm"
+                onClick={openModal} />
                 : 
-                <Button type="button" icon="pi pi-pencil" text tooltip='Edit' tooltipOptions={{position: 'top'}} onClick={openModal}
+                <Button 
+                type="button" 
+                icon="pi pi-pencil" 
+                tooltip='Edit' 
+                outlined
+                tooltipOptions={{position: 'top'}}
+                className='w-8 h-8 rounded-md text-gray-900/50 border border-gray-900/50 flex items-center justify-center view-btn' 
+                onClick={openModal}
                 />
             }
 
@@ -171,7 +197,7 @@ const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, s
                             id="serviceName"
                             name="serviceName"
                             type="text"
-                            placeholder="Painting"
+                            placeholder="Service name"
                             rules={{
                                 required: 'Service name is required'
                             }}
@@ -205,11 +231,11 @@ const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, s
                             placeholder="Select Categories"
                             filter
                             panelFooterTemplate={panelFooterTemplate}
-                            className="w-full"
+                            className="w-full text-sm rounded-xl border-neutral-200"
                             display="chip" />
                         </InputWrapper>
                         <div className='col-span-12'>
-                            <p className="font-medium">Service image</p>
+                            <Label id="image">Service image</Label>
                             <FileUpload
                             ref={fileUploadServiceRef}
                             id='providerImage'

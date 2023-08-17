@@ -3,16 +3,14 @@ import { Auth } from '@/hooks/auth'
 import { Contracts } from '@/hooks/contracts'
 import { ContractProvider, Profile } from '@/interfaces/interfaces'
 import { FilterMatchMode, FilterOperator } from 'primereact/api'
-import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column'
+import { Column } from 'primereact/column'
 import { DataTable, DataTableFilterMeta } from 'primereact/datatable'
 import { InputText } from 'primereact/inputtext'
 import React, { useEffect, useState, useRef } from 'react'
 import { formatDateHour } from '@/functions/date'
 import Link from 'next/link'
-import { Calendar, CalendarChangeEvent } from 'primereact/calendar'
 import Spinner from '@/components/spinner';
 import { Toast } from 'primereact/toast';
-import { InputNumber, InputNumberChangeEvent } from 'primereact/inputnumber'
 import { Tooltip } from 'primereact/tooltip'
 import View from './view'
 import { RiSendPlaneLine } from 'react-icons/ri'
@@ -22,7 +20,6 @@ const Index = () => {
     const { getUserAuthenticated } = Auth();
 
     const[contracts, setContracts] = useState<ContractProvider[]>([]);
-    const [selectedContract, setSelectedContract] = useState<ContractProvider[] | any>(null);
     const [user, setUser] = useState<Profile>(
         {
             uid:                 0,
@@ -49,12 +46,6 @@ const Index = () => {
             exp:                 0,
         }
     );
-
-    let items = [
-        {label: 'Send a message', icon: 'pi pi-fw pi-send'}
-    ];
-
-    const menu = useRef<any>(null);
 
     const [loading, setLoading] = useState<boolean>(false);
     const toast = useRef<Toast>(null)
@@ -147,16 +138,8 @@ const Index = () => {
         );
     };
 
-    const dateFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
-        return <Calendar value={options.value} onChange={(e: CalendarChangeEvent) => options.filterCallback(e.value, options.index)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />;
-    };
-
     const priceBodyTemplate = (rowData: ContractProvider) => {
         return <p className='text-green-600/60 font-semibold'>{formatCurrency(rowData.contract_price || 0)}</p>;
-    };
-
-    const priceFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
-        return <InputNumber value={options.value} onChange={(e: InputNumberChangeEvent) => options.filterCallback(e.value, options.index)} mode="currency" currency="USD" locale="en-US" />;
     };
 
     const descriptionBodyTemplate = (rowData: ContractProvider) => {
@@ -171,14 +154,13 @@ const Index = () => {
             <h1 className='text-gray-900/75 text-xl font-semibold leading-loose'>Projects In Progress</h1>
             <div className="text-gray-900/50 text-sm font-normal leading-none mt-3">Track Your Ongoing Projects</div>
             <div className='mt-5'>
-                <DataTable value={contracts} rows={8} header={renderHeader} filters={filters} onFilter={(e) => setFilters(e.filters)} selection={selectedContract} 
-                        globalFilterFields={['service_name', 'person_name', 'phone', 'contract_description', 'contract_price', 'contract_date']} onSelectionChange={(e) => setSelectedContract(e.value)} selectionMode="checkbox" dataKey="id_contract"
+                <DataTable value={contracts} rows={8} header={renderHeader} filters={filters} onFilter={(e) => setFilters(e.filters)}
+                        globalFilterFields={['service_name', 'person_name', 'phone', 'contract_description', 'contract_price', 'contract_date']} dataKey="id_contract"
                         stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="No contracts found." tableStyle={{ minWidth: '50rem' }}
                         paginator rowsPerPageOptions={[5, 10, 25, 50]} removableSort className='text-sm'>
-                    <Column selectionMode="multiple" headerStyle={{ width: '1%' }}></Column>
                     <Column field="service_name" header="Service" sortable style={{ width: '15%' }}></Column>
                     <Column field="person_name" header="Customer" body={customerBodyTemplate} sortable style={{ width: '15%' }}></Column>
-                    <Column field="phone" header="Phone" sortable style={{ width: '4%' }}></Column>
+                    <Column field="phone" header="Phone" sortable style={{ width: '5%' }}></Column>
                     <Column field="contract_description" header="Description" body={descriptionBodyTemplate} sortable style={{ width: '25%' }}></Column>
                     <Column field="contract_price" header="Price" sortable dataType='numeric' body={priceBodyTemplate} style={{ width: '7%' }}></Column>
                     <Column field="contract_date" header="Submission Date" body={dateBodyTemplate} sortable style={{ width: '23%' }}></Column>

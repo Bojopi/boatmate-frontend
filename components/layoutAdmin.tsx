@@ -9,9 +9,10 @@ import MenuAdmin from '@/sql/menuAdmin.json';
 import MenuProvider from '@/sql/menuProvider.json';
 import { Sidebar } from 'flowbite-react';
 import {BsInbox, BsStar} from 'react-icons/bs'
-import {AiOutlineDashboard} from 'react-icons/ai'
-import {PiWallet, PiWrench} from 'react-icons/pi'
+import {AiOutlineDashboard, AiOutlinePieChart} from 'react-icons/ai'
+import {PiWallet, PiWrench, PiUsers} from 'react-icons/pi'
 import {MdOutlineLogout} from 'react-icons/md'
+import {LiaUsersCogSolid} from 'react-icons/lia'
 import { Avatar } from 'primereact/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
@@ -94,14 +95,14 @@ const LayoutAdmin = ({children}: any) => {
                         <Sidebar.Item className='p-0'>
                             <div className='flex items-center gap-3'>
                                 {
-                                    user.providerImage != null ?
-                                        <Avatar image={user.providerImage} shape="circle" size='large' />
+                                    user.providerImage != null || user.image != null ?
+                                        <Avatar image={user.providerImage || user.image} shape="circle" size='large' />
                                         :
                                         <FontAwesomeIcon icon={faCircleUser} className='w-8 h-8' style={{color: "#c2c2c2"}} />
                                 }
                                 <div>
-                                    <p>{user.providerName}</p>
-                                    <p className='text-xs'>{user.name}</p>
+                                    <p>{user.providerName || `${user.name} ${user.lastname}`}</p>
+                                    <p className='text-xs' style={{textTransform: 'capitalize'}}>{user.role == 'PROVIDER' ? `${user.name} ${user.lastname}` : user.role.toLowerCase()}</p>
                                 </div>
                             </div>
                         </Sidebar.Item>
@@ -122,28 +123,77 @@ const LayoutAdmin = ({children}: any) => {
                         >
                             <p>Dashboard</p>
                         </Sidebar.Item>
-                        <Sidebar.Collapse
-                        label='Projects'
-                        icon={BsInbox}
-                        className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
-                        >
-                            <Sidebar.Item href={'/welcome/providers/projects/requests'} className='hover:bg-sky-500/50 hover:text-white'>
-                                <p>Requests</p>
-                            </Sidebar.Item>
-                            <Sidebar.Item href={'/welcome/providers/projects/inprogress'} className='hover:bg-sky-500/50 hover:text-white'>
-                                <p>In Progress</p>
-                            </Sidebar.Item>
-                            <Sidebar.Item href={'/welcome/providers/projects/finished'} className='hover:bg-sky-500/50 hover:text-white'>
-                                <p>Finished</p>
-                            </Sidebar.Item>
-                        </Sidebar.Collapse>
-                        <Sidebar.Item
-                        href={`/welcome/providers/ratings/${user.idProvider}`}
-                        icon={BsStar}
-                        className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
-                        >
-                            <p>Reviews</p>
-                        </Sidebar.Item>
+                        {
+                            user.role == 'PROVIDER' ?
+                            <>
+                                <Sidebar.Collapse
+                                label='Projects'
+                                icon={BsInbox}
+                                className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
+                                >
+                                    <Sidebar.Item href={'/welcome/providers/projects/requests'} className='hover:bg-sky-500/50 hover:text-white'>
+                                        <p>Requests</p>
+                                    </Sidebar.Item>
+                                    <Sidebar.Item href={'/welcome/providers/projects/inprogress'} className='hover:bg-sky-500/50 hover:text-white'>
+                                        <p>In Progress</p>
+                                    </Sidebar.Item>
+                                    <Sidebar.Item href={'/welcome/providers/projects/finished'} className='hover:bg-sky-500/50 hover:text-white'>
+                                        <p>Finished</p>
+                                    </Sidebar.Item>
+                                </Sidebar.Collapse>
+                                <Sidebar.Item
+                                href={`/welcome/providers/ratings/${user.idProvider}`}
+                                icon={BsStar}
+                                className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
+                                >
+                                    <p>Reviews</p>
+                                </Sidebar.Item>
+                            </>
+                            :
+                            <>
+                                <Sidebar.Collapse
+                                label='Providers & Services'
+                                icon={AiOutlinePieChart}
+                                className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
+                                >
+                                    <Sidebar.Item href={'/welcome/providers'} className='hover:bg-sky-500/50 hover:text-white'>
+                                        <p>Providers</p>
+                                    </Sidebar.Item>
+                                    <Sidebar.Item href={'/welcome/services'} className='hover:bg-sky-500/50 hover:text-white'>
+                                        <p>Services</p>
+                                    </Sidebar.Item>
+                                    <Sidebar.Item href={'/welcome/categories'} className='hover:bg-sky-500/50 hover:text-white'>
+                                        <p>Categories</p>
+                                    </Sidebar.Item>
+                                </Sidebar.Collapse>
+                                <Sidebar.Item
+                                href={`/welcome/customers`}
+                                icon={PiUsers}
+                                className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
+                                >
+                                    <p>Customers</p>
+                                </Sidebar.Item>
+                                <Sidebar.Item
+                                href={`/welcome/ratings`}
+                                icon={BsStar}
+                                className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
+                                >
+                                    <p>Ratings</p>
+                                </Sidebar.Item>
+                                <Sidebar.Collapse
+                                label='Users & Roles'
+                                icon={LiaUsersCogSolid}
+                                className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
+                                >
+                                    <Sidebar.Item href={'/welcome/users'} className='hover:bg-sky-500/50 hover:text-white'>
+                                        <p>Users</p>
+                                    </Sidebar.Item>
+                                    <Sidebar.Item href={'/welcome/roles'} className='hover:bg-sky-500/50 hover:text-white'>
+                                        <p>Roles</p>
+                                    </Sidebar.Item>
+                                </Sidebar.Collapse>
+                            </>
+                        }
                         {/* <Sidebar.Item
                         href='#'
                         icon={PiWallet}
@@ -172,7 +222,7 @@ const LayoutAdmin = ({children}: any) => {
                 </Sidebar.Items>
             </Sidebar>
             <div className='w-full h-screen flex flex-col'>
-                <div className='w-full h-14 bg-white shadow-lg flex items-center justify-between px-5'>
+                <div className='w-full h-14 bg-white shadow-lg flex items-center justify-between px-5 z-10'>
                     <i className='pi pi-bars cursor-pointer' onClick={toggleSidebar}></i>
                     <div className='pi pi-overlay-bagde relative cursor-pointer'>
                         <Badge severity={'warning'} className='absolute top-0 right-0'></Badge>

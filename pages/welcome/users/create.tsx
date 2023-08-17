@@ -18,6 +18,11 @@ import Spinner from '@/components/spinner';
 import LayoutAdmin from '@/components/layoutAdmin';
 import { useRouter } from 'next/router';
 import { Avatar } from 'primereact/avatar';
+import { GeneralUser } from '@/interfaces/interfaces';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { BreadCrumb } from 'primereact/breadcrumb';
+import { generateBreadcrumbItems } from '@/functions/breadcrumb';
 
 export type FormProps = {
     email:                  string;
@@ -45,12 +50,19 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
 
     const [role, setRole] = useState<any>(null);
 
+    const [userInfo, setUserInfo] = useState<GeneralUser | null>(null);
+
+    const [imageBussines, setImageBussines] = useState<string | any>(null);
     const [imagePerson, setImagePerson] = useState<any>(null);
     const [imageProvider, setImageProvider] = useState<any>(null);
 
     const [selectedPlace, setSelectedPlace] = useState<string>('');
     const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
+    const [buttonActive, setButtonActive] = useState<boolean>(false);
+    const [listNames, setListNames] = useState<string[]>([]);
+
+    const [hiddenBread, setHiddenBread] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
 
     const fileUploadProviderRef = useRef<any>(null);
@@ -63,11 +75,31 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
         {name: 'Customer', code: '4'}
     ]
 
+    const home = {icon: 'pi pi-home'}
+
+    const breadcrumbItems = [
+        ...generateBreadcrumbItems(router.asPath)
+    ];
+
     useEffect(() => {
         if(router.query.id) {
             resetAsyncForm(Number(router.query.id))
+        } else {
+            setHiddenBread(false);
         }
     }, [router.query.id]);
+
+    const toTitleCase = (str: string) => {
+        const string = str
+        .toLowerCase()
+        .split(' ')
+        .map(word => {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        })
+        .join(' ');
+
+        return string;
+    }
 
     const methods = useForm<FormProps>({
         defaultValues: {
@@ -103,10 +135,19 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
             result.data.user.providerDescription = result.data.user.provider_description || '';
             result.data.user.providerImage = result.data.user.provider_image || '';
 
+            setUserInfo(result.data.user);
+
+            if(result.data.user.role_description == 'PROVIDER') {
+                setImageBussines(result.data.user.provider_image || '');
+            } else if(result.data.user.role_description == 'CUSTOMER') {
+                setImageBussines(result.data.user.person_image || '');
+            }
+
             reset(result.data.user);
-            const roleSelect = roles.filter((item) => item.code == String(result.data.user.roleId));
+            const roleSelect = roles.filter((item) => item.code == String(result.data.user.id_role));
             setRole(roleSelect[0]);
             setSelectedLocation({lat: Number(result.data.user.lat), lng: Number(result.data.user.lng)})
+            setHiddenBread(false);
         }
     };
 
@@ -173,13 +214,266 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
     const chooseOptions = { icon: 'pi pi-fw pi-images', iconOnly: true, className: 'custom-choose-btn p-button-rounded p-button-outlined' };
     const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
 
+    const handleImageChange = (event: any) => {
+        const selectedImage = event.target.files[0];
+        if (selectedImage) {
+            setImageBussines(URL.createObjectURL(selectedImage));
+            if(userInfo && userInfo.role_description == 'PROVIDER') {
+                setImageProvider(selectedImage);
+            } else {
+                setImagePerson(selectedImage);
+            }
+            setButtonActive(true);
+        }
+    };
+
+    const handleEditButtonClick = () => {
+        const fileInput = document.getElementById('image-input');
+        if (fileInput) {
+            fileInput.click();
+        }
+    };
+
+    const onClickInputs = (e: any) => {
+        setButtonActive(true);
+        e.target.readOnly = false;
+        if(listNames.length > 0) {
+            if(!listNames.includes(e.target.name)) {
+                listNames.push(e.target.name);
+            }
+        } else {
+            listNames.push(e.target.name);
+        }
+    };
+
+    const resetInputsForm = () => {
+        listNames.map((item: string) => {
+            document.getElementById(item)?.setAttribute('readOnly', 'true');
+        });
+        setListNames([]);
+        setButtonActive(false);
+    }
+
+    const cancelEdit = () => {
+        reset();
+        resetInputsForm();
+        if(userInfo && userInfo.role_description == 'PROVIDER') {
+            setImageBussines(userInfo.provider_image || '');
+        } else if(userInfo && userInfo.role_description == 'CUSTOMER') {
+            setImageBussines(userInfo.person_image || '');
+        } else {
+            setImageBussines(null);
+        }
+        setImagePerson(null);
+        setImageProvider(null);
+        setButtonActive(false);
+        setLoading(true);
+        setInterval(() => {
+            setLoading(false);
+        }, 1500)
+    }
+
   return (
     <LayoutAdmin>
         <Spinner loading={loading} />
         <Toast ref={toast} />
         <FormProvider {...methods}>
-            <h2 className='w-full text-lg font-medium border-b-2 p-5 shadow-sm'>{router.query.id ? 'Edit User' : 'Create User'}</h2>
-            <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-12 p-5 gap-3'>
+        <div className='w-full p-5'>
+            <BreadCrumb model={breadcrumbItems} home={home} hidden={hiddenBread} className='border-none' />
+            <h1 className='text-gray-900/75 text-xl font-semibold leading-loose'>{router.query.id ? 'Edit User' : 'Create User'}</h1>
+            <div className='w-full mx-auto h-full flex gap-5 my-5'>
+                {
+                    userInfo ?
+                    <div className='w-80 h-80 bg-white rounded-xl border border-neutral-200 flex flex-col items-center gap-10 p-5'>
+                        <div className='relative'>
+                            {
+                                imageBussines == null || imageBussines == '' ?
+                                <FontAwesomeIcon icon={faCircleUser} className='w-32 h-32' style={{color: "#c2c2c2"}} />
+                                : 
+                                <img src={imageBussines} width={200} height={200} alt='profile' className='rounded-full' />
+                            }
+                            <input
+                                type='file'
+                                id='image-input'
+                                accept='image/*'
+                                style={{ display: 'none' }}
+                                onChange={handleImageChange}
+                            />
+                            <Button type='button' icon={'pi pi-pencil'} rounded className='absolute bottom-4 right-0' onClick={handleEditButtonClick} />
+                        </div>
+                        <div className='w-full flex flex-col gap-2 text-center'>
+                            <p className='font-normal text-xl text-black leading-7'>{toTitleCase(userInfo ? `${userInfo.person_name} ${userInfo && userInfo.lastname}` : 'No name')}</p>
+                            <p className='text-neutral-600 text-base font-normal leading-normal'>{toTitleCase(userInfo ? `${userInfo.role_description}` : 'No role')}</p>
+                            {/* <p className='text-sky-500 text-sm'>Change Password</p> */}
+                        </div>
+                    </div>
+                    : null
+                }
+                <div className='w-full h-full  overflow-y-auto mx-auto pb-5'>
+                    <FormProvider {...methods}>
+                        <form onSubmit={handleSubmit(onSubmit, onErrors)}>
+                            <div className='px-5'>
+                                <div className='w-full grid grid-cols-12 mt-5 gap-2'>
+                                    <InputWrapper outerClassName='col-span-12 md:col-span-6 py-2'>
+                                        <p>First Name</p>
+                                        <Input 
+                                        type='text' 
+                                        id='personName' 
+                                        name='personName' 
+                                        placeholder='First Name'
+                                        readonly 
+                                        onClick={onClickInputs} />
+                                        {errors.personName?.message && (
+                                            <ErrorMessage>{errors.personName.message}</ErrorMessage>
+                                        )}
+                                    </InputWrapper>
+                                    <InputWrapper outerClassName='col-span-12 md:col-span-6 py-2'>
+                                        <p>Lastname</p>
+                                        <Input 
+                                        type='text' 
+                                        id='lastname' 
+                                        name='lastname' 
+                                        placeholder='Lastname'
+                                        readonly 
+                                        onClick={onClickInputs} />
+                                        {errors.lastname?.message && (
+                                            <ErrorMessage>{errors.lastname.message}</ErrorMessage>
+                                        )}
+                                    </InputWrapper>
+                                    {
+                                        !userInfo ?
+                                        <InputWrapper outerClassName='col-span-12 py-2'>
+                                            <p>Password</p>
+                                            <Input 
+                                            type='password' 
+                                            id='password' 
+                                            name='password' 
+                                            placeholder='******'
+                                            readonly 
+                                            onClick={onClickInputs} />
+                                            {errors.lastname?.message && (
+                                                <ErrorMessage>{errors.lastname.message}</ErrorMessage>
+                                            )}
+                                        </InputWrapper>
+                                        : null
+                                    }
+                                    {/* <div className='col-span-12 py-2'>
+                                        <div className='font-medium flex flex-row items-center gap-2'>
+                                            <i className='pi pi-lock'></i>
+                                            <p>Password</p>
+                                        </div>
+                                        <Input id='password' name='password' type='password' placeholder='******' readonly onClick={onClickInputs} />
+                                    </div> */}
+                                    <InputWrapper outerClassName='col-span-12 md:col-span-6 py-2'>
+                                        <p>Email</p>
+                                        <Input 
+                                        id='email' 
+                                        name='email' 
+                                        type='email' 
+                                        placeholder='user@email.com' 
+                                        readonly onClick={onClickInputs} />
+                                        {errors.email?.message && (
+                                            <ErrorMessage>{errors.email.message}</ErrorMessage>
+                                        )}
+                                    </InputWrapper>
+                                    <InputWrapper outerClassName='col-span-12 md:col-span-6 py-2'>
+                                        <p>Phone Number</p>
+                                        <Input 
+                                        type='tel' 
+                                        id='phone' 
+                                        name='phone' 
+                                        placeholder="(999) 999-9999" 
+                                        readonly 
+                                        onClick={onClickInputs} />
+                                        {errors.phone?.message && (
+                                            <ErrorMessage>{errors.phone.message}</ErrorMessage>
+                                        )}
+                                    </InputWrapper>
+                                    <InputWrapper outerClassName='col-span-12 py-2'>
+                                        <p>Address</p>
+                                        <MapComponent
+                                            selectedLocation={selectedLocation}
+                                            setSelectedLocation={setSelectedLocation}
+                                            getAddress={getAddress}
+                                            selectedPlace={selectedPlace}
+                                            setSelectedPlace={setSelectedPlace} />
+                                    </InputWrapper>
+                                    <InputWrapper outerClassName='col-span-12'>
+                                        <p id='roleId'>Role</p>
+                                        <Dropdown
+                                        value={role}
+                                        options={roles}
+                                        optionLabel='name'
+                                        placeholder='Select a role'
+                                        showClear
+                                        className='w-full text-sm rounded-xl border-neutral-200'
+                                        onChange={(e) => {setRole(e.target.value)}}
+                                        />
+                                    </InputWrapper>
+
+                                    {
+                                        role?.code === '3' ?
+                                        <>
+                                            <InputWrapper outerClassName='col-span-12'>
+                                                <p id='providerName'>Business Name</p>
+                                                <Input 
+                                                type='text' 
+                                                id='providerName' 
+                                                name='providerName'
+                                                placeholder='Business Name'
+                                                onClick={onClickInputs}  />
+                                                {errors.providerName?.message && (
+                                                    <ErrorMessage>{errors.providerName.message}</ErrorMessage>
+                                                    )}
+                                            </InputWrapper>
+
+                                            <InputWrapper outerClassName='col-span-12'>
+                                                <p id='providerDescription'>Description</p>
+                                                <Textarea
+                                                id='providerDescription'
+                                                name='providerDescription'
+                                                placeholder='Add a description of your business'
+                                                onClick={onClickInputs}
+                                                />
+                                            </InputWrapper>
+
+                                            <div className='col-span-12'>
+                                                <div className='font-medium flex flex-row items-center gap-2'>
+                                                    <i className='pi pi-image'></i>
+                                                    <p>Bussiness image</p>
+                                                </div>
+                                                <FileUpload
+                                                ref={fileUploadProviderRef}
+                                                id='providerImage'
+                                                name="providerImage"
+                                                onClear={() => setImageProvider(null)}
+                                                accept="image/*"
+                                                maxFileSize={1000000}
+                                                headerTemplate={headerTemplate}
+                                                itemTemplate={itemTemplateProvider}
+                                                chooseOptions={chooseOptions}
+                                                cancelOptions={cancelOptions}
+                                                emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
+                                            </div>
+                                        </>
+                                        : null
+                                    }
+                                </div>
+                                {
+                                    buttonActive && (
+                                        <div className='flex flex-row items-center justify-end gap-3 my-5'>
+                                            <Button type='button' label='Cancel' id='btnPersonal' outlined className='w-36 h-10 border-sky-500 text-sky-500 font-medium rounded-xl border-2' onClick={cancelEdit}></Button>
+                                            <Button type='submit' label='Save' className='w-36 h-10 font-medium bg-sky-500 border-sky-500 rounded-xl shadow-lg shadow-sky-300 hover:bg-sky-600 hover:border-sky-600'></Button>
+                                        </div>
+                                    )
+                                }
+                            </div>
+                        </form>
+                    </FormProvider>
+                </div>
+            </div>
+        </div>
+            {/* <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-12 p-5 gap-3'>
                 <div className='col-span-4 md:col-span-2'>
                     <Label id='perImage'>Profile Image</Label>
                     <div className='relative h-20'>
@@ -326,7 +620,7 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
                     <Button type='reset' label='Cancel' icon='pi pi-times' className='p-button-text' onClick={onClear} />
                     <Button type='submit' label='Save' icon='pi pi-check' className='p-button-success p-mr-2' />
                 </div>
-            </form>
+            </form> */}
         </FormProvider>
     </LayoutAdmin>
   )

@@ -161,3 +161,23 @@
 .p-dialog-header .p-dialog-title {
   font-size: 15px !important;
 }
+
+.steps-signup .p-steps-title {
+  font-size: 12px !important;
+  color: #109EDA !important;
+}
+
+.steps-signup .p-steps-item {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.steps-signup .p-steps-number {
+  background-color: #109EDA !important;
+  color: white !important;
+  font-size: 15px !important;
+  font-weight: bold !important;
+  min-width: 1.5rem !important;
+  height: 1.5rem !important;
+}

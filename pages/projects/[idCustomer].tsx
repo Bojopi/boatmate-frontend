@@ -36,6 +36,8 @@ const ProjectsPage = () => {
         return 'text-teal-600'
       case 'CANCELED':
         return 'text-rose-500'
+      case 'FINISHED':
+        return 'text-gray-500'
       default:
         break;
     }
@@ -49,6 +51,8 @@ const ProjectsPage = () => {
         return 'bg-teal-600 border-teal-600'
       case 'CANCELED':
         return 'bg-rose-500 border-rose-500'
+      case 'FINISHED':
+        return 'bg-gray-500 border-gray-500'
       default:
         break;
     }
@@ -137,7 +141,7 @@ const ProjectsPage = () => {
       <LayoutPrincipal>
           <Spinner loading={loading} />
           <Toast ref={toast} />
-          <p className='w-full md:w-[80%] mx-auto font-semibold'>Projects</p>
+          <p className='w-full md:w-[80%] mx-auto mt-28 font-semibold'>Projects</p>
           <div className="w-[500px] h-[500px] left-[80%] top-[300px] absolute bg-sky-500/30 rounded-full blur-3xl -z-10" />
           <div className='w-[80%] h-full mx-auto mt-8 flex gap-8'>
             <div className='h-full w-96 border rounded-xl shrink-0 overflow-x-hidden'>

@@ -1,24 +1,22 @@
-import { ErrorMessage } from '@/components/react-hook-form/error-message';
 import { Input } from '@/components/react-hook-form/input';
-import { InputWrapper } from '@/components/react-hook-form/input-wrapper';
-import { Label } from '@/components/react-hook-form/label';
-import { Dropdown } from 'primereact/dropdown';
-import { FileUpload } from 'primereact/fileupload';
-import React, { useRef, useState, useEffect, useCallback } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
-import { Tooltip } from 'primereact/tooltip';
-import { Tag } from 'primereact/tag';
+import React, { useRef, useState, useEffect } from 'react'
+import { FormProvider, useForm } from 'react-hook-form';
 import MapComponent from '@/components/map';
 import { Maps } from '@/hooks/maps';
 import { Button } from 'primereact/button';
 import { Textarea } from '@/components/react-hook-form/textarea';
-import { Users } from '@/hooks/user';
 import { Toast } from 'primereact/toast';
 import Spinner from '@/components/spinner';
 import LayoutAdmin from '@/components/layoutAdmin';
 import { useRouter } from 'next/router';
-import { Avatar } from 'primereact/avatar';
 import { Providers } from '@/hooks/providers';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { Provider } from '@/interfaces/interfaces';
+import { InputWrapper } from '@/components/react-hook-form/input-wrapper';
+import { ErrorMessage } from '@/components/react-hook-form/error-message';
+import { BreadCrumb } from 'primereact/breadcrumb';
+import { generateBreadcrumbItems } from '@/functions/breadcrumb';
 
 export type FormProps = {
     lat:                    string;
@@ -30,28 +28,33 @@ export type FormProps = {
     providerImage:          any;
 }
 
-export type UserInfo = {
-    providers: any;
-    setProviders: any;
-}
-
-const Edit: React.FC<UserInfo> = ({providers, setProviders}) => {
+const Edit = () => {
     const {getAddress} = Maps();
     const {show, updateProvider} = Providers();
 
+    const [provider, setProvider] = useState<Provider | null>(null);
 
+    const [imageBussines, setImageBussines] = useState<string>('');
     const [imageProvider, setImageProvider] = useState<any>(null);
     const [idProfile, setIdProfile] = useState<number>(0)
+
+    const [buttonActive, setButtonActive] = useState<boolean>(false);
+    const [listNames, setListNames] = useState<string[]>([]);
 
     const [selectedPlace, setSelectedPlace] = useState<string>('');
     const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
     const [loading, setLoading] = useState<boolean>(false);
 
-    const fileUploadProviderRef = useRef<any>(null);
     const toast = useRef<Toast>(null);
 
     const router = useRouter();
+
+    const home = {icon: 'pi pi-home'}
+
+    const breadcrumbItems = [
+        ...generateBreadcrumbItems(router.asPath)
+    ];
 
     useEffect(() => {
         if(router.query.id) {
@@ -73,7 +76,6 @@ const Edit: React.FC<UserInfo> = ({providers, setProviders}) => {
 
     const {
         handleSubmit,
-        setError,
         reset,
         formState: {errors},
     } = methods;
@@ -86,6 +88,9 @@ const Edit: React.FC<UserInfo> = ({providers, setProviders}) => {
             result.data.provider.providerName = result.data.provider.provider_name || '';
             result.data.provider.providerDescription = result.data.provider.provider_description || '';
             result.data.provider.providerImage = result.data.provider.provider_image || '';
+
+            setProvider(result.data.provider);
+            setImageBussines(result.data.provider.provider_image);
 
             reset(result.data.provider);
             setIdProfile(result.data.provider.id_profile);
@@ -104,123 +109,155 @@ const Edit: React.FC<UserInfo> = ({providers, setProviders}) => {
         updateProvider(Number(router.query.id), data, toast, setLoading)
     };
 
-    const onClear = () => {
-        reset();
-        setImageProvider(null);
-        setSelectedPlace('');
-        setSelectedLocation(null);
-
-        router.push('/welcome/providers');
-    }
-
     const onErrors = () => {
         toast.current!.show({severity:'error', summary:'Error', detail: 'You must fill in all fields', life: 4000});
     };
 
-    const headerTemplate = (options: any) => {
-        const { className, chooseButton, cancelButton } = options;
 
-        return (
-            <div className={className} style={{ backgroundColor: 'transparent', display: 'flex', alignItems: 'center' }}>
-                {chooseButton}
-                {cancelButton}
-            </div>
-        );
+    const handleImageChange = (event: any) => {
+        const selectedImage = event.target.files[0];
+        if (selectedImage) {
+            setImageBussines(URL.createObjectURL(selectedImage));
+            setImageProvider(selectedImage);
+            setButtonActive(true);
+        }
     };
 
-    const itemTemplateProvider = (file: any, props: any) => {
-        setImageProvider(file);
-        return (
-            <div className="flex items-center flex-wrap">
-                <div className="flex items-center" style={{ width: '40%' }}>
-                    <img alt={file.name} role="presentation" src={file.objectURL} width={100} />
-                    <span className="flex flex-col text-left ml-3">
-                        {file.name}
-                        <small>{new Date().toLocaleDateString()}</small>
-                    </span>
-                </div>
-                <Tag value={props.formatSize} severity="warning" className="px-3 py-2" />
-            </div>
-        );
+    const handleEditButtonClick = () => {
+        const fileInput = document.getElementById('image-input');
+        if (fileInput) {
+            fileInput.click();
+        }
     };
 
-    const chooseOptions = { icon: 'pi pi-fw pi-images', iconOnly: true, className: 'custom-choose-btn p-button-rounded p-button-outlined' };
-    const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
+    const toTitleCase = (str: string) => {
+        const string = str
+        .toLowerCase()
+        .split(' ')
+        .map(word => {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        })
+        .join(' ');
+
+        return string;
+    }
+
+    const onClickInputs = (e: any) => {
+        setButtonActive(true);
+        e.target.readOnly = false;
+        if(listNames.length > 0) {
+            if(!listNames.includes(e.target.name)) {
+                listNames.push(e.target.name);
+            }
+        } else {
+            listNames.push(e.target.name);
+        }
+    };
+
+    const cancelEdit = () => {
+        reset();
+        resetAsyncForm(Number(router.query.id));
+        setImageBussines(provider && provider.provider_image || '');
+        setImageProvider(null);
+        setButtonActive(false);
+        setImageProvider(null);
+        setSelectedPlace('');
+        setSelectedLocation(null);
+        setLoading(true);
+        setInterval(() => {
+            // router.push('/welcome/providers');
+            setLoading(false);
+        }, 1500)
+    }
 
   return (
     <LayoutAdmin>
         <Spinner loading={loading} />
         <Toast ref={toast} />
-        <FormProvider {...methods}>
-            <h2 className='text-lg font-medium p-5 border-b-2 shadow-sm'>Edit Provider</h2>
-            <form onSubmit={handleSubmit(onSubmit, onErrors)} className='w-full grid grid-cols-1 lg:grid-cols-12 p-5 gap-3'>
-                <InputWrapper outerClassName='col-span-12'>
-                    <Label id='providerName'>Name Business</Label>
-                    <Input type='text' id='providerName' name='providerName' placeholder='Alice Company' />
-                    {errors.providerName?.message && (
-                        <ErrorMessage>{errors.providerName.message}</ErrorMessage>
-                    )}
-                </InputWrapper>
-
-                <InputWrapper outerClassName='col-span-12'>
-                    <Label id='providerDescription'>Description</Label>
-                    <Textarea
-                    id='providerDescription'
-                    name='providerDescription'
-                    placeholder='Add a description of your business'
-                    />
-                </InputWrapper>
-
-                <InputWrapper outerClassName='col-span-6'>
-                    <Label id='email'>Email</Label>
-                    <Input type='email' id='email' name='email' placeholder='tugrp@example.com' />
-                    {errors.email?.message && (
-                        <ErrorMessage>{errors.email.message}</ErrorMessage>
-                    )}
-                </InputWrapper>
-
-                <InputWrapper outerClassName='col-span-6'>
-                    <Label id='phone'>Phone</Label>
-                    <Input type='text' id='phone' name='phone' placeholder='+34 6 1234567' />
-                    {errors.phone?.message && (
-                        <ErrorMessage>{errors.phone.message}</ErrorMessage>
-                    )}
-                </InputWrapper>
-
-                <InputWrapper outerClassName='col-span-12'>
-                    <Label id='address'>Address</Label>
-                    <MapComponent
-                    selectedLocation={selectedLocation}
-                    setSelectedLocation={setSelectedLocation}
-                    getAddress={getAddress}
-                    selectedPlace={selectedPlace}
-                    setSelectedPlace={setSelectedPlace} />
-                </InputWrapper>
-                <div className='col-span-12'>
-                    <div className='font-medium flex flex-row items-center gap-2'>
-                        <i className='pi pi-image'></i>
-                        <p>Bussiness image</p>
+        <div className='w-full p-5'>
+            <BreadCrumb model={breadcrumbItems} home={home} className='border-none' />
+            <h1 className='text-gray-900/75 text-xl font-semibold leading-loose'>Edit Provider</h1>
+            <div className='w-full mx-auto h-full flex gap-5 mt-5'>
+                <div className='w-80 h-72 bg-white rounded-xl border border-neutral-200 flex flex-col items-center gap-10 p-5'>
+                    <div className='relative'>
+                        {
+                            imageBussines != null || imageBussines != '' ?
+                            <img src={imageBussines} width={200} height={200} alt='profile' className='rounded-full' />
+                            : <FontAwesomeIcon icon={faCircleUser} className='w-10 h-10' style={{color: "#c2c2c2"}} />
+                        }
+                        <input
+                            type='file'
+                            id='image-input'
+                            accept='image/*'
+                            style={{ display: 'none' }}
+                            onChange={handleImageChange}
+                        />
+                        <Button type='button' icon={'pi pi-pencil'} rounded className='absolute bottom-4 right-0' onClick={handleEditButtonClick} />
                     </div>
-                    <FileUpload
-                    ref={fileUploadProviderRef}
-                    id='providerImage'
-                    name="providerImage"
-                    onClear={() => setImageProvider(null)}
-                    accept="image/*"
-                    maxFileSize={1000000}
-                    headerTemplate={headerTemplate}
-                    itemTemplate={itemTemplateProvider}
-                    chooseOptions={chooseOptions}
-                    cancelOptions={cancelOptions}
-                    emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
+                    <div className='w-full flex flex-col gap-2 text-center'>
+                        <p className='font-normal text-xl text-black leading-7'>{toTitleCase(`${provider && provider.provider_name}`)}</p>
+                    </div>
                 </div>
-
-                <div className='col-span-12 flex justify-between items-center p-2'>
-                    <Button type='reset' label='Cancel' icon='pi pi-times' className='p-button-text' onClick={onClear} />
-                    <Button type='submit' label='Save' icon='pi pi-check' className='p-button-success p-mr-2' />
+                <div className='w-full h-full  overflow-y-auto mx-auto'>
+                    <FormProvider {...methods}>
+                        <form onSubmit={handleSubmit(onSubmit, onErrors)}>
+                            <div className='bg-white rounded-xl border border-neutral-200 grid grid-cols-2 gap-5 p-5'>
+                                <p className='col-span-2 leading-snug'>Business Information</p>
+                                <InputWrapper outerClassName='col-span-2 md:col-span-1 py-2'>
+                                    <p className='text-sm'>Bussiness Name</p>
+                                    <Input 
+                                    id='providerName' 
+                                    name='providerName' 
+                                    type='text' 
+                                    placeholder='work day' 
+                                    readonly 
+                                    onClick={onClickInputs}
+                                    rules={{required: 'Provider name is required'}} />
+                                    {errors.providerName?.message && (
+                                        <ErrorMessage>{errors.providerName.message}</ErrorMessage>
+                                    )}
+                                </InputWrapper>
+                                <InputWrapper outerClassName='col-span-2 md:col-span-1 py-2'>
+                                    <p className='text-sm'>Phone Number</p>
+                                    <Input type='tel' id='phone' name='phone' placeholder="(999) 999-9999" readonly onClick={onClickInputs} />
+                                    {errors.phone?.message && (
+                                        <ErrorMessage>{errors.phone.message}</ErrorMessage>
+                                    )}
+                                </InputWrapper>
+                                <InputWrapper outerClassName='col-span-2 py-2'>
+                                    <p className='text-sm'>Email</p>
+                                    <Input id='email' name='email' type='email' placeholder='user@email.com' readonly onClick={onClickInputs} />
+                                    {errors.email?.message && (
+                                        <ErrorMessage>{errors.email.message}</ErrorMessage>
+                                    )}
+                                </InputWrapper>
+                                <div className='col-span-2 py-2'>
+                                    <p className='text-sm'>Business Description</p>
+                                    <Textarea id='providerDescription' name='providerDescription' rows={3} readonly onClick={onClickInputs} />
+                                </div>
+                                <div className='col-span-2 py-2'>
+                                    <p className='text-sm'>Address</p>
+                                    <MapComponent
+                                        selectedLocation={selectedLocation}
+                                        setSelectedLocation={setSelectedLocation}
+                                        getAddress={getAddress}
+                                        selectedPlace={selectedPlace}
+                                        setSelectedPlace={setSelectedPlace} />
+                                </div>
+                                {
+                                    buttonActive && (
+                                        <div className='col-span-2 flex flex-row items-center justify-end gap-3 my-5'>
+                                            <Button type='button' label='Cancel' id='btnPersonal' outlined className='w-36 h-10 border-sky-500 text-sky-500 font-medium rounded-xl border-2' onClick={cancelEdit}></Button>
+                                            <Button type='submit' label='Save' className='w-36 h-10 font-medium bg-sky-500 border-sky-500 rounded-xl shadow-lg shadow-sky-300 hover:bg-sky-600 hover:border-sky-600'></Button>
+                                        </div>
+                                    )
+                                }
+                            </div>
+                        </form>
+                    </FormProvider>
                 </div>
-            </form>
-        </FormProvider>
+            </div>
+        </div>
     </LayoutAdmin>
   )
 }

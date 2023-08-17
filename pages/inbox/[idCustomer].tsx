@@ -77,7 +77,7 @@ const InboxPage = () => {
       <LayoutPrincipal>
           <Spinner loading={loading} />
           <Toast ref={toast} />
-          <p className='w-full md:w-[80%] mx-auto font-semibold'>Inbox</p>
+          <p className='w-full md:w-[80%] mx-auto mt-28 font-semibold'>Inbox</p>
           <div className="w-[500px] h-[500px] left-[80%] top-[300px] absolute bg-sky-500/30 rounded-full blur-3xl -z-10" />
           <div className='w-[80%] h-full mx-auto mt-8 flex gap-5'>
             <div className='max-h-[500px] h-full w-96 border rounded-xl shrink-0 overflow-x-hidden overflow-y-auto'>

@@ -15,6 +15,8 @@ import { Divider } from 'primereact/divider';
 import { Auth } from '@/hooks/auth';
 import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { useRouter } from 'next/router';
+import MenuBar from '@/components/menuBar';
+import { Button } from 'primereact/button';
 
 
 export type FormProps = {
@@ -88,74 +90,64 @@ const Login: React.FC = () => {
             </Head>
             <Spinner loading={loading} />
             <Toast ref={toast} />
-            <div
-                className="w-full h-1/3 shadow-md md:h-screen absolute bg-no-repeat bg-cover bg-center"
-                style={{'backgroundImage': "url('https://i.postimg.cc/qv8LyXWs/tomas-malik-FHAHn-F9-C0-Sw-unsplash.jpg')"}}>
-                <div></div>
-            </div>
-            <div className="w-full h-screen absolute p-5 flex justify-center items-center">
-                <div className='bg-white w-full md:w-2/4 rounded-lg shadow-2xl p-10 flex flex-col items-center'>
-                    <div className='w-full flex justify-between'>
-                        <Link href={'/'} className='w-16 lg:w-24' >
-                            <img
-                                src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
-                                alt="logo"
-                                className='w-16 lg:w-24'
-                            />
-                        </Link>
-                        <h1 className='mt-5 text-xl md:text-4xl font-semibold mr-5' style={{'color': '#373A85'}}>SIGN IN</h1>
+            <MenuBar linkMenu='Join Our Pro Network' urlMenu='/pro' setLoading={setLoading}/>
+            <div className='w-full h-screen flex items-center justify-center overflow-hidden'>
+                <div className='w-[60%] border rounded-lg shadow-xl grid grid-cols-2'>
+                    <div className='p-5'>
+                        <p className='text-indigo-900 text-xl font-medium leading-9'>Sign In</p>
+                        <p className='text-neutral-600 leading-9 text-sm'>fill the fields for continue</p>
+                        <FormProvider {...methods}>
+                            <form onSubmit={handleSubmit(onSubmit, onErrors)} className="w-full mt-3">
+                                <div className="grid grid-cols-1 gap-5">
+                                    <InputWrapper outerClassName="col-span-1">
+                                            <Input
+                                                id='email'
+                                                name='email'
+                                                type='email'
+                                                placeholder='Email'
+                                                rules={{required: "Email is required"}}
+                                            />
+                                        {errors?.email?.message && (
+                                            <ErrorMessage>{errors.email.message}</ErrorMessage>
+                                        )}
+                                    </InputWrapper>
+                                    <InputWrapper outerClassName="col-span-1">
+                                            <Input
+                                                id='password'
+                                                name='password'
+                                                type='password'
+                                                placeholder='Password'
+                                                rules={{required: "Password is required"}}
+                                            />
+                                        {errors?.password?.message && (
+                                            <ErrorMessage>{errors.password.message}</ErrorMessage>
+                                        )}
+                                    </InputWrapper>
+                                </div>
+                                
+                                <p className='text-neutral-600 text-sm text-center my-5'>- or -</p>
+
+                                <div className='w-full flex flex-row justify-center'>
+                                    <GoogleLogin onError={handleError} onSuccess={handleSuccess} />
+                                </div>
+
+                                <div className="w-full my-7 flex items-center justify-end">
+                                    <Link
+                                        className='text-xs lg:text-sm font-medium text-indigo-900 hover:underline'
+                                        href={'/forgot'}>
+                                            Forgot password?
+                                    </Link>
+                                </div>
+                                <Button type='submit' label='SIGN IN' className='w-full p-3 border-none bg-gradient-to-r from-sky-600 to-sky-300 hover:to-sky-400 shadow-lg shadow-sky-300/50 text-white text-sm lg:text-base rounded-xl' />
+                            </form>
+                        </FormProvider>
                     </div>
-                    <FormProvider {...methods}>
-                        <form onSubmit={handleSubmit(onSubmit, onErrors)} className="w-full md:mt-5">
-
-                            <div className="grid grid-cols-1 gap-y-6 p-5">
-                                <InputWrapper outerClassName="col-span-12">
-                                        <Label id='email'>Email</Label>
-                                        <Input
-                                            id='email'
-                                            name='email'
-                                            type='email'
-                                            rules={{required: "Email is required"}}
-                                        />
-                                    {errors?.email?.message && (
-                                        <ErrorMessage>{errors.email.message}</ErrorMessage>
-                                    )}
-                                </InputWrapper>
-                                <InputWrapper outerClassName="col-span-12">
-                                        <Label id="password">Password</Label>
-                                        <Input
-                                            id='password'
-                                            name='password'
-                                            type='password'
-                                            rules={{required: "Password is required"}}
-                                        />
-                                    {errors?.password?.message && (
-                                        <ErrorMessage>{errors.password.message}</ErrorMessage>
-                                    )}
-                                </InputWrapper>
-                                <p className='w-full text-center text-xs lg:text-sm font-medium text-[#373A85]'>New to BoatMate?
-                                <Link href='/register' className='text-[#00CBA4] hover:underline'> Create account</Link>
-                                </p>
-                            </div>
-
-                            <Divider align='center'>
-                                <p className='text-gray-400 text-sm'>OR</p>
-                            </Divider>
-
-                            <div className='w-full flex flex-row justify-center'>
-                                <GoogleLogin onError={handleError} onSuccess={handleSuccess} />
-                            </div>
-
-                            <div className="mt-4 flex items-center justify-between">
-                                <Link
-                                    className='text-xs lg:text-sm font-medium text-[#00CBA4] hover:underline'
-                                    href={'/forgot'}>
-                                        Forgot password?
-                                </Link>
-                                <button type='submit' className='p-3 bg-[#109EDA] hover:bg-[#0E8FC7] text-white text-sm lg:text-base rounded-md hover:transition'>SIGN IN</button>
-                            </div>
-                        </form>
-                    </FormProvider>
+                    <div className='h-[450px] flex items-center justify-center overflow-hidden'>
+                        <img 
+                        src="https://s3-alpha-sig.figma.com/img/1a3f/69d3/e2ffbce11a16ded3bbb8c0e28b7f75eb?Expires=1693180800&Signature=RsM1Ob-BGifavlrAyEqnuV54WWx~Zy6~HuWMKsbgov4R-8pEkliRV9bZMVJ85nBNWfIIeR7B9wP03~DEIjJmz-WQLZLl07CXZHRqZ8YyvnRLaPlH3H-Qf8eyMLzMSDu76BcZGfuVasv2921gvs-FqykDuQXpJwWwDJpFGmCO-nAXGDq7zhRnpi0bO--~It2UOfhNbJC3jmZL0P5FGZi1Hu5cqvL16jIcT1mLYQJtlWPnMVOYgx3Qk3HTjC6pHKQB6cbB1pyOBiIOguRQGidXdS4qkoX78POxwOtbfNzO7ZvCrf9L6McbYQECjDWc~RPl69YI7AgTs9JWdFZMyIuyBg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" 
+                        alt="boat"
+                        className='w-full object-cover' />
+                    </div>
                 </div>
             </div>
         </GoogleOAuthProvider>

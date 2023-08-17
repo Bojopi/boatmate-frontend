@@ -1,233 +1,237 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
-import { DataTable } from 'primereact/datatable';
-import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column';
-import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
-import { Providers } from '@/hooks/providers';
-import { Avatar } from 'primereact/avatar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import LayoutAdmin from '@/components/layoutAdmin';
-import Link from 'next/link';
+import { Auth } from '@/hooks/auth';
+import { Profile, Provider } from '@/interfaces/interfaces';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { Column } from 'primereact/column';
+import { DataTable, DataTableFilterMeta } from 'primereact/datatable';
+import { InputText } from 'primereact/inputtext';
+import React, { useEffect, useState, useRef } from 'react';
+import Spinner from '@/components/spinner';
 import { Toast } from 'primereact/toast';
-import { Tag } from 'primereact/tag';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-import { Users } from '@/hooks/user';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { ButtonEdit } from '@/components/buttons/icons';
-import { Provider } from '@/interfaces/interfaces';
+import { Providers } from '@/hooks/providers';
+import { Menu } from 'primereact/menu';
+import { Button } from 'primereact/button';
+import { Avatar } from 'primereact/avatar';
+// import View from './view'
 
-const ProvidersIndex: React.FC = () => {
+const Index = () => {
     const { getAllProviders } = Providers();
-    const { activateUser } = Users();
-    
-    const [providers, setProviders] = useState<Provider[]>([]);
-    const [filters, setFilters] = useState<any>(null);
+    const { getUserAuthenticated } = Auth();
 
-    const [globalFilterValue, setGlobalFilterValue] = useState<string>('');
+    const [providers, setProviders] = useState<Provider[] | any[]>([]);
+    const [user, setUser] = useState<Profile>(
+        {
+            uid: 0,
+            email: '',
+            state: false,
+            google: false,
+            idPerson: 0,
+            name: '',
+            lastname: '',
+            phone: '',
+            image: '',
+            idRole: 0,
+            role: '',
+            idProvider: 0,
+            providerName: '',
+            providerImage: '',
+            providerDescription: '',
+            providerLat: '',
+            providerLng: '',
+            idCustomer: '',
+            customerLat: '',
+            customerLng: '',
+            iat: 0,
+            exp: 0,
+        }
+    );
+
+    const [itemsMenu, setItemsMenu] = useState<any[]>([]);
 
     const [loading, setLoading] = useState<boolean>(false);
+    const toast = useRef<Toast>(null)
+    const menuComponent = useRef<Menu>(null);
 
-    const toast = useRef<Toast>(null);
+    const [filters, setFilters] = useState<DataTableFilterMeta | any>({
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        provider_name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        person_name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        provider_description: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        email: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        phone: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        profile_state: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    });
 
-    const [statuses] = useState<string[]>(['Active', 'Inactive']);
+    const getUserAuth = async () => {
+        try {
+            const response = await getUserAuthenticated();
+            if (response.status == 200) {
+                setUser(response.data.user);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const getProviders = async () => {
+        try {
+            const response = await getAllProviders();
+            if (response.status == 200) {
+                const addMenu = response.data.providers.map((item: any) => {
+                    item['items'] = [
+                        {
+                            label: 'Edit provider',
+                            url: `/welcome/providers/edit/${item.id_provider}`,
+                            icon: 'pi pi-pencil'
+                        },
+                        {
+                            label: 'Services',
+                            url: `/welcome/providers/services/${item.id_provider}`,
+                            icon: 'pi pi-th-large'
+                        },
+                        {
+                            label: 'Ratings',
+                            url: `/welcome/providers/ratings/${item.id_provider}`,
+                            icon: 'pi pi-comments'
+                        },
+                        {
+                            label: 'Portofolio',
+                            url: `/welcome/providers/portofolio/${item.id_provider}`,
+                            icon: 'pi pi-cloud-upload'
+                        }
+                    ];
+
+                    return item;
+                })
+
+                setProviders(addMenu);
+                setLoading(false);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
         setLoading(true);
-        getAllProviders(setProviders, setLoading);
-        initFilters();
+        getUserAuth();
+        getProviders();
     }, []);
 
-    const getSeverity = (state: boolean) => {
-        switch (state) {
-            case false:
-                return 'danger';
-
-            case true:
-                return 'success';
+    const formatStatus = (state: boolean) => {
+        if (state) {
+            return 'Active'
+        } else {
+            return 'Inactive'
         }
-    };
+    }
 
-    const clearFilter = () => {
-        initFilters();
-    };
-
-    const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
+    const onGlobalFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
         let _filters = { ...filters };
 
         _filters['global'].value = value;
 
         setFilters(_filters);
-        setGlobalFilterValue(value);
-    };
-
-    const initFilters = () => {
-        setFilters({
-            global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-            provider_name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            provider_description: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            profile_state: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            email: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            phone: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            person_name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            lastname: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        });
-        setGlobalFilterValue('');
     };
 
     const renderHeader = () => {
+        const value = filters['global'] ? filters['global'].value : '';
+
         return (
-            <div className="flex justify-between">
-                <Button type="button" icon="pi pi-filter-slash" label="Clear" outlined className='p-button-success' onClick={clearFilter} />
-                <span className="p-input-icon-left">
-                    <i className="pi pi-search" />
-                    <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
-                </span>
+            <div className='w-full flex justify-end'>
+                <InputText 
+                type="search" 
+                value={value || ''} 
+                onChange={(e) => onGlobalFilterChange(e)} 
+                placeholder="Search user" 
+                className='text-sm rounded-2xl px-6 py-3 opacity-60 shadow-lg text-gray-900/50' />
             </div>
         );
     };
 
-    const header = renderHeader();
+    const emptyMessageTemplate = () => {
+        return (
+            <div className='w-full flex justify-center'>
+                <p>No services found.</p>
+            </div>
+        );
+    };
+
+    const customerBodyTemplate = (rowData: Provider) => {
+        return (
+            <p>{rowData.lastname}, {rowData.person_name}</p>
+        );
+    };
 
     const statusBodyTemplate = (rowData: Provider) => {
-        if(rowData.profile_state) {
-            return <Tag value={'Active'} rounded severity={getSeverity(rowData.profile_state)} />;
-        } else {
-            return <Tag value={'Inactive'} rounded severity={getSeverity(rowData.profile_state)} />;
-        }
-    };
-
-    const statusFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
-        return <Dropdown value={options.value} options={statuses} onChange={(e: DropdownChangeEvent) => options.filterCallback(e.value, options.index)} itemTemplate={statusItemTemplate} placeholder="Select One" className="p-column-filter" showClear />;
-    };
-
-    const statusItemTemplate = (option: string) => {
-        if(option == 'Active') {
-            return <Tag value={option} severity={getSeverity(true)} />;
-        } else {
-            return <Tag value={option} severity={getSeverity(false)} />;
-        }
-    };
-
-    const providerBodyTemplate = (rowData: Provider) => {
-
         return (
-            <div className="flex items-center gap-2">
-                {
-                rowData.provider_image != null ?
-                    <Avatar image={rowData.provider_image} shape="circle" />
-                    :
-                    <FontAwesomeIcon icon={faCircleUser} className='w-8 h-8' style={{color: "#c2c2c2"}} />
-                }
-                <span>{rowData.provider_name}</span>
+            <div className={`px-3 py-0.5 rounded-md justify-center items-center gap-2.5 inline-flex ${rowData.profile_state ? 'bg-green-100' : 'bg-red-100'}`}>
+                <p className={`text-xs font-semibold ${rowData.profile_state ? 'text-green-800' : 'text-red-800'}`}>{formatStatus(rowData.profile_state)}</p>
             </div>
         );
     };
 
-    const ownerBodyTemplate = (rowData: Provider) => {
-        return (
-            <p>{rowData.person_name} {rowData.lastname}</p>
-        )
-    }
-    
-    const descriptionTemplate = (rowData: Provider) => {
-        return (
-            <p className={rowData.provider_description ? 'line-clamp-2' : 'text-gray-400'}>{rowData.provider_description ? rowData.provider_description : 'No description'}</p>
-        )
+    const showMenu = (items: any, idProvider: number, event: any) => {
+        setItemsMenu(items)
+        menuComponent.current!.toggle(event)
     }
 
-    const actionsBodyTemplate = (rowData: Provider) => {
+    const actionsBodyTemplate = (rowData: Provider | any) => {
+        console.log(rowData)
         return (
-          <div className="flex items-center">
-            {
-                rowData.profile_state ?
-                <>
-                    <ButtonEdit href={`/welcome/providers/edit/${rowData.id_provider}`} />
-                    <Link href={`/welcome/providers/services/${rowData.id_provider}`}>
-                        <Button
-                        type="button"
-                        icon="pi pi-th-large"
-                        className="p-button-warning"
-                        text
-                        tooltip='Services'
-                        tooltipOptions={{position: 'top'}}
-                        />
-                    </Link>
-                    <Link href={`/welcome/providers/ratings/${rowData.id_provider}`}>
-                        <Button
-                        type="button"
-                        icon="pi pi-comments"
-                        className="text-teal-700"
-                        text
-                        tooltip='Ratings'
-                        tooltipOptions={{position: 'top'}}
-                        />
-                    </Link>
-                    <Link href={`/welcome/providers/portofolio/${rowData.id_provider}`}>
-                        <Button
-                        type="button"
-                        icon="pi pi-cloud-upload"
-                        className="text-pink-400"
-                        text
-                        tooltip='Portofolio'
-                        tooltipOptions={{position: 'top'}}
-                        />
-                    </Link>
-                </>
-                :
-                <Button
-                type="button"
-                icon="pi pi-check-square"
-                className="p-button-help"
-                text
-                tooltip='Activate provider'
-                tooltipOptions={{position: 'top'}}
-                onClick={() => confirmActivate(Number(rowData.id_profile))}
-                />
-            }
-          </div>
+            <div className='flex items-center justify-between'>
+                <Button icon="pi pi-ellipsis-v" rounded text severity='secondary' className="mr-2" onClick={(event) => {showMenu(rowData.items, rowData.id_provider, event); }} aria-controls={`popup_menu`} aria-haspopup />
+            </div>
         );
-      };
-
-      const confirmActivate = (idProfile: number) => {
-        const accept = async () => {
-            setLoading(true)
-            activateUser(idProfile, providers, setProviders, toast, setLoading)
-        }
-        const reject = () => {toast.current!.show({severity:'info', summary:'Info', detail: 'Operation rejected', life: 4000});}
-        confirmDialog({
-            message: 'Do you want to activate this provider?',
-            header: 'Activate Confirmation',
-            icon: 'pi pi-info-circle',
-            acceptClassName: 'p-button-danger',
-            accept,
-            reject
-        });
     };
 
+    const descriptionBodyTemplate = (rowData: Provider) => {
+        return <p className={`w-full line-clamp-3 ${rowData.provider_description == null || rowData.provider_description == '' ? 'text-gray-900/50' : 'text-gray-900'}`}>{rowData.provider_description || 'No description'}</p>;
+    };
 
-  return (
-    <LayoutAdmin>
-        <Toast ref={toast} />
-        <ConfirmDialog />
-        <div className='w-full h-full'>
-            <DataTable value={providers!} paginator rows={10} loading={loading} dataKey="id_provider" 
-                    filters={filters!} globalFilterFields={['provider_name', 'person_name', 'lastname', 'provider_description', 'profile_state', 'email', 'phone']} header={header}
-                    emptyMessage="No providers found."
-                    className='min-h-full'>
-                <Column field="provider_name" header="Provider Name" body={providerBodyTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-                <Column field="person_name" header="Owner's name" body={ownerBodyTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-                <Column field="provider_description" header="Description" body={descriptionTemplate} filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-                <Column field="profile_state" header="State" filterMenuStyle={{ width: '6rem' }} style={{ minWidth: '6rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
-                <Column field="email" header="Email" filter filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} />
-                <Column field="phone" header="Phone" filter filterMenuStyle={{ width: '10rem' }} style={{ minWidth: '10rem' }} />
-                <Column header='Actions' body={actionsBodyTemplate} style={{ width: '10rem', textAlign: 'center' }} />
-            </DataTable>
-        </div>
-    </LayoutAdmin>
-  )
+    const providerNameBodyTemplate = (rowData: Provider) => {
+        return (
+            <div className='flex items-center gap-2'>
+                {
+                    rowData.provider_image != null ?
+                        <img src={`${rowData.provider_image}`} alt={`${rowData.provider_name}`} className='w-10 h-10 rounded-full' />
+                        :
+                        <Avatar icon="pi pi-image" size='large' shape="circle" />
+                }
+                <p className={`w-full ${rowData.provider_name == null || rowData.provider_name == '' ? 'text-gray-900/50' : 'text-gray-900'}`}>{rowData.provider_name || 'No name'}</p>
+            </div>
+        );
+    };
+
+    const phoneBodyTemplate = (rowData: Provider) => {
+        return <p className={`w-full ${rowData.phone == null || rowData.phone == '' ? 'text-gray-900/50' : 'text-gray-900'}`}>{rowData.phone || 'No phone number'}</p>;
+    };
+
+    return (
+        <LayoutAdmin>
+            <Spinner loading={loading} />
+            <Toast ref={toast} />
+            <Menu model={itemsMenu} popup ref={menuComponent} id={`popup_menu`} />
+            <div className='w-full p-5'>
+                <h1 className='text-gray-900/75 text-xl font-semibold leading-loose'>Providers</h1>
+                <div className='mt-5'>
+                    <DataTable value={providers} rows={8} header={renderHeader} filters={filters} onFilter={(e) => setFilters(e.filters)}
+                        globalFilterFields={['provider_name', 'person_name', 'provider_description', 'email', 'phone', 'profile_state']} dataKey="id_provider"
+                        stateStorage="session" stateKey="dt-state-demo-local" emptyMessage={emptyMessageTemplate} tableStyle={{ minWidth: '50rem' }}
+                        paginator rowsPerPageOptions={[5, 10, 25, 50]} removableSort className='text-sm'>
+                        <Column field="provider_name" header="Provider Name" body={providerNameBodyTemplate} sortable style={{ width: '20%' }}></Column>
+                        <Column field="person_name" header="Owner's Name" body={customerBodyTemplate} sortable style={{ width: '20%' }}></Column>
+                        <Column field="provider_description" header="Description" body={descriptionBodyTemplate} sortable style={{ width: '25%' }}></Column>
+                        <Column field="email" header="Email" sortable style={{ width: '15%' }}></Column>
+                        <Column field="phone" header="Phone Number" body={phoneBodyTemplate} sortable style={{ width: '5%' }}></Column>
+                        <Column field="profile_state" header="Status" body={statusBodyTemplate} sortable style={{ width: '10%' }}></Column>
+                        <Column field="actions" body={actionsBodyTemplate} style={{ width: '5%' }}></Column>
+                    </DataTable>
+                </div>
+            </div>
+        </LayoutAdmin>
+    )
 }
 
-export default ProvidersIndex
+export default Index

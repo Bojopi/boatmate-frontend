@@ -11,6 +11,7 @@ import { SearchServiceProvider } from '@/context/SearchServiceContext';
 import { io } from 'socket.io-client';
 import {useEffect, useState} from 'react';
 import { Auth } from '@/hooks/auth';
+import ErrorPage from './404';
 
 export default function App({ Component, pageProps }: AppProps) {
   const { getUserAuthenticated } = Auth();
@@ -51,6 +52,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <ErrorPage />
       <SearchServiceProvider>
         <FormProvider>
           <MenuProvider>
