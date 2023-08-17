@@ -444,7 +444,7 @@ const Index = () => {
                                     <div className='col-span-2 py-2'>
                                         <div className='flex items-center gap-5'>
                                             <p className='text-sm'>Gallery</p>
-                                            <Create idProvider={user.idProvider} portofolio={portofolioList} setPortofolio={setPortofolioList} setLoading={setLoading} toast={toast} />
+                                            <Create idProvider={user.idProvider} portofolio={portofolioList} setPortofolio={setPortofolioList} loading={loading} setLoading={setLoading} toast={toast} />
                                         </div>
                                         <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 justify-center items-center gap-3 mt-5 overflow-x-hidden'>
                                             {
@@ -461,7 +461,7 @@ const Index = () => {
                                                                     <p className='font-medium text-sm md:text-base'>Description</p>
                                                                     <p className='text-xs md:text-sm line-clamp-5'>{item.portofolio_description}</p>
                                                                     <div className='absolute bottom-0 flex items-center'>
-                                                                        <Edit idPortofolio={item.id_portofolio} portofolio={portofolioList} setPortofolio={setPortofolioList} setLoading={setLoading} toast={toast} />
+                                                                        <Edit idPortofolio={item.id_portofolio} portofolio={portofolioList} setPortofolio={setPortofolioList} loading={loading} setLoading={setLoading} toast={toast} />
                                                                         <Button type='button' icon='pi pi-trash' text className='text-white' onClick={() => confirmDelete(item.id_portofolio)} />
                                                                         <Button type='button'  icon="pi pi-external-link" text className='text-white' onClick={() => {
                                                                             setPortofolioIndex(i)
