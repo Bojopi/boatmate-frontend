@@ -289,7 +289,7 @@ const Principal = () => {
                         <Button icon={'pi pi-arrow-right'} rounded className='bg-sky-500 border-sky-500 hover:bg-sky-600 hover:border-sky-600' />
                     </div> */}
                 </div>
-                <div className='w-full grid grid-cols-3 gap-8 mt-8'>
+                <div className='w-full grid grid-cols-4 gap-8 mt-8'>
                     {
                         popularServicesList.length > 0 ?
                         popularServicesList.slice(0, 6).map((service: Hired, i: number) => (

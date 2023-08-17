@@ -212,9 +212,10 @@ const Profile = () => {
                 <div className='w-80 h-96 bg-white rounded-xl border border-neutral-200 flex flex-col items-center gap-10 p-5'>
                     <div className='relative'>
                         {
-                            imageProfile != null || imageProfile != '' ?
+                            imageProfile == null || imageProfile == '' ?
+                            <FontAwesomeIcon icon={faCircleUser} className='w-32 h-32' style={{color: "#c2c2c2"}} />
+                            : 
                             <img src={imageProfile} width={200} height={200} alt='profile' className='rounded-full' />
-                            : <FontAwesomeIcon icon={faCircleUser} className='w-10 h-10' style={{color: "#c2c2c2"}} />
                         }
                         <input
                             type='file'

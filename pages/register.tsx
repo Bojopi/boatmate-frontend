@@ -94,8 +94,8 @@ const Register: React.FC = () => {
         formData.idRole = isSelected;
         formData.password = password;
 
-        formData.lat = selectedLocation.lat ? selectedLocation.lat : ''
-        formData.lng = selectedLocation.lng ? selectedLocation.lng : ''
+        formData.lat = selectedLocation && selectedLocation.lat ? selectedLocation.lat : ''
+        formData.lng = selectedLocation && selectedLocation.lng ? selectedLocation.lng : ''
         formData.zip = zip;
 
         setLoading(true);
@@ -370,7 +370,7 @@ const Register: React.FC = () => {
                                                 alt="sailor"
                                                 className='w-full h-full object-cover' />
                                             </div>
-                                            <p id='customer' className='font-extrabold'>BOAT OWNER</p>
+                                            <p id='customer' className='font-extrabold'>CUSTOMER</p>
                                         </div>
                                         <div id='provider' className={`col-span-1 flex flex-col items-center gap-5 p-5 rounded-md shadow-lg shadow-gray-300/30 hover:shadow-sky-300/30 cursor-pointer ${isSelected == '3' ? 'border border-sky-500 shadow-xl shadow-sky-300/30' : 'border-none'}`} onClick={selectedRole}>
                                             <div className='w-36 h-36 rounded-full overflow-hidden flex items-center justify-center'>

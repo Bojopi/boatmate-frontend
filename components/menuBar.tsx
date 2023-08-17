@@ -61,7 +61,7 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, user = null, menuItem=t
                 { 
                     template: (item: any, options: any) => {
                         return (
-                            <div className='w-full flex items-center p-2'>
+                            <div className='w-full flex items-center gap-2 p-2'>
                                 {
                                     user?.image != null ?
                                     <Avatar image={user.image} className="mr-2 w-8 h-8" shape="circle" />
@@ -110,17 +110,20 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, user = null, menuItem=t
         {
             user ? 
             <div className='flex flex-row gap-7 items-end'>
-                <i className='pi pi-inbox p-overlay-badge text-[1.3rem] cursor-pointer' onClick={() => console.log('mensajes')}>
-                    <Badge value={2}></Badge>
-                </i>
-                {
-                    user.image != null ?
-                        <Avatar image={user.image} shape="circle" onClick={(e) => menuUser.current.toggle(e)} />
-                        :
-                        <FontAwesomeIcon icon={faCircleUser} className='w-8 h-8' style={{color: "#c2c2c2"}} onClick={(e) => menuUser.current.toggle(e)} />
-                }
+                <Link href={`/inbox/${user.idCustomer}`} className='flex items-center justify-center'>
+                    <i className='pi pi-inbox p-overlay-badge text-[1.3rem] cursor-pointer'>
+                        <Badge value={2}></Badge>
+                    </i>
+                </Link>
                 <TieredMenu model={menus} popup ref={menuUser} className='mt-1 hidden md:block' />
-                {/* <Button rounded text icon="pi pi-angle-down" className='text-[#109EDA] shrink-0 hidden md:block' onClick={(e) => menuUser.current.toggle(e)} /> */}
+                <Button className='bg-transparent border-none focus:shadow-none p-0 shrink-0 hidden md:flex items-center justify-center' onClick={(e) => menuUser.current.toggle(e)}>
+                    {
+                        user.image != null ?
+                            <Avatar image={user.image} shape="circle" />
+                            :
+                            <FontAwesomeIcon icon={faCircleUser} className='w-8 h-8' style={{color: "#c2c2c2"}} />
+                    }
+                </Button>
                 <TieredMenu model={menus} popup ref={menuPhone} className='mt-1 block md:hidden' breakpoint="767px" />
                 <Button rounded text icon="pi pi-ellipsis-v" className='text-[#109EDA] shrink-0 block md:hidden' onClick={(e) => menuPhone.current.toggle(e)} />
             </div>
