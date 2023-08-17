@@ -135,7 +135,7 @@ const Index = () => {
         {/* <BreadCrumb model={items} home={home} className='w-[60%] mx-auto border-none bg-transparent' /> */}
         <div className="w-[500px] h-[500px] left-[-200px] top-[-100px] absolute bg-teal-500/30 rounded-full blur-3xl -z-10" />
         <div className="w-[500px] h-[500px] left-[80%] top-[50vh] absolute bg-sky-500/30 rounded-full blur-3xl -z-10" />
-        <div className='w-[60%] mx-auto flex items-start justify-between'>
+        <div className='w-[60%] mx-auto mt-28 flex items-start justify-between'>
           <div className='flex gap-8'>
             <div className='flex flex-col items-center gap-5'>
               <div className='w-36 h-36 rounded-full overflow-hidden'>
