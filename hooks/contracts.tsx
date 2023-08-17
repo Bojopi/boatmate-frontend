@@ -51,7 +51,6 @@ export const Contracts = () => {
     const createContract = (idCustomer: number, data: any, setLoading: any, toast: any, setVisible: any) => {
         axios.post(`/contract/${idCustomer}`, data)
         .then((res) => {
-            console.log(res)
             toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
             setVisible(false);
             setLoading(false);

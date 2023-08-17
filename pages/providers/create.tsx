@@ -67,7 +67,7 @@ const Create: React.FC<RequestProps> = ({idCustomer, idServiceProvider, toast}) 
 
     const footerContent = (
         <div className="w-full flex items-center justify-end gap-3">
-            <Button type="button" label="Cancel" icon="pi pi-times" onClick={closeModal} className="p-button-text" />
+            <Button type="button" label="Cancel" icon="pi pi-times" severity="danger" disabled={loading} onClick={closeModal} className="p-button-text" />
             {
                 loading ?
                     <Button type="button" className="p-button-success flex items-center" disabled>

@@ -178,7 +178,6 @@ const Principal = () => {
     }
 
     const testimonialTemplate = (data: RatingInterface) => {
-        console.log(data)
         return (
             <div className="w-full flex flex-col items-center gap-10 p-20">
                 <div className="w-32 h-32 bg-white overflow-hidden rounded-full flex items-center justify-center">

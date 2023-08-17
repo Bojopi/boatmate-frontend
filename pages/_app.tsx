@@ -18,9 +18,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const [userToken, setUserToken] = useState<string>('');
 
-  const socket = io('https://boatmate.com', {
-    auth: {token: userToken},
-  });
+  // const socket = io('https://boatmate.com', {
+  //   auth: {token: userToken},
+  // });
 
   const getToken = async () => {
     try {
@@ -36,7 +36,12 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     getToken();
     if(userToken != '') {
+      const socket = io('https://boatmate.com', {
+        auth: {token: userToken},
+      });
+      
       socket.on('connect', () => {
+        console.log('socket connected')
       });
       socket.on('test', (data) => {
           console.log(data)

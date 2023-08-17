@@ -101,7 +101,7 @@ const InboxPage = () => {
                               <p className='text-sm text-neutral-600 font-light leading-tight'>{addresses[i]}</p>
                             : <p className='text-sm text-neutral-600 font-light leading-tight'>No address</p>
                           }
-                        <p className='text-sm text-neutral-600 font-light leading-tight'>{item.contract_description}</p>
+                        <p className='text-sm text-neutral-600 font-light line-clamp-3 leading-tight '>{item.contract_description}</p>
                       </div>
                     </div>
                   </div>
