@@ -78,7 +78,7 @@ const View: React.FC<ContractProviderProps> = ({contract, contracts, setContract
                 <div className="w-full">
                     <div className="w-[60%] mx-auto flex items-center justify-between">
                         <p className='text-center text-black font-semibold'>{contract && contract.service_name}</p>
-                        <p className="text-green-600/60 font-semibold text-lg">$ {contract.contract_price || 0}</p>
+                        <p className="text-green-600/60 font-semibold text-lg">$ {contract && contract.contract_price || 0}</p>
                     </div>
                     <div className='flex items-center gap-5 mt-8'>
                         <div>
