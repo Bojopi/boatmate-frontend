@@ -35,7 +35,7 @@ const ProvidersIndex: React.FC = () => {
 
     useEffect(() => {
         setLoading(true);
-        getAllProviders(setProviders, setLoading);
+        getAllProviders();
         initFilters();
     }, []);
 
