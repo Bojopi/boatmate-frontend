@@ -76,7 +76,7 @@ const Index: React.FC = () => {
     const renderHeader = () => {
         return (
             <div className="flex justify-between">
-                <Create idRole={0} roles={roles} setRoles={setRoles} toast={toast} setLoading={setLoading} />
+                <Create idRole={0} roles={roles} setRoles={setRoles} toast={toast} loading={loading} setLoading={setLoading} />
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
@@ -101,7 +101,7 @@ const Index: React.FC = () => {
             {
                 rowData.role_state ?
                 <>
-                    <Create idRole={rowData.id_role} roles={roles} setRoles={setRoles} toast={toast} setLoading={setLoading} />
+                    <Create idRole={rowData.id_role} roles={roles} setRoles={setRoles} toast={toast} loading={loading} setLoading={setLoading} />
                     <ButtonDelete onClick={() => confirmDelete(Number(rowData.id_role))} />
                 </>
                 :
