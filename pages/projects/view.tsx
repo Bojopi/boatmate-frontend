@@ -26,6 +26,8 @@ const View: React.FC<ContractCustomerProps> = ({contract}) => {
         switch (status) {
             case 'PENDING':
                 return 'bg-sky-300/50'
+            case 'OFFERED':
+                return 'bg-purple-300/50'
             case 'APPROVED':
                 return 'bg-green-300/50'
             case 'CANCELED':

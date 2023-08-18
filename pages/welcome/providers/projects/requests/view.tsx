@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { ContractProvider, Gallery } from "@/interfaces/interfaces";
+import { ContractProvider, Gallery, Profile } from "@/interfaces/interfaces";
 import { Galleries } from "@/hooks/gallery";
 import { Avatar } from "primereact/avatar";
 import { formatDate } from "@/functions/date";
@@ -11,6 +11,7 @@ import { AiFillEye } from 'react-icons/ai';
 import { Contracts } from "@/hooks/contracts";
 import { OverlayPanel } from 'primereact/overlaypanel';
 import { InputNumber } from "primereact/inputnumber";
+import { useRouter } from "next/router";
 
 export type ContractProviderProps = {
     contract: ContractProvider;
@@ -30,6 +31,8 @@ const View: React.FC<ContractProviderProps> = ({contract, contracts, setContract
     const [loadingAccept, setLoadingAccept] = useState<boolean>(false);
 
     const op = useRef<any>(null);
+
+    const router = useRouter();
 
     const getGallery = async (idContract: number) => {
         try {
@@ -61,8 +64,12 @@ const View: React.FC<ContractProviderProps> = ({contract, contracts, setContract
             const response = await updateState(contract.id_contract, data);
             if(response.status == 200) {
                 contract.contract_state = response.data.contract[1][0].contract_state;
-                const updateList = contracts.filter((item: ContractProvider) => item.id_contract != contract.id_contract);
-                setContracts(updateList)
+                if(data.contractState == 'OFFERED') {
+                    setContracts([...contracts]);
+                } else {
+                    const updateList = contracts.filter((item: ContractProvider) => item.id_contract != contract.id_contract);
+                    setContracts(updateList)
+                }
                 toast.current!.show({severity:'success', summary:'Successfull', detail: response.data.msg, life: 4000});
                 setLoadingAccept(false);
                 setLoadingCancel(false);
@@ -75,7 +82,7 @@ const View: React.FC<ContractProviderProps> = ({contract, contracts, setContract
     }
 
     const updateResponse = (state: string) => {
-        let data = {contractState: state, price: 0};
+        let data = {contractState: state, price: 0, date: new Date().toISOString()};
         if(state == 'CANCELED') {
             setLoadingCancel(true);
         } else {
@@ -102,14 +109,20 @@ const View: React.FC<ContractProviderProps> = ({contract, contracts, setContract
 
     const footerContent = (
         <div className="flex items-center justify-between">
-            <Button type="button" label="Send Message" icon="pi pi-send" iconPos="right" onClick={closeModal} className="rounded-3xl text-sm px-5 py-3 bg-sky-500 border-sky-500 hover:bg-sky-600 hover:border-sky-600" />
+            <Button type="button" label="Send Message" icon="pi pi-send" iconPos="right" onClick={() => router.push(`/welcome/providers/inbox/${contract && contract.id_contract}`)} className="rounded-3xl text-sm px-5 py-3 bg-sky-500 border-sky-500 hover:bg-sky-600 hover:border-sky-600" />
             <div className="flex items-center gap-5">
-                <Button type="button" label="Cancel" disabled={loadingCancel} icon={`pi ${loadingCancel ? "pi-spin pi-spinner" : "pi-times"}`} iconPos="right" onClick={() => updateResponse('CANCELED')} className="rounded-3xl text-sm px-5 py-3 bg-rose-500 border-rose-500 hover:bg-rose-600 hover:border-rose-600" />
-                <Button type="button" label="Accept" disabled={loadingAccept} icon={`pi ${loadingAccept ? "pi-spin pi-spinner" : "pi-check"}`} iconPos="right" onClick={(e) => op.current.toggle(e)} className="rounded-3xl text-sm px-5 py-3 bg-green-500 border-green-500 hover:bg-green-600 hover:border-green-600" />
-                <OverlayPanel ref={op} showCloseIcon>
-                    <InputNumber inputId="currency-us" value={money} onValueChange={(e) => setMoney(Number(e.value))} mode="currency" currency="USD" locale="en-US" />
-                    <Button label="Send Offer" text className="rounded-3xl text-sm px-5 py-3 text-sky-500 hover:text-sky-600" onClick={() => updateResponse('APPROVED')} />
-                </OverlayPanel>
+                <Button type="button" label="Cancel" disabled={loadingCancel || loadingAccept} icon={`pi ${loadingCancel ? "pi-spin pi-spinner" : "pi-times"}`} iconPos="right" onClick={() => updateResponse('CANCELED')} className="rounded-3xl text-sm px-5 py-3 bg-rose-500 border-rose-500 hover:bg-rose-600 hover:border-rose-600" />
+                {
+                    contract && contract.contract_state == 'PENDING' ?
+                    <>
+                        <Button type="button" label="Accept" disabled={loadingAccept || loadingCancel} icon={`pi ${loadingAccept ? "pi-spin pi-spinner" : "pi-check"}`} iconPos="right" onClick={(e) => op.current.toggle(e)} className="rounded-3xl text-sm px-5 py-3 bg-green-500 border-green-500 hover:bg-green-600 hover:border-green-600" />
+                        <OverlayPanel ref={op} showCloseIcon>
+                            <InputNumber inputId="currency-us" value={money} onValueChange={(e) => setMoney(Number(e.value))} mode="currency" currency="USD" locale="en-US" />
+                            <Button label="Send Offer" text className="rounded-3xl text-sm px-5 py-3 text-sky-500 hover:text-sky-600" onClick={() => updateResponse('OFFERED')} />
+                        </OverlayPanel>
+                    </>
+                    : null
+                }
             </div>
         </div>
     );

@@ -26,5 +26,6 @@ export const config = {
     matcher: [
         '/welcome/:path*',
         '/providers/:path*',
+        '/profile'
     ]
 }

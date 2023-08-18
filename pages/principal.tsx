@@ -211,8 +211,8 @@ const Principal = () => {
         <div className="w-[500px] h-[500px] left-[-200px] top-[270vh] absolute bg-yellow-400/20 rounded-full blur-3xl -z-10" />
         <div className="w-[500px] h-[500px] left-[80%] top-[380vh] absolute bg-indigo-900/20 rounded-full blur-3xl -z-10" />
         <div className='w-full py-10'>
-            <div className='w-[80%] mx-auto mt-20 grid grid-cols-2 items-center'>
-                <div className='col-span-1 w-[80%] justify-self-end flex flex-col gap-8'>
+            <div className='w-[90%] md:w-[80%] mx-auto mt-20 grid grid-cols-1 md:grid-cols-2 items-center'>
+                <div className='col-span-1 w-[90%] md:w-[80%] justify-self-end flex flex-col gap-3 md:gap-8'>
                     <div className='w-64 h-12 px-8 py-4 bg-white rounded-full shadow-2xl justify-start items-center gap-4 inline-flex'>
                         <div className="text-[#00CBA4] text-xs font-bold leading-none">Professionals in your area</div>
                         <svg width="20" height="21" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -221,9 +221,9 @@ const Principal = () => {
                             </g>
                         </svg>
                     </div>
-                    <div className='text-6xl font-bold leading-none'>Connect with<br/>Marine Service</div>
+                    <div className='text-4xl md:text-6xl font-bold leading-none'>Connect with<br/>Marine Service</div>
                     <div className='text-gray-900/50 leading-7'>Mariners and novelty boat owners alike understand it&apos;s all about who you know in the boating and marine industry. Let us make boating hassle-free for you!</div>
-                    <div className='w-[70%]'>
+                    <div className='w-full md:w-[70%]'>
                         <AutoComplete 
                         field='service_name' 
                         value={selectedService} 
@@ -249,27 +249,27 @@ const Principal = () => {
                     <img src="https://i.postimg.cc/xCkm9nWB/Group-13.png" alt="world" className='w-full' />
                 </div>
             </div>
-            <div className='w-[81%] ml-auto mt-32 flex items-center'>
-                <div className='w-[20%]'>
-                    <p className='text-[#00CBA4] text-sm font-bold uppercase leading-7 tracking-widest'>popular</p>
-                    <p className='text-gray-900 text-2xl font-bold leading-8'>Popular costs guides</p>
+            <div className='w-[90%] md:w-[81%] mx-auto md:ml-auto mt-32 flex flex-col md:flex-row items-center'>
+                <div className='w-full md:w-[20%]'>
+                    <p className='text-[#00CBA4] text-xs md:text-sm font-bold uppercase leading-7 tracking-widest'>popular</p>
+                    <p className='text-gray-900 text-xl md:text-2xl font-bold leading-8'>Popular costs guides</p>
                 </div>
-                <div className='w-[80%] grid grid-cols-3 gap-5'>
-                    <div className='col-span-1 w-72 h-96 p-12 bg-white border shadow-lg rounded-3xl flex flex-col justify-center items-center gap-8'>
+                <div className='w-full md:w-[80%] grid grid-cols-1 md:grid-cols-3 gap-5'>
+                    <div className='col-span-1 mx-auto w-60 md:w-72 h-80 md:h-96 p-8 md:p-12 bg-white border shadow-lg rounded-3xl flex flex-col justify-center items-center gap-5 md:gap-8'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256"><g fill="#16a34a"><path d="M216 120v48a8 8 0 0 1-8 8h-12.69a8 8 0 0 0-5.65 2.34l-35.32 35.32a8 8 0 0 1-5.65 2.34H83.31a8 8 0 0 1-5.65-2.34l-35.32-35.32a8 8 0 0 1-2.34-5.65V80a8 8 0 0 1 8-8h100.69a8 8 0 0 1 5.65 2.34l35.32 35.32a8 8 0 0 0 5.65 2.34H208a8 8 0 0 1 8 8Z" opacity=".2"/><path d="M248 104a8 8 0 0 0-8 8v24h-16v-16a16 16 0 0 0-16-16h-12.69L160 68.69A15.86 15.86 0 0 0 148.69 64H128V48h24a8 8 0 0 0 0-16H88a8 8 0 0 0 0 16h24v16H48a16 16 0 0 0-16 16v56H16v-24a8 8 0 0 0-16 0v64a8 8 0 0 0 16 0v-24h16v20.69A15.86 15.86 0 0 0 36.69 184L72 219.31A15.86 15.86 0 0 0 83.31 224h65.38a15.86 15.86 0 0 0 11.31-4.69L195.31 184H208a16 16 0 0 0 16-16v-16h16v24a8 8 0 0 0 16 0v-64a8 8 0 0 0-8-8Zm-40 64h-12.69a15.86 15.86 0 0 0-11.31 4.69L148.69 208H83.31L48 172.69V80h100.69L184 115.31a15.86 15.86 0 0 0 11.31 4.69H208Z"/></g></svg>
                         <div className="h-40 flex-col justify-start items-center gap-3 flex">
                             <div className="text-center text-gray-900 text-xl font-bold leading-snug">Engine Service Cost</div>
                             <div className="text-center text-gray-900 text-sm text-opacity-50 font-normal leading-7">Engine Service Coverage! Explore our competitive prices.</div>
                         </div>
                     </div>
-                    <div className='col-span-1 w-72 h-96 p-12 bg-white border shadow-lg rounded-3xl flex flex-col justify-center items-center gap-8'>
+                    <div className='col-span-1 mx-auto w-60 md:w-72 h-80 md:h-96 p-8 md:p-12 bg-white border shadow-lg rounded-3xl flex flex-col justify-center items-center gap-5 md:gap-8'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24"><g fill="#109eda"><path d="M3 11.991c0 5.638 4.239 8.375 6.899 9.536c.721.315 1.082.473 2.101.473V8l-9 3v.991Z"/><path d="M14.101 21.527C16.761 20.365 21 17.63 21 11.991V11l-9-3v14c1.02 0 1.38-.158 2.101-.473ZM8.838 2.805L8.265 3c-3.007 1.03-4.51 1.545-4.887 2.082C3 5.62 3 7.22 3 10.417V11l9-3V2c-.811 0-1.595.268-3.162.805Z" opacity=".5"/><path d="m15.735 3l-.573-.195C13.595 2.268 12.812 2 12 2v6l9 3v-.583c0-3.198 0-4.797-.378-5.335c-.377-.537-1.88-1.052-4.887-2.081Z"/></g></svg>
                         <div className="h-40 flex-col justify-start items-center gap-3 flex">
                             <div className="text-center text-gray-900 text-xl font-bold leading-snug">Insurance Cost</div>
                             <div className="text-center text-gray-900 text-sm text-opacity-50 font-normal leading-7">Affordable Insurance Plans. Get a quote today!</div>
                         </div>
                     </div>
-                    <div className='col-span-1 w-72 h-96 p-12 bg-white border shadow-lg rounded-3xl flex flex-col justify-center items-center gap-8'>
+                    <div className='col-span-1 mx-auto w-60 md:w-72 h-80 md:h-96 p-8 md:p-12 bg-white border shadow-lg rounded-3xl flex flex-col justify-center items-center gap-5 md:gap-8'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 48 48"><path fill="#FF9800" d="M44 18v-4H34V4h-4v10h-4V4h-4v10h-4V4h-4v10H4v4h10v4H4v4h10v4H4v4h10v10h4V34h4v10h4V34h4v10h4V34h10v-4H34v-4h10v-4H34v-4h10z"/><path fill="#4CAF50" d="M8 12v24c0 2.2 1.8 4 4 4h24c2.2 0 4-1.8 4-4V12c0-2.2-1.8-4-4-4H12c-2.2 0-4 1.8-4 4z"/><path fill="#37474F" d="M31 31H17c-1.1 0-2-.9-2-2V19c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2z"/></svg>
                         <div className="h-40 flex-col justify-start items-center gap-3 flex">
                             <div className="text-center text-gray-900 text-xl font-bold leading-snug">Electronics Replacement Cost</div>
@@ -278,22 +278,18 @@ const Principal = () => {
                     </div>
                 </div>
             </div>
-            <div className='w-[63%] mx-auto mt-32'>
+            <div className='w-[90%] md:w-[63%] mx-auto mt-32'>
                 <div className='w-full flex items-center justify-between'>
                     <div>
-                        <p className='text-[#00CBA4] text-sm font-bold uppercase leading-7 tracking-widest'>popular projects</p>
+                        <p className='text-[#00CBA4] text-xs md:text-sm font-bold uppercase leading-7 tracking-widest'>popular projects</p>
                         <p className='text-gray-900 text-xl font-bold leading-8'>Explore popular projects near you</p>
                     </div>
-                    {/* <div className='flex items-center justify-end gap-5'>
-                        <Button icon={'pi pi-arrow-left'} rounded text raised severity='secondary' />
-                        <Button icon={'pi pi-arrow-right'} rounded className='bg-sky-500 border-sky-500 hover:bg-sky-600 hover:border-sky-600' />
-                    </div> */}
                 </div>
-                <div className='w-full grid grid-cols-4 gap-8 mt-8'>
+                <div className='w-full grid grid-cols-1 md:grid-cols-4 gap-5 md:gap-8 mt-8'>
                     {
                         popularServicesList.length > 0 ?
                         popularServicesList.slice(0, 6).map((service: Hired, i: number) => (
-                            <div key={i} className='col-span-1 h-96'>
+                            <div key={i} className='col-span-1 h-80 md:h-96'>
                                 <HiredCardComponent service={service}></HiredCardComponent>
                             </div>
                         ))
@@ -301,13 +297,13 @@ const Principal = () => {
                     }
                 </div>
             </div>
-            <div className='w-[80%] mt-52 grid grid-cols-3'>
-                <div className='col-span-2'>
+            <div className='w-full md:w-[80%] mt-32 md:mt-52 flex flex-col-reverse md:grid grid-cols-3'>
+                <div className='w-full md:col-span-2'>
                     <img src="https://i.postimg.cc/8Pn17mdv/Group-9238.png" alt="boat-float" className='w-full' />
                 </div>
-                <div className='col-span-1 flex flex-col gap-5'>
-                    <p className='text-[#00CBA4] uppercase font-bold leading-7 tracking-widest'>Boat services</p>
-                    <p className='text-gray-900 text-4xl font-bold leading-10'>We helping you find the best services</p>
+                <div className='w-[90%] mx-auto md:col-span-1 flex flex-col gap-5'>
+                    <p className='text-[#00CBA4] uppercase text-xs md:text-base font-bold leading-7 tracking-widest'>Boat services</p>
+                    <p className='text-gray-900 text-2xl md:text-4xl font-bold leading-10'>We helping you find the best services</p>
                     <p className='text-gray-900/50 leading-7'>Our aim is to assist you in finding the finest solutions for your boat, providing you with a serene and secure journey through crystal-clear waters.</p>
                     <div className='grid grid-cols-2 gap-8'>
                         <div className='w-full h-32 flex flex-col items-center justify-center p-3 bg-white rounded-3xl border border-gray-900 border-opacity-10'>
@@ -329,7 +325,7 @@ const Principal = () => {
                     </div>
                 </div>
             </div>
-            <div className='w-[63%] mx-auto mt-52 grid grid-cols-2'>
+            <div className='w-[90%] md:w-[63%] mx-auto mt-32 md:mt-52 grid grid-cols-1 md:grid-cols-2'>
                 <div className='col-span-1 flex flex-col gap-3'>
                     <p className='text-sm uppercase text-[#00CBA4] font-bold leading-7 tracking-widest'>steps</p>
                     <p className='text-gray-900 text-2xl font-bold leading-10'>How it works</p>
@@ -362,18 +358,18 @@ const Principal = () => {
                         </div>
                     </div>
                 </div>
-                <div className='col-span-1 flex items-center justify-center'>
+                <div className='col-span-1 hidden md:flex items-center justify-center'>
                     <img src="https://i.postimg.cc/dtYcxSsw/Group-47773.png" alt="boats-figures" className='w-[90%]' />
                 </div>
             </div>
-            <div className='w-full relative py-32'>
-                <div className='absolute -top-52 w-full'>
+            <div className='w-full relative py-20 md:py-32'>
+                <div className='absolute top-32 md:-top-52 w-full'>
                     <img src="https://i.postimg.cc/1zV1VxRh/Vector-2.png" alt="vector" className='w-[150%] opacity-10' />
                 </div>
                 <div>
                     <p className='uppercase text-pink-500 w-full text-center font-bold leading-7 tracking-widest'>Testimonials</p>
                     <p className='text-gray-900 text-2xl w-full text-center font-bold leading-7 tracking-widest'>Trust our clients</p>
-                    <div className='w-[63%] mx-auto'>
+                    <div className='w-full md:w-[63%] mx-auto'>
                         <Carousel value={testimonials} numVisible={1} numScroll={1} className="custom-carousel" circular
                         itemTemplate={testimonialTemplate} />
                     </div>

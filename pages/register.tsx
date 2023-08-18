@@ -247,7 +247,7 @@ const Register: React.FC = () => {
         <Toast ref={toast} />
         <MenuBar linkMenu='Join Our Pro Network' urlMenu='/pro' setLoading={setLoading}/>
         <div className='w-full max-h-screen pt-24 flex items-center justify-center'>
-            <div className='w-[75%] h-[600px] border rounded-lg shadow-xl grid grid-cols-2 items-center overflow-hidden'>
+            <div className='w-[90%] md:w-[75%] h-auto md:h-[600px] border rounded-lg shadow-xl grid grid-cols-1 md:grid-cols-2 items-center overflow-hidden'>
                 <div className='col-span-1 h-full p-5 flex flex-col'>
                     <p className='text-indigo-900 text-xl font-medium leading-9'>Sign Up</p>
                     <div className='w-[60%] mx-auto'>
@@ -255,7 +255,7 @@ const Register: React.FC = () => {
                     </div>
                     <div className='w-full h-full mt-3'>
                         <FormProvider {...methods}>
-                            <form className="w-full h-full flex flex-col justify-between">
+                            <form className="w-full h-full flex flex-col gap-3 justify-between">
                                 {
                                     activeIndex === 0 ?
                                     <div className="grid grid-cols-2 gap-3">
@@ -361,9 +361,9 @@ const Register: React.FC = () => {
                                         </InputWrapper>
                                     </div>
                                     : activeIndex == 2 ?
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 h-full items-center px-3">
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 h-full items-center px-3 py-3">
                                         <div id='customer' className={`col-span-1 flex flex-col items-center gap-5 p-5 rounded-md shadow-lg shadow-gray-300/30 hover:shadow-sky-300/30 cursor-pointer ${isSelected == '4' ? 'border border-sky-500 shadow-xl shadow-sky-300/30' : 'border-none'}`} onClick={selectedRole}>
-                                            <div className='w-36 h-36 rounded-full overflow-hidden flex items-center justify-center'>
+                                            <div className='w-20 h-20 md:w-36 md:h-36 rounded-full overflow-hidden flex items-center justify-center'>
                                                 <img 
                                                 id='customer' 
                                                 src="https://s3-alpha-sig.figma.com/img/ddd5/77e1/14855842f8a56f007586b8285e9d0847?Expires=1693180800&Signature=dC2L0D7cgdZooQQFXKX8-waC2jEhK~cB-dzAhrE0XvrE0If7a~nu8hU9C8biDadeHKHWFrqa~ZNm1ZPQ9cmFUy5yBF4pgxX-udRrM5MpKMkH~R5H0-4xpLMuCT8AhaxCCFWpCBGK86ImEufpxOuViuyVVPJvP6Y4aZiH4W~Hr6~-ATyES1AF3srA~UAXbsv7vxW58lzzpZ4vssqY05F2JNhgCr3skEyzbvMA-ZpwTR6omtj36zfr1e7vrfH1Z~eTr0evMI1WhIv7z0usnJWiDd5BY5RkFCNkFLR~6qeyyuV-9NZ0lKmxT1Mc-P6nklT0LNTt0deY4KSsrzyxZq5LKQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" 
@@ -373,7 +373,7 @@ const Register: React.FC = () => {
                                             <p id='customer' className='font-extrabold'>CUSTOMER</p>
                                         </div>
                                         <div id='provider' className={`col-span-1 flex flex-col items-center gap-5 p-5 rounded-md shadow-lg shadow-gray-300/30 hover:shadow-sky-300/30 cursor-pointer ${isSelected == '3' ? 'border border-sky-500 shadow-xl shadow-sky-300/30' : 'border-none'}`} onClick={selectedRole}>
-                                            <div className='w-36 h-36 rounded-full overflow-hidden flex items-center justify-center'>
+                                            <div className='w-20 h-20 md:w-36 md:h-36 rounded-full overflow-hidden flex items-center justify-center'>
                                                 <img 
                                                 id='provider' 
                                                 src="https://s3-alpha-sig.figma.com/img/1a9a/fc2f/184b5b79b23f05c4cd45ec775514c43b?Expires=1693180800&Signature=dESmJYDeD8IZ3e2Eowj-xI2heHR7HZStGMvX6Af12wSKVnlFHJZkU4Ou7XO7wbLXE5-oORow020ZDMVnh-GpFP3A~79ht0VAH1dEDmskCrtCCfKyy9IfBMh5SHQPRyiN2m-tJ~A106~ScQw2dB~WRUmDZpgXXszxfy~z8~O6iDjASoJD03SQg03kdMo7zngZhppAYV-mLOo~c2qXDWoEwOPckixW0IdZVGgotKs1Y5PNLMrOAl1xa-8FJFEdyJtxB7aAlZor5USqIMBBvUCYkrWn8j86BugZuK5jR3FtUJ9r4mSzxmC5if-s2CudJ3UAUIk0XzJTzMr1PyO5QckIQg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
@@ -392,7 +392,7 @@ const Register: React.FC = () => {
                         </FormProvider>
                     </div>
                 </div>
-                <div className='col-span-1 h-full flex items-center justify-center overflow-hidden'>
+                <div className='col-span-1 h-full hidden md:flex items-center justify-center overflow-hidden'>
                     <img 
                     src="https://s3-alpha-sig.figma.com/img/1a3f/69d3/e2ffbce11a16ded3bbb8c0e28b7f75eb?Expires=1693180800&Signature=RsM1Ob-BGifavlrAyEqnuV54WWx~Zy6~HuWMKsbgov4R-8pEkliRV9bZMVJ85nBNWfIIeR7B9wP03~DEIjJmz-WQLZLl07CXZHRqZ8YyvnRLaPlH3H-Qf8eyMLzMSDu76BcZGfuVasv2921gvs-FqykDuQXpJwWwDJpFGmCO-nAXGDq7zhRnpi0bO--~It2UOfhNbJC3jmZL0P5FGZi1Hu5cqvL16jIcT1mLYQJtlWPnMVOYgx3Qk3HTjC6pHKQB6cbB1pyOBiIOguRQGidXdS4qkoX78POxwOtbfNzO7ZvCrf9L6McbYQECjDWc~RPl69YI7AgTs9JWdFZMyIuyBg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" 
                     alt="boat"

@@ -75,7 +75,7 @@ const Index = () => {
         try {
             const response = await getContractsProvider(idProvider);
             if(response.status == 200) {
-                const contracts = response.data.contracts.filter((item: ContractProvider) => item.contract_state == 'PENDING');
+                const contracts = response.data.contracts.filter((item: ContractProvider) => item.contract_state == 'PENDING' || item.contract_state == 'OFFERED');
                 setContracts(contracts);
                 setLoading(false)
             }
@@ -125,7 +125,7 @@ const Index = () => {
             <div className='flex items-center justify-between'>
                 <View contract={rowData} contracts={contracts} setContracts={setContracts} toast={toast} />
                 <Tooltip target=".send-btn" className='text-xs' />
-                <Link href={'#'} data-pr-tooltip='Send message' data-pr-position='top' className='w-8 h-8 rounded-md border border-gray-900/50 flex items-center justify-center send-btn'>
+                <Link href={`/welcome/providers/inbox/${rowData.id_contract}`} data-pr-tooltip='Send message' data-pr-position='top' className='w-8 h-8 rounded-md border border-gray-900/50 flex items-center justify-center send-btn'>
                     <RiSendPlaneLine className='w-4 h-4'/>
                 </Link>
             </div>

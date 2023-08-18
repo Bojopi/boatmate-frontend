@@ -91,9 +91,9 @@ const Login: React.FC = () => {
             <Spinner loading={loading} />
             <Toast ref={toast} />
             <MenuBar linkMenu='Join Our Pro Network' urlMenu='/pro' setLoading={setLoading}/>
-            <div className='w-full h-screen flex items-center justify-center overflow-hidden'>
-                <div className='w-[60%] border rounded-lg shadow-xl grid grid-cols-2'>
-                    <div className='p-5'>
+            <div className='w-full h-screen flex flex-col md:flex-row items-center justify-center overflow-hidden'>
+                <div className='w-[90%] md:w-[60%] border rounded-lg shadow-xl grid grid-cols-1 md:grid-cols-2'>
+                    <div className='p-5 col-span-1'>
                         <p className='text-indigo-900 text-xl font-medium leading-9'>Sign In</p>
                         <p className='text-neutral-600 leading-9 text-sm'>fill the fields for continue</p>
                         <FormProvider {...methods}>
@@ -142,7 +142,7 @@ const Login: React.FC = () => {
                             </form>
                         </FormProvider>
                     </div>
-                    <div className='h-[450px] flex items-center justify-center overflow-hidden'>
+                    <div className='hidden md:col-span-1 h-[450px] md:flex items-center justify-center overflow-hidden'>
                         <img 
                         src="https://s3-alpha-sig.figma.com/img/1a3f/69d3/e2ffbce11a16ded3bbb8c0e28b7f75eb?Expires=1693180800&Signature=RsM1Ob-BGifavlrAyEqnuV54WWx~Zy6~HuWMKsbgov4R-8pEkliRV9bZMVJ85nBNWfIIeR7B9wP03~DEIjJmz-WQLZLl07CXZHRqZ8YyvnRLaPlH3H-Qf8eyMLzMSDu76BcZGfuVasv2921gvs-FqykDuQXpJwWwDJpFGmCO-nAXGDq7zhRnpi0bO--~It2UOfhNbJC3jmZL0P5FGZi1Hu5cqvL16jIcT1mLYQJtlWPnMVOYgx3Qk3HTjC6pHKQB6cbB1pyOBiIOguRQGidXdS4qkoX78POxwOtbfNzO7ZvCrf9L6McbYQECjDWc~RPl69YI7AgTs9JWdFZMyIuyBg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" 
                         alt="boat"

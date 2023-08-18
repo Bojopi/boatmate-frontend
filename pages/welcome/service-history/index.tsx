@@ -27,13 +27,16 @@ const ServiceHistoryIndex: React.FC = () => {
     const toast = useRef<Toast>(null);
     const dt = useRef<any>(null);
 
-    const [states] = useState<string[]>(['APPROVED', 'PENDING', 'CANCELED']);
+    const [states] = useState<string[]>(['OFFERED', 'APPROVED', 'PENDING', 'CANCELED']);
 
     const getSeverity = (status: string) => {
         switch (status) {
             case 'CANCELED':
                 return 'danger';
 
+            case 'OFFERED':
+                return 'info';
+            
             case 'APPROVED':
                 return 'success';
 

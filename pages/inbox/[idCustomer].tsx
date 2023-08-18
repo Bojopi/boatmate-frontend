@@ -26,6 +26,8 @@ const InboxPage = () => {
     switch (state) {
       case 'PENDING':
         return 'text-neutral-600'
+      case 'OFFERED':
+        return 'text-purple-600'
       case 'APPROVED':
         return 'text-teal-600'
       case 'CANCELED':
