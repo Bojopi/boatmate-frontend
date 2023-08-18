@@ -154,7 +154,7 @@ const ProjectsPage = () => {
         const response = await updateState(item.id_contract, data);
         if(response.status == 200) {
           item.contract_state = response.data.contract[1][0].contract_state
-          if(data.contractState == 'OFFERED') {
+          if(data.contractState == 'OFFERED' || data.contractState == 'APPROVED') {
               setContractFilterProgress([...contractFilterProgress]);
           } else {
               const updateList = contractFilterProgress.filter((itemContract: ContractCustomer) => itemContract.id_contract != item.id_contract);
