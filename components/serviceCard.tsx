@@ -7,13 +7,16 @@ import { Ratings } from '@/hooks/rating';
 import { avgRating } from '@/functions/rating';
 import { Maps } from '@/hooks/maps';
 import Link from 'next/link';
+import { calculateDistance } from '@/functions/calculateDistance';
 
 export type ServiceProps = {
     service: ServiceProvider;
+    userLat: any;
+    userLng: any;
     disabled?: boolean;
 }
 
-const ServiceCardComponent: React.FC<ServiceProps> = ({service, disabled = false}) => {
+const ServiceCardComponent: React.FC<ServiceProps> = ({service, disabled = false, userLat, userLng}) => {
 
     const { getRatingProvider } = Ratings();
     const { getAddress } = Maps();
@@ -45,7 +48,7 @@ const ServiceCardComponent: React.FC<ServiceProps> = ({service, disabled = false
   return (
     <div className='w-full h-full rounded-2xl shadow-2xl bg-white flex flex-col relative'>
         <div className='absolute w-auto h-7 top-3 right-3 px-2 bg-gray-900/60 rounded-3xl text-white flex items-center justify-center text-sm'>
-            To 10mi
+            To {calculateDistance(userLat, userLng, service && Number(service.provider.provider_lat), service && Number(service.provider.provider_lng))}mi
         </div>
         <div className='w-full h-[60%] rounded-tl-2xl rounded-tr-2xl flex items-center justify-center overflow-hidden'>
             {
