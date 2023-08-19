@@ -55,8 +55,8 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, user = null, menuItem=t
                 {label: 'Profile', url: '/profile'},
                 {label: 'Inbox', url: `/inbox/${user.idCustomer}`},
                 {label: 'Projects', url: `/projects/${user.idCustomer}`},
-                { separator: true},
-                ...menuItems,
+                // { separator: true},
+                // ...menuItems,
                 { separator: true},
                 { 
                     template: (item: any, options: any) => {
@@ -112,7 +112,7 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, user = null, menuItem=t
             <div className='flex flex-row gap-7 items-end'>
                 <Link href={`/inbox/${user.idCustomer}`} className='flex items-center justify-center'>
                     <i className='pi pi-inbox p-overlay-badge text-[1.3rem] cursor-pointer'>
-                        <Badge value={2}></Badge>
+                        <Badge></Badge>
                     </i>
                 </Link>
                 <TieredMenu model={menus} popup ref={menuUser} className='mt-1 hidden md:block' />
@@ -173,9 +173,9 @@ const MenuBar:React.FC<MenuProps> = ({linkMenu, urlMenu, user = null, menuItem=t
     return (
         <div className="fixed w-full z-10">
             {
-                user ?
-                <Menubar id='menubar' start={start} end={end} className="bg-transparent border-none z-10 lg:px-[15%] py-4 md:py-6 flex items-center justify-between text-sm font-medium" style={{'borderRadius': 0}} />
-                :
+                // user ?
+                // <Menubar id='menubar' start={start} end={end} className="bg-transparent border-none z-10 lg:px-[15%] py-4 md:py-6 flex items-center justify-between text-sm font-medium" style={{'borderRadius': 0}} />
+                // :
                 <Menubar id='menubar' model={menuList} start={start} end={end} className="bg-transparent border-none z-10 lg:px-[15%] py-4 md:py-6 flex items-center justify-between text-sm font-medium" style={{'borderRadius': 0}} />
             }
         </div>

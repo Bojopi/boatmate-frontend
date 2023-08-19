@@ -242,7 +242,6 @@ const Create: React.FC<ServiceProps> = ({idService = 0, services, setServices, l
                             name="providerImage"
                             onClear={() => setImageService(null)}
                             accept="image/*"
-                            maxFileSize={1000000}
                             headerTemplate={headerTemplate}
                             itemTemplate={itemTemplateService}
                             chooseOptions={chooseOptions}

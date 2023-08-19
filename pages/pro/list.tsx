@@ -16,7 +16,7 @@ const libraries: any = ['places'];
 
 const ListPage: React.FC = () => {
     const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyBfwNcp4UHQnucX_gq0_ThusY_ceSgAtyU',
+    googleMapsApiKey: 'AIzaSyC-K6LZapV6N0hI0kjJIVcZuU927qEVeiM',
     libraries
     });
 

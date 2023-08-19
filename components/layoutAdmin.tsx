@@ -222,12 +222,12 @@ const LayoutAdmin = ({children}: any) => {
                 </Sidebar.Items>
             </Sidebar>
             <div className='w-full h-screen flex flex-col'>
-                <div className='w-full h-14 bg-white shadow-lg flex items-center justify-between px-5 z-10'>
+                <div className='w-full h-14 bg-white shadow-lg flex items-center justify-start px-5 z-10'>
                     <i className='pi pi-bars cursor-pointer' onClick={toggleSidebar}></i>
-                    <div className='pi pi-overlay-bagde relative cursor-pointer'>
+                    {/* <div className='pi pi-overlay-bagde relative cursor-pointer'>
                         <Badge severity={'warning'} className='absolute top-0 right-0'></Badge>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9h8m-8 4h6m-5 5H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-3l-3 3l-3-3z"/></svg>
-                    </div>
+                    </div> */}
                 </div>
                 <main className='w-full h-full overflow-y-auto'>
                     {children}

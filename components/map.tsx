@@ -12,6 +12,7 @@ export type InputProps = {
   setSelectedPlace: any;
   height?: string;
   setZip?: any;
+  onClick?: (e: any) => void;
 }
 
 let center = {
@@ -23,9 +24,9 @@ let zoom = 15
 
 const libraries: any = ['places'];
 
-const MapComponent: React.FC<InputProps> = ({readonly = false, height='400px', selectedLocation, setSelectedLocation, getAddress, selectedPlace, setSelectedPlace, setZip}) => {
+const MapComponent: React.FC<InputProps> = ({readonly = false, height='400px', selectedLocation, setSelectedLocation, getAddress, selectedPlace, setSelectedPlace, setZip, onClick}) => {
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyBfwNcp4UHQnucX_gq0_ThusY_ceSgAtyU',
+    googleMapsApiKey: 'AIzaSyC-K6LZapV6N0hI0kjJIVcZuU927qEVeiM',
     libraries
   });
 
@@ -64,6 +65,8 @@ const MapComponent: React.FC<InputProps> = ({readonly = false, height='400px', s
     setSelectedLocation({ lat: e.latLng.lat(), lng: e.latLng.lng() });
 
     try {
+      const otro = await getAddress(e.latLng.lat(), e.latLng.lng());
+      console.log(otro)
       const { data } = await getAddress(e.latLng.lat(), e.latLng.lng());
       const code = data.results[0].address_components.find((data: any) => data.types.includes('postal_code'));
       setZip(code != undefined ? code.long_name : 'No Zip Code');
@@ -79,7 +82,14 @@ const MapComponent: React.FC<InputProps> = ({readonly = false, height='400px', s
         onLoad={autocomplete => setAutocomplete(autocomplete)}
         onPlaceChanged={onPlaceChanged}
       >
-        <input type="text" className='p-inputtext w-full text-sm rounded-xl border-neutral-200 read-only:focus:shadow-none' readOnly={readonly} value={selectedPlace} onChange={(e: any) => {setSelectedPlace(e.target.value)}} placeholder="Search for a location" />
+        <input 
+        type="text" 
+        className='p-inputtext w-full text-sm rounded-xl border-neutral-200 read-only:focus:shadow-none' 
+        readOnly={readonly} 
+        value={selectedPlace} 
+        onChange={(e: any) => {setSelectedPlace(e.target.value)}} 
+        placeholder="Search for a location"
+        onClick={onClick} />
       </Autocomplete>
       <div className={readonly ? 'hidden' : 'block'}>
         <GoogleMap

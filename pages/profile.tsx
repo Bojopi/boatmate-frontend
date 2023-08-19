@@ -167,6 +167,7 @@ const Profile = () => {
         setImageProfile(user.image);
         setImagePerson(null);
         setButtonActive(false);
+        resetMap(Number(user.providerLat) || 0, Number(user.providerLng) || 0);
         setLoading(true);
         setInterval(() => {
             setLoading(false);
@@ -267,7 +268,8 @@ const Profile = () => {
                                             setSelectedLocation={setSelectedLocation}
                                             getAddress={getAddress}
                                             selectedPlace={selectedPlace}
-                                            setSelectedPlace={setSelectedPlace} />
+                                            setSelectedPlace={setSelectedPlace}
+                                            onClick={onClickInputs} />
                                     </div>
                                     {/* <div className='col-span-12 py-2'>
                                         <div className='font-medium flex flex-row items-center gap-2'>

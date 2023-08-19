@@ -242,7 +242,8 @@ const Edit = () => {
                                         setSelectedLocation={setSelectedLocation}
                                         getAddress={getAddress}
                                         selectedPlace={selectedPlace}
-                                        setSelectedPlace={setSelectedPlace} />
+                                        setSelectedPlace={setSelectedPlace}
+                                        onClick={onClickInputs} />
                                 </div>
                                 {
                                     buttonActive && (

@@ -396,7 +396,8 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
                                             setSelectedLocation={setSelectedLocation}
                                             getAddress={getAddress}
                                             selectedPlace={selectedPlace}
-                                            setSelectedPlace={setSelectedPlace} />
+                                            setSelectedPlace={setSelectedPlace}
+                                            onClick={onClickInputs} />
                                     </InputWrapper>
                                     <InputWrapper outerClassName='col-span-12'>
                                         <p id='roleId'>Role</p>
@@ -448,7 +449,6 @@ const Create: React.FC<UserInfo> = ({users, setUsers}) => {
                                                 name="providerImage"
                                                 onClear={() => setImageProvider(null)}
                                                 accept="image/*"
-                                                maxFileSize={1000000}
                                                 headerTemplate={headerTemplate}
                                                 itemTemplate={itemTemplateProvider}
                                                 chooseOptions={chooseOptions}

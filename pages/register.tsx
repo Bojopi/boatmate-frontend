@@ -299,7 +299,14 @@ const Register: React.FC = () => {
                                             )}
                                         </InputWrapper>
                                         <div className='col-span-2'>
-                                            <MapComponent height='250px' getAddress={getAddress} selectedLocation={selectedLocation} selectedPlace={selectedPlace} setSelectedLocation={setSelectedLocation} setSelectedPlace={setSelectedPlace} setZip={setZip} />
+                                            <MapComponent 
+                                            height='250px' 
+                                            getAddress={getAddress} 
+                                            selectedLocation={selectedLocation} 
+                                            selectedPlace={selectedPlace} 
+                                            setSelectedLocation={setSelectedLocation} 
+                                            setSelectedPlace={setSelectedPlace} 
+                                            setZip={setZip} />
                                         </div>
                                     </div>
                                     : activeIndex == 1 ?

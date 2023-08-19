@@ -33,8 +33,8 @@ export const Auth = () => {
     const logout = (setLoading: any) => {
         axios.post('/logout', {})
         .then((res) => {
+            router.push('/login');
             setLoading(false)
-            router.push('/login')
         })
         .catch(error => {
             console.log('Error:', error)
@@ -49,7 +49,7 @@ export const Auth = () => {
         .then((res) => {
             toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
             if(data.idRole == 4) {
-                router.push('/');
+                router.push('/category/detailing')
             } else {
                 router.push('/welcome');
             }

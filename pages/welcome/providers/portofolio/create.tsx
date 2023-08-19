@@ -174,7 +174,6 @@ const Create: React.FC<PortofolioProps> = ({portofolio, setPortofolio, loading, 
                             onSelect={onTemplateSelect}
                             onClear={() => setImagesList([])}
                             accept="image/*"
-                            maxFileSize={1000000}
                             headerTemplate={headerTemplate}
                             itemTemplate={itemTemplateProvider}
                             chooseOptions={chooseOptions}

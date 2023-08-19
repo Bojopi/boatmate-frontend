@@ -392,7 +392,8 @@ const Index = () => {
                                             setSelectedLocation={setSelectedLocation}
                                             getAddress={getAddress}
                                             selectedPlace={selectedPlace}
-                                            setSelectedPlace={setSelectedPlace} />
+                                            setSelectedPlace={setSelectedPlace}
+                                            onClick={onClickInputs} />
                                     </div>
                                     {
                                         buttonActive && (
@@ -550,7 +551,8 @@ const Index = () => {
                                             setSelectedLocation={setSelectedLocation}
                                             getAddress={getAddress}
                                             selectedPlace={selectedPlace}
-                                            setSelectedPlace={setSelectedPlace} />
+                                            setSelectedPlace={setSelectedPlace}
+                                            onClick={onClickInputs} />
                                     </div>
                                     {
                                         buttonActive && (
