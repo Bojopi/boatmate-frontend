@@ -20,9 +20,13 @@ export const Users = () => {
     const setRoleUser = (idProfile: number, data: any, toast: any, setLoading: any) => {
         axios.post(`/profile-role/${idProfile}`, data)
         .then((res) => {
-            toast.current.show({severity:'success', summary:'Successful', detail: 'Welcome!', life: 4000});
+            if(res.data.user.role_description == 'CUSTOMER') {
+                toast.current.show({severity:'success', summary:'Successful', detail: 'Welcome!', life: 4000});
+                router.push('/category/detailing');
+            } else if(res.data.user.role_description == 'PROVIDER') {
+                router.push('/service-list');
+            }
             setLoading(false);
-            router.push('/welcome');
         })
         .catch(error => {
             console.log('Error:', error)
@@ -30,22 +34,25 @@ export const Users = () => {
         })
     }
 
-    const updateProfile = (id: number, data: any, setLoading: any, toast: any, setDataUser: any, resetInputsForm: any) => {
+    const updateProfile = (id: number, data: any) => 
+    // const updateProfile = (id: number, data: any, setLoading: any, toast: any, setDataUser: any, resetInputsForm: any) => 
+    // {
         axios.post(`/profile/${id}`, data, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
-        }).then((res) => {
-            setLoading(false);
-            toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
-            setDataUser();
-            resetInputsForm();
-        }).catch(error => {
-            console.log(error)
-            setLoading(false)
-            toast.current!.show({severity:'error', summary:'Error', detail: error.msg, life: 4000});
         })
-    };
+    //     .then((res) => {
+    //         setLoading(false);
+    //         toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
+    //         setDataUser();
+    //         resetInputsForm();
+    //     }).catch(error => {
+    //         console.log(error)
+    //         setLoading(false)
+    //         toast.current!.show({severity:'error', summary:'Error', detail: error.msg, life: 4000});
+    //     })
+    // };
 
     const createNewUser = (data: any, users: any, setUsers: any, setLoading: any, toast: any) => {
         axios.post('/profile', data, {
@@ -126,6 +133,8 @@ export const Users = () => {
         })
     }
 
+    const setCheckSteps = (idProfile: number, data: any) => axios.post(`/check-steps/${idProfile}`, data);
+
 
     return {
         getAllUsers,
@@ -136,7 +145,8 @@ export const Users = () => {
         updateUser,
         deleteUser,
         activateUser,
-        resetPassword
+        resetPassword,
+        setCheckSteps
     }
 }
 

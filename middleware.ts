@@ -9,13 +9,42 @@ export async function middleware(request: NextRequest) {
     let token = request.cookies.get("tokenUser")?.value;
 
     if(!token) {
-        return NextResponse.redirect(new URL('/login', request.url));
+        if(request.nextUrl.pathname == '/' ||
+            request.nextUrl.pathname.startsWith('/category')
+        ) {
+            return NextResponse.next();
+        } else {
+            return NextResponse.redirect(new URL('/login', request.url));
+        }
     }
 
     try {
         const { payload } = await jwtVerify(token, new TextEncoder().encode(secret));
-        // console.log(payload)
-        return NextResponse.next();
+
+        if (request.nextUrl.pathname.startsWith('/welcome')) {
+            const allowedRoles = ['ADMIN', 'SUPERADMIN', 'PROVIDER'];
+            if (allowedRoles.includes(String(payload.role))) {
+                return NextResponse.next();
+            } else {
+                return NextResponse.redirect(new URL('/category/detailing', request.url));
+            }
+        }
+
+        if (
+            request.nextUrl.pathname === '/' || 
+            request.nextUrl.pathname.startsWith('/category') ||
+            request.nextUrl.pathname.startsWith('/profile') ||
+            request.nextUrl.pathname.startsWith('/inbox') ||
+            request.nextUrl.pathname.startsWith('/projects') ||
+            request.nextUrl.pathname.startsWith('/providers')
+            ) {
+            if (payload.role === 'CUSTOMER') {
+                return NextResponse.next();
+            } else {
+                return NextResponse.redirect(new URL('/welcome/profile', request.url));
+            }
+        }
+        // return NextResponse.next();
     } catch (error) {
         console.log(error)
         return NextResponse.redirect(new URL('/login', request.url));
@@ -26,6 +55,12 @@ export const config = {
     matcher: [
         '/welcome/:path*',
         '/providers/:path*',
-        '/profile'
+        '/profile',
+        '/category/:path*',
+        '/inbox/:path*',
+        '/projects/:path*',
+        // '/preferences',
+        // '/service-list',
+        '/'
     ]
 }

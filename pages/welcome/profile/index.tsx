@@ -1,5 +1,5 @@
 import { Auth } from '@/hooks/auth'
-import { Portofolio, Profile } from '@/interfaces/interfaces'
+import { Portofolio, Profile, Service } from '@/interfaces/interfaces'
 import React, { useEffect, useState, useRef } from 'react'
 import Spinner from '@/components/spinner';
 import { Toast } from 'primereact/toast';
@@ -22,6 +22,8 @@ import Create from '../providers/portofolio/create';
 import Edit from '../providers/portofolio/edit';
 import CreateMethodPayment from '../payments/create';
 import LayoutAdmin from '@/components/layoutAdmin';
+import { MultiSelect } from 'primereact/multiselect';
+import { Services } from '@/hooks/services';
 
 export type FormProps = {
     name: string;
@@ -36,6 +38,7 @@ export type FormProps = {
     state: boolean;
     personImage: any;
     providerDescription: string;
+    zip?: string;
 }
 
 const Index = () => {
@@ -43,7 +46,8 @@ const Index = () => {
     const {updateProfile} = Users();
     const {getAddress} = Maps();
     const {getPortofolioProvider, deleteImagePortofolio} = Portofolios();
-    const {uploadLicense, getLicenses} = Providers();
+    const {uploadLicense, getLicenses, getServicesProvider, updateServices} = Providers();
+    const { getAllServices } = Services();
 
     const [user, setUser] = useState<Profile>(
         {
@@ -85,9 +89,13 @@ const Index = () => {
 
     const [selectedPlace, setSelectedPlace] = useState<string>('');
     const [selectedLocation, setSelectedLocation] = useState<any>(null);
+    const [zip, setZip] = useState<any>(null);
 
     const [buttonActive, setButtonActive] = useState<boolean>(false);
     const [listNames, setListNames] = useState<string[]>([]);
+
+    const [services, setServices] = useState<Service[]>([]);
+    const [selectedServices, setSelectedServices] = useState<any[]>([]);
 
     const fileUploadPersonRef = useRef<any>(null);
     const fileUploadProviderRef = useRef<any>(null);
@@ -127,22 +135,37 @@ const Index = () => {
     }
 
     const setDataUser = async () => {
-        const response = await getUserAuthenticated();
-        setUser(response.data.user);
-        if(response.data.user.role === 'PROVIDER') {
-            setImageBussines(response.data.user.providerImage);
-            getPortofolio(response.data.user.idProvider);
-            getLicense(response.data.user.idProvider);
-            setSelectedLocation({
-                lat: Number(response.data.user.providerLat || 0),
-                lng: Number(response.data.user.providerLng || 0),
-            })
-            resetMap(response.data.user.providerLat || 0, response.data.user.providerLng || 0);
-        } else {
-            setImageBussines(response.data.user.image);
+        try {
+            const response = await getUserAuthenticated();
+            setUser(response.data.user);
+            const serviceList = await getAllServices();
+            if(serviceList.status == 200) {
+                setServices(serviceList.data.services);
+            }
+
+            if(response.data.user.role === 'PROVIDER') {
+                setImageBussines(response.data.user.providerImage);
+                getPortofolio(response.data.user.idProvider);
+                getLicense(response.data.user.idProvider);
+                setSelectedLocation({
+                    lat: Number(response.data.user.providerLat || 0),
+                    lng: Number(response.data.user.providerLng || 0),
+                })
+                resetMap(response.data.user.providerLat || 0, response.data.user.providerLng || 0);
+                const servicesProvider = await getServicesProvider(response.data.user.idProvider);
+                if(servicesProvider.status == 200 && servicesProvider.data.services.length > 0) {
+                    const filter = servicesProvider.data.services.map((serviceItem: any) => serviceItem.service)
+                    setSelectedServices(filter);
+                }
+            } else {
+                setImageBussines(response.data.user.image);
+            }
+            reset(response.data.user)
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
         }
-        reset(response.data.user)
-        setLoading(false);
     }
 
     const getLicense = async (idProvider: number) => {
@@ -181,6 +204,10 @@ const Index = () => {
         setDataUser();
     }, []);
 
+    useEffect(() => {
+        setButtonActive(true);
+    }, [setSelectedServices])
+
     const toTitleCase = (str: string) => {
         const string = str
         .toLowerCase()
@@ -193,6 +220,31 @@ const Index = () => {
         return string;
     }
 
+    const resUpdate = async (idProfile: number, data: any) => {
+        try {
+            const response = await updateProfile(idProfile, data);
+            if(response.status == 200) {
+                if(user && user.role == 'PROVIDER') {
+                    const servicesData = {
+                        services: selectedServices.length > 0 ? selectedServices : []
+                    }
+                    const updateService = await updateServices(user && user.idProvider, servicesData)
+                    if(updateService.status == 200) {
+                        setDataUser();
+                        resetInputsForm();
+                        toast.current!.show({severity:'success', summary:'Successfull', detail: response.data.msg, life: 4000});
+                        setLoading(false);
+                    }
+                }
+
+            }
+        } catch (error: any) {
+            console.log(error)
+            setLoading(false)
+            toast.current!.show({severity:'error', summary:'Error', detail: error.msg, life: 4000});
+        }
+    }
+
     const onSubmit = (formData: FormProps) => {
         setLoading(true)
         formData.providerImage = imageProvider;
@@ -200,8 +252,9 @@ const Index = () => {
 
         formData.lat = String(selectedLocation.lat);
         formData.lng = String(selectedLocation.lng);
+        formData.zip = String(zip)
 
-        updateProfile(user.uid, formData, setLoading, toast, setDataUser, resetInputsForm);
+        resUpdate(user.uid, formData);
         
         if(fileUploadPersonRef.current !== null) fileUploadPersonRef.current.clear();
         if(fileUploadProviderRef.current !== null) fileUploadProviderRef.current.clear();
@@ -386,6 +439,11 @@ const Index = () => {
                                         <Textarea id='providerDescription' name='providerDescription' rows={3} readonly onClick={onClickInputs} />
                                     </div>
                                     <div className='col-span-2 py-2'>
+                                        <p className='text-sm'>Services</p>
+                                        <MultiSelect value={selectedServices} onChange={(e) => setSelectedServices(e.value)} options={services} optionLabel="service_name" 
+                                        filter display="chip" placeholder="Select Services" maxSelectedLabels={10} className="w-full md:w-20rem" />
+                                    </div>
+                                    <div className='col-span-2 py-2'>
                                         <p className='text-sm'>Address</p>
                                         <MapComponent
                                             selectedLocation={selectedLocation}
@@ -393,6 +451,7 @@ const Index = () => {
                                             getAddress={getAddress}
                                             selectedPlace={selectedPlace}
                                             setSelectedPlace={setSelectedPlace}
+                                            setZip={setZip}
                                             onClick={onClickInputs} />
                                     </div>
                                     {

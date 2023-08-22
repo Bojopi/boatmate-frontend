@@ -191,8 +191,9 @@ const Index = () => {
           </div>
           <div className='mt-8'>
             {
-              portofolio.length > 0 &&
+              portofolio.length > 0 ?
                 <ImageCarousel portofolio={portofolio}></ImageCarousel>
+              : <p className='text-sky-500'>No gallery</p>
             }
           </div>
         </div>
@@ -220,7 +221,7 @@ const Index = () => {
                     }
                 </div>
               ))
-              : <p>No registered license</p>
+              : <p className='text-sky-500'>No registered license</p>
             }
           </div>
         </div>
@@ -254,7 +255,7 @@ const Index = () => {
                   </div>
                 : null
               ))
-              : null
+              : <p className='text-sky-500'>No reviews</p>
             }
           </div>
         </div>

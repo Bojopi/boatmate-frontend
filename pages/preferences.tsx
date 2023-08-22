@@ -52,14 +52,12 @@ const Preferences = () => {
 
     const setRole = async (e: any) => {
         setLoading(true);
-        let data = {
-            role: 4
-        };
+        let data: any = {};
 
         if(e.target.id == 'provider') {
-            data.role = 3
+            data['role'] = 3
         } else {
-            data.role = 4;
+            data['role'] = 4;
         }
 
         setRoleUser(user.uid, data, toast, setLoading);
@@ -75,8 +73,31 @@ const Preferences = () => {
         </Head>
         <Spinner loading={loading} />
         <Toast ref={toast} />
-        <div className='w-full h-screen bg-gray-100 flex items-center justify-center'>
-            <div className='bg-white md:rounded-md shadow-lg flex flex-col items-center gap-5 md:gap-20 justify-center p-10'>
+        <div className='w-full h-screen bg-gray-100 flex flex-col items-center justify-center'>
+            <h1 className='text-xl font-bold py-10'>Which best describes your role?</h1>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center px-3 py-3">
+                <div id='customer' className={`col-span-1 flex flex-col items-center gap-5 p-5 rounded-md shadow-lg shadow-gray-300/30 hover:shadow-sky-300/30 cursor-pointer border-none`} onClick={setRole}>
+                    <div className='w-20 h-20 md:w-52 md:h-52 rounded-full overflow-hidden flex items-center justify-center'>
+                        <img 
+                        id='customer' 
+                        src="https://s3-alpha-sig.figma.com/img/ddd5/77e1/14855842f8a56f007586b8285e9d0847?Expires=1693180800&Signature=dC2L0D7cgdZooQQFXKX8-waC2jEhK~cB-dzAhrE0XvrE0If7a~nu8hU9C8biDadeHKHWFrqa~ZNm1ZPQ9cmFUy5yBF4pgxX-udRrM5MpKMkH~R5H0-4xpLMuCT8AhaxCCFWpCBGK86ImEufpxOuViuyVVPJvP6Y4aZiH4W~Hr6~-ATyES1AF3srA~UAXbsv7vxW58lzzpZ4vssqY05F2JNhgCr3skEyzbvMA-ZpwTR6omtj36zfr1e7vrfH1Z~eTr0evMI1WhIv7z0usnJWiDd5BY5RkFCNkFLR~6qeyyuV-9NZ0lKmxT1Mc-P6nklT0LNTt0deY4KSsrzyxZq5LKQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" 
+                        alt="sailor"
+                        className='w-full h-full object-cover' />
+                    </div>
+                    <p id='customer' className='font-extrabold'>CUSTOMER</p>
+                </div>
+                <div id='provider' className={`col-span-1 flex flex-col items-center gap-5 p-5 rounded-md shadow-lg shadow-gray-300/30 hover:shadow-sky-300/30 cursor-pointer border-none`} onClick={setRole}>
+                    <div className='w-20 h-20 md:w-52 md:h-52 rounded-full overflow-hidden flex items-center justify-center'>
+                        <img 
+                        id='provider' 
+                        src="https://s3-alpha-sig.figma.com/img/1a9a/fc2f/184b5b79b23f05c4cd45ec775514c43b?Expires=1693180800&Signature=dESmJYDeD8IZ3e2Eowj-xI2heHR7HZStGMvX6Af12wSKVnlFHJZkU4Ou7XO7wbLXE5-oORow020ZDMVnh-GpFP3A~79ht0VAH1dEDmskCrtCCfKyy9IfBMh5SHQPRyiN2m-tJ~A106~ScQw2dB~WRUmDZpgXXszxfy~z8~O6iDjASoJD03SQg03kdMo7zngZhppAYV-mLOo~c2qXDWoEwOPckixW0IdZVGgotKs1Y5PNLMrOAl1xa-8FJFEdyJtxB7aAlZor5USqIMBBvUCYkrWn8j86BugZuK5jR3FtUJ9r4mSzxmC5if-s2CudJ3UAUIk0XzJTzMr1PyO5QckIQg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+                        alt="provider"
+                        className='w-full h-full object-cover' />
+                    </div>
+                    <p id='provider' className='font-extrabold'>PROVIDER</p>
+                </div>
+            </div>
+            {/* <div className='bg-white md:rounded-md shadow-lg flex flex-col items-center gap-5 md:gap-20 justify-center p-10'>
                 <div className='flex flex-row items-center gap-5'>
                     <img
                         src="https://images.squarespace-cdn.com/content/v1/634f43133040660154fd193a/07d993cf-6c35-46b4-a3d8-2c26c53b2958/Biggest_BoatMate-removebg-preview.png?format=1500w"
@@ -95,7 +116,7 @@ const Preferences = () => {
                         <p id='provider' className='font-extrabold text-[#373A85]'>PROVIDER</p>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     </>
   )

@@ -125,6 +125,20 @@ export const Providers = () => {
 
     const getLicenses = (idProvider: number) => axios.get(`/provider-license/${idProvider}`);
 
+    const updateServices = (idProvider: number, data: any) => 
+    // {
+        axios.post(`/update-services/${idProvider}`, data)
+    //     .then((res) => {
+    //         toast.current!.show({severity:'success', summary:'Successfull', detail: res.data.msg, life: 4000});
+    //         setLoading(false)
+    //         router.push('/welcome/profile');
+    //     })
+    //     .catch((error) => {
+    //         console.log(error);
+    //         toast.current!.show({severity:'error', summary:'Error', detail: error.response.data.msg, life: 4000});
+    //         setLoading(false);
+    //     })
+    // }
 
     return {
         getAllProviders,
@@ -137,7 +151,8 @@ export const Providers = () => {
         addService,
         uploadLicense,
         getLicenses,
-        getOneServiceProvider
+        getOneServiceProvider,
+        updateServices
     }
 }
 

@@ -194,7 +194,7 @@ const Index = () => {
                 serviceList.map((item: ServiceProvider) => {
                   return (<div key={item.id_service_provider} className='col-span-3 h-96'><ServiceCardComponent service={item} disabled={disabled} userLat={userLat} userLng={userLng} ></ServiceCardComponent></div>)
                 })
-                : 
+                :
                 <div className='col-span-12 flex flex-col gap-3 justify-center items-center my-[25%] md:my-3'>
                   <i className='pi pi-ban' style={{fontSize: '3rem', color: 'red'}}></i>
                   <p className='text-xl font-bold'>No Content</p>

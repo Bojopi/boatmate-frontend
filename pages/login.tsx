@@ -66,15 +66,23 @@ const Login: React.FC = () => {
 
     const handleSuccess = async (credentialResponse: CredentialResponse) => {
         setLoading(true);
-        const response = await googleLogin(credentialResponse);
-        if(response.status == 200) {
-            if(response.data.newUser) {
-                router.push('/preferences');
-            } else {
-                router.push('/welcome');
+        try {
+            const response = await googleLogin(credentialResponse);
+            if(response.status == 200) {
+                console.log(response)
+                if(response.data.newUser == true || response.data.user.check_steps == false) {
+                    router.push('/preferences');
+                } else {
+                    if(response.data.user.role_description == 'CUSTOMER') {
+                        router.push('/category/detailing');
+                    }
+                    router.push('/welcome/profile');
+                }
+    
+                setLoading(false);
             }
-
-            setLoading(false);
+        } catch (error) {
+            console.log(error)
         }
     }
 

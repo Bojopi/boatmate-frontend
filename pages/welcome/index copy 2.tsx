@@ -141,7 +141,7 @@ const Welcome = () => {
         formData.lat = String(selectedLocation.lat);
         formData.lng = String(selectedLocation.lng);
 
-        updateProfile(user.uid, formData, setLoading, toast, setDataUser, resetInputsForm);
+        // updateProfile(user.uid, formData, setLoading, toast, setDataUser, resetInputsForm);
         
         if(fileUploadPersonRef.current !== null) fileUploadPersonRef.current.clear();
         if(fileUploadProviderRef.current !== null) fileUploadProviderRef.current.clear();

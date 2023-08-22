@@ -125,6 +125,22 @@ const Profile = () => {
         reset,
     } = methods;
 
+    const resUpdate = async (idProfile: number, data: any) => {
+        try {
+            const response = await updateProfile(idProfile, data);
+            if(response.status == 200) {
+                setLoading(false);
+                toast.current!.show({severity:'success', summary:'Successfull', detail: response.data.msg, life: 4000});
+                setDataUser();
+                resetInputsForm();
+            }
+        } catch (error: any) {
+            console.log(error)
+            setLoading(false)
+            toast.current!.show({severity:'error', summary:'Error', detail: error.msg, life: 4000});
+        }
+    }
+
     const onSubmit = (formData: FormProps) => {
         setLoading(true)
         formData.personImage = imagePerson;
@@ -132,7 +148,7 @@ const Profile = () => {
         formData.lat = String(selectedLocation.lat);
         formData.lng = String(selectedLocation.lng);
 
-        updateProfile(Number(user?.uid), formData, setLoading, toast, setDataUser, resetInputsForm);
+        resUpdate(Number(user?.uid), formData);
         
         if(fileUploadPersonRef.current !== null) fileUploadPersonRef.current.clear();
     };
