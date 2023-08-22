@@ -78,7 +78,7 @@ const CreateAccount = () => {
         setLoading(true);
         data.password = password;
         data.idRole = "3";
-        createUSer(data, toast, setLoading);
+        // createUSer(data, toast, setLoading);
     }
     
     const onErrors = () => {}
