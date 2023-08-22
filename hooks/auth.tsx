@@ -44,23 +44,24 @@ export const Auth = () => {
 
     const googleLogin = (data: any) => axios.post('/google', data);
 
-    const createUSer = (data: any, toast: any, setLoading: any) => {
+    const createUSer = (data: any) => 
+    // {
         axios.post('/create-profile', data)
-        .then((res) => {
-            toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
-            if(data.idRole == 4) {
-                router.push('/category/detailing')
-            } else {
-                router.push('/welcome');
-            }
-            setLoading(false);
-        })
-        .catch((err) => {
-            console.log(err);
-            toast.current.show({severity:'error', summary:'Error', detail: `${err.response.data.msg}`, life: 4000});
-            setLoading(false);
-        })
-    };
+    //     .then((res) => {
+    //         toast.current.show({severity:'success', summary:'Successful', detail: `${res.data.msg}`, life: 4000});
+    //         if(data.idRole == 4) {
+    //             router.push('/category/detailing')
+    //         } else {
+    //             router.push('/welcome');
+    //         }
+    //         setLoading(false);
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //         toast.current.show({severity:'error', summary:'Error', detail: `${err.response.data.msg}`, life: 4000});
+    //         setLoading(false);
+    //     })
+    // };
 
     const forgotPass = (data: any, setLoading: any, toast: any) => {
         axios.post('/send-mail', data)

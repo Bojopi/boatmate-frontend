@@ -16,6 +16,7 @@ import { Maps } from '@/hooks/maps';
 import { Auth } from '@/hooks/auth';
 import { Button } from 'primereact/button';
 import MenuBar from '@/components/menuBar';
+import { useRouter } from 'next/router';
 
 
 export type FormProps = {
@@ -55,6 +56,8 @@ const Register: React.FC = () => {
     const [toggleConfirmPass, setToggleConfirmPass] = useState<boolean>(false);
     const [errorMatch, setErrorMatch] = useState<boolean>(false);
 
+    const router = useRouter()
+
     const items = [
         {
             label: 'Personal Data',
@@ -90,6 +93,25 @@ const Register: React.FC = () => {
         formState: {errors, isValid},
     } = methods;
 
+    const createNewUser = async (data: any) => {
+        try {
+            const response = await createUSer(data);
+            if(response.status == 200) {
+                toast.current!.show({severity:'success', summary:'Successful', detail: `${response.data.msg}`, life: 4000});
+                if(data.idRole == 4) {
+                    router.push('/category/detailing')
+                } else {
+                    router.push('/service-list');
+                }
+                setLoading(false);
+            }
+        } catch (error: any) {
+            console.log(error);
+            toast.current!.show({severity:'error', summary:'Error', detail: `${error.response.data.msg}`, life: 4000});
+            setLoading(false);
+        }
+    }
+
     const onSubmit = (formData: FormProps) => {
         formData.idRole = isSelected;
         formData.password = password;
@@ -99,7 +121,7 @@ const Register: React.FC = () => {
         formData.zip = zip;
 
         setLoading(true);
-        createUSer(formData, toast, setLoading)
+        createNewUser(formData)
     };
 
     const onErrors = () => {
