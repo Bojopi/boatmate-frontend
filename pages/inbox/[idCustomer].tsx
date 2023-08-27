@@ -8,15 +8,27 @@ import { ContractCustomer } from '@/interfaces/interfaces';
 import { formatDateDash } from '@/functions/date';
 import { Maps } from '@/hooks/maps';
 
+import io from 'socket.io-client'
+import { InputText } from 'primereact/inputtext';
+import { Button } from 'primereact/button';
+import { Conversations } from '@/hooks/conversation';
+
+const socket = io('http://localhost:8080');
+
 const InboxPage = () => {
   const { getContractsCustomer } = Contracts();
   const { getAddress } = Maps();
+  const { getMessages, sendMessage } = Conversations();
 
   const [contracts, setContracts] = useState<ContractCustomer[]>([]);
   const [addresses, setAddresses] = useState<string[]>([]);
   const [indexActive, setIndexActive] = useState<number>(0);
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [message, setMessage] = useState<string>('');
+  const [messages, setMessages] = useState<any[]>([]);
+  const [storedMessage, setStoredMessage] = useState<any[]>([]);
 
   const toast = useRef<Toast>(null);
 
@@ -34,6 +46,20 @@ const InboxPage = () => {
         return 'text-rose-500'
       default:
         break;
+    }
+  };
+
+  const getMessageStored = async (idContract: number) => {
+    try {
+      const response = await getMessages(idContract);
+      if(response.status == 200) {
+        setStoredMessage(response.data.messages);
+        setLoading(false)
+      }
+    } catch (error) {
+      console.log(error);
+      setStoredMessage([]);
+      setLoading(false)
     }
   }
 
@@ -59,6 +85,8 @@ const InboxPage = () => {
           response.data.contracts.map(async (item: ContractCustomer) => {
             getAddressMap(Number(item.provider_lat), Number(item.provider_lng));
           })
+
+          getMessageStored(Number(response.data.contracts[indexActive].id_contract));
         }
 
         setLoading(false);
@@ -72,8 +100,38 @@ const InboxPage = () => {
     setLoading(true)
     if(router.query.idCustomer) {
       getContracts(Number(router.query.idCustomer));
+      socket.emit('user_connected', router.query.idCustomer);
     }
   }, [router.query.idCustomer]);
+
+  useEffect(() => {
+    socket.on('message', recieveMessage);
+
+    return () => {socket.off('message', recieveMessage)}
+  }, [])
+
+  useEffect(() => {
+    setLoading(true);
+    if(contracts && contracts.length > 0) {
+      getMessageStored(contracts[indexActive].id_contract)
+    }
+  }, [indexActive])
+
+  const sendMessages = (e: any) => {
+    e.preventDefault();
+    const data = {
+      userId: (contracts && contracts.length > 0) && contracts[indexActive].id_provider,
+      message: message,
+      from: (contracts && contracts.length > 0) && `${contracts[indexActive].person_name} ${contracts[indexActive].lastname}`
+    }
+    setMessages([...messages, message]);
+    socket.emit('message', data);
+    setMessage('');
+  }
+
+  const recieveMessage = (message: any) => 
+    setMessages((state) => [...state, message]);
+
   return (
     <div className='relative overflow-hidden'>
       <LayoutPrincipal>
@@ -111,7 +169,7 @@ const InboxPage = () => {
                 : null
               }
             </div>
-            <div className='h-auto w-full border rounded-xl bg-white p-4'>
+            <div className='h-auto w-full flex flex-col justify-between border rounded-xl bg-white p-4'>
               {
                 contracts.length > 0 && (
                     <div>
@@ -132,6 +190,29 @@ const InboxPage = () => {
                     </div>
                 )
               }
+              <form onSubmit={sendMessages}>
+                <div className='w-full h-64 p-5 border rounded-tl-xl rounded-tr-xl overflow-y-auto flex flex-col gap-3'>
+                  {
+                    storedMessage && storedMessage.length > 0 ?
+                    storedMessage.map((store: any, i: number) => (
+                      <div key={`st-${i}`} className={`py-1 px-2 rounded-xl w-auto ${store.id_provider ? 'bg-gray-100 mr-auto' : 'bg-sky-300 ml-auto'}`}>{store.message_text}</div>
+                    ))
+                    : null
+                  }
+                  <p className={`w-auto mx-auto text-xs ${storedMessage && storedMessage.length > 0 ? 'flex' : 'hidden'}`} >- Last messages -</p>
+                  {
+                    messages.length > 0 ?
+                    messages.map((msg: any, i: number) => (
+                      <div key={i} className={`py-1 px-2 rounded-xl w-auto ${msg.from == `${contracts && contracts[indexActive].person_name} ${contracts && contracts[indexActive].lastname}` ? 'bg-sky-300 ml-auto': 'bg-gray-100 mr-auto'}`}>{msg.message}</div>
+                    ))
+                    : null
+                  }
+                </div>
+                <div className='w-full flex items-center justify-between'>
+                  <InputText type="text" className='w-full' value={message} onChange={(e: any) => setMessage(e.target.value)} />
+                  <Button type='submit' label='Send' icon='pi pi-send' className='w-auto px-5 shrink-0'></Button>
+                </div>
+              </form>
             </div>
           </div>
       </LayoutPrincipal>

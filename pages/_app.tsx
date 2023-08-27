@@ -18,10 +18,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const [userToken, setUserToken] = useState<string>('');
 
-  // const socket = io('https://boatmate.com', {
-  //   auth: {token: userToken},
-  // });
-
   const getToken = async () => {
     try {
       const response = await getUserAuthenticated();
@@ -33,27 +29,27 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }
 
-  useEffect(() => {
-    getToken();
-    if(userToken != '') {
-      const socket = io('https://boatmate.com', {
-        auth: {token: userToken},
-      });
+  // useEffect(() => {
+  //   getToken();
+  //   if(userToken != '') {
+  //     const socket = io('http://localhost:8080', {
+  //       auth: {token: userToken},
+  //     });
       
-      socket.on('connect', () => {
-        console.log('socket connected')
-      });
-      socket.on('test', (data) => {
-          console.log(data)
-      })
-      socket.on('connect_error', (err) => {
-          console.log('connect error: ', err)
-      })
-      socket.on('contract-create', (data) => {
-          console.log('contract-info: ', data)
-      })
-    }
-  }, [userToken])
+  //     socket.on('connect', () => {
+  //       console.log('socket connected')
+  //     });
+  //     socket.on('test', (data) => {
+  //         console.log(data)
+  //     })
+  //     socket.on('connect_error', (err) => {
+  //         console.log('connect error: ', err)
+  //     })
+  //     socket.on('contract-create', (data) => {
+  //         console.log('contract-info: ', data)
+  //     })
+  //   }
+  // }, [userToken])
 
   return (
     <>

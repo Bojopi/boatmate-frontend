@@ -251,3 +251,22 @@ export interface Hired {
     provider_zip:        string;
     count?:              number;
 }
+
+export interface Conversation {
+    id_conversation:    number;
+    conversation_state: boolean;
+    contractId:         number;
+}
+
+export interface Message {
+    id_message:     number;
+    message_text:   string;
+    message_date:   Date;
+    message_read:   boolean;
+    id_provider:    number | null;
+    provider_name:  string | null;
+    provider_image: string | null;
+    id_customer:    number | null;
+    person_name:    string | null;
+    lastname:       string | null;
+}

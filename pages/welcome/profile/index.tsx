@@ -24,6 +24,7 @@ import CreateMethodPayment from '../payments/create';
 import LayoutAdmin from '@/components/layoutAdmin';
 import { MultiSelect } from 'primereact/multiselect';
 import { Services } from '@/hooks/services';
+import { Stripes } from '@/hooks/stripe';
 
 export type FormProps = {
     name: string;
@@ -45,9 +46,10 @@ const Index = () => {
     const {getUserAuthenticated} = Auth();
     const {updateProfile} = Users();
     const {getAddress} = Maps();
-    const {getPortofolioProvider, deleteImagePortofolio} = Portofolios();
+    const {getPortofolioProvider, deleteImagePortofolio, postImagesPortofolio} = Portofolios();
     const {uploadLicense, getLicenses, getServicesProvider, updateServices} = Providers();
     const { getAllServices } = Services();
+    const { createAccount } = Stripes();
 
     const [user, setUser] = useState<Profile>(
         {
@@ -82,7 +84,6 @@ const Index = () => {
     // const [providerLicense, setProviderLicense] = useState<any[]>([]);
 
     const [licenseList, setLicenseList] = useState<any[]>([]);
-    const [buttonLicense, setButtonLicense] = useState<boolean>(true);
 
     const [portofolioList, setPortofolioList] = useState<Portofolio[]>([]);
     const [portofolioIndex, setPortofolioIndex] = useState<number>(0);
@@ -288,18 +289,6 @@ const Index = () => {
         }, 1500)
     }
 
-    const onTemplateSelect = (e: any) => {
-        setButtonLicense(false);
-        let providerLicense: any[] = []
-        let files = e.files;
-        console.log(files);
-        Object.keys(files).forEach((key) => {
-            providerLicense.push(files[key])
-        });
-
-        saveLicense(providerLicense);
-    };
-
     const confirmDelete = (idPortofolio: number) => {
         const accept = async () => {
             setLoading(true)
@@ -328,14 +317,6 @@ const Index = () => {
         return <img src={item.portofolio_image} alt="photo" style={{ width: '100%', display: 'block' }} />;
     }
 
-    const caption = (item: Portofolio) => {
-        return (
-            <React.Fragment>
-                <div className="text-lg mb-2 font-bold">Description</div>
-                <p className="text-white">{item.portofolio_description}</p>
-            </React.Fragment>
-        );
-    }
 
     const saveLicense = (providerLicense: any) => {
         setLoading(true);
@@ -345,9 +326,54 @@ const Index = () => {
         uploadLicense(user.idProvider, data, toast, setLoading, setLicenseList);
 
         if(fileUploadProviderLicense.current !== null) fileUploadProviderLicense.current.clear();
-        setButtonLicense(true);
+    }
+    
+    const savePortofolio = (providerPortofolio: any[]) => {
+        setLoading(true);
+        const data = {
+            images: providerPortofolio,
+            count: providerPortofolio.length
+        }
+        postImagesPortofolio(user.idProvider, data, toast, setLoading, portofolioList, setPortofolioList);
     }
 
+    const handleLicenseChange = (event: any) => {
+        let providerLicense: any[] = []
+        let files = event.target.files;
+        Object.keys(files).forEach((key) => {
+            providerLicense.push(files[key])
+        });
+
+        saveLicense(providerLicense);
+    };
+
+    const handleEditLicenseButtonClick = () => {
+        const fileInput = document.getElementById('license-input');
+        if (fileInput) {
+            fileInput.click();
+        }
+    };
+    
+    const handlePortofolioChange = (event: any) => {
+        let providerPortofolio: any[] = []
+        let files = event.target.files;
+        if(Object.keys(files).length > 0) {
+            Object.keys(files).forEach((key) => {
+                providerPortofolio.push(files[key])
+            });
+        } else {
+            providerPortofolio.push(files)
+        }
+        savePortofolio(providerPortofolio);
+    };
+
+    const handleEditPortofolioButtonClick = () => {
+        const fileInput = document.getElementById('portofolio-input');
+        if (fileInput) {
+            fileInput.click();
+        }
+    };
+    
     const handleImageChange = (event: any) => {
         const selectedImage = event.target.files[0];
         if (selectedImage) {
@@ -367,6 +393,14 @@ const Index = () => {
             fileInput.click();
         }
     };
+    
+    const stripeAccount = () => {
+        setLoading(true);
+        const data = {
+            email: user.email
+        }
+        createAccount(user.idProvider, data, toast, setLoading);
+    }
 
   return (
     <LayoutAdmin>
@@ -374,7 +408,7 @@ const Index = () => {
         <Toast ref={toast} />
         <ConfirmDialog />
         <Galleria ref={galleria} value={portofolioList} numVisible={portofolioList.length} style={{ maxWidth: '50%' }} 
-        circular fullScreen showItemNavigators showThumbnails={false} item={itemTemplate} caption={caption} activeIndex={portofolioIndex}
+        circular fullScreen showItemNavigators showThumbnails={false} item={itemTemplate} activeIndex={portofolioIndex}
         onItemChange={(e) => setPortofolioIndex(e.index)} />
         <div className='w-full p-5'>
             <h1 className='text-gray-900/75 text-xl font-semibold leading-loose'>Settings</h1>
@@ -465,13 +499,22 @@ const Index = () => {
                                     <div className='col-span-2 py-2'>
                                         <div className='flex items-center gap-5'>
                                             <p className='text-sm'>Credentials</p>
-                                            <FileUpload 
-                                            ref={fileUploadProviderLicense} 
-                                            mode='basic' accept='.pdf,image/*' 
-                                            multiple 
-                                            customUpload 
-                                            uploadHandler={onTemplateSelect}
-                                            chooseOptions={{style: {background: 'none', color: 'rgba(25, 24, 37, 50)', borderColor: 'rgba(25, 24, 37, 50)', fontSize: '12px'}}} />
+                                            <div className='relative h-8'>
+                                                <input
+                                                    type='file'
+                                                    id='license-input'
+                                                    accept='.pdf,image/*'
+                                                    multiple
+                                                    style={{ display: 'none' }}
+                                                    onChange={handleLicenseChange}
+                                                />
+                                                <Button 
+                                                type='button'
+                                                icon='pi pi-plus' 
+                                                outlined
+                                                severity='secondary'
+                                                className='absolute top-0 left-0 w-8 h-8' onClick={handleEditLicenseButtonClick} />
+                                            </div>
                                         </div>
                                         <div className='w-full mt-5'>
                                         {
@@ -505,7 +548,22 @@ const Index = () => {
                                     <div className='col-span-2 py-2'>
                                         <div className='flex items-center gap-5'>
                                             <p className='text-sm'>Gallery</p>
-                                            <Create idProvider={user.idProvider} portofolio={portofolioList} setPortofolio={setPortofolioList} loading={loading} setLoading={setLoading} toast={toast} />
+                                            <div className='relative h-8'>
+                                                <input
+                                                type='file'
+                                                id='portofolio-input'
+                                                accept='image/*'
+                                                multiple
+                                                style={{ display: 'none' }}
+                                                onChange={handlePortofolioChange}
+                                                />
+                                                <Button 
+                                                type='button'
+                                                icon='pi pi-plus' 
+                                                outlined
+                                                severity='secondary'
+                                                className='absolute top-0 left-0 w-8 h-8' onClick={handleEditPortofolioButtonClick} />
+                                            </div>
                                         </div>
                                         <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 justify-center items-center gap-3 mt-5 overflow-x-hidden'>
                                             {
@@ -519,10 +577,7 @@ const Index = () => {
                                                                 style={{'backgroundImage': `url(${item.portofolio_image})`}}
                                                             >
                                                                 <div className='text-white bg-black/30 w-full h-full p-2 relative flex flex-col opacity-0 hover:opacity-100 transition-opacity'>
-                                                                    <p className='font-medium text-sm md:text-base'>Description</p>
-                                                                    <p className='text-xs md:text-sm line-clamp-5'>{item.portofolio_description}</p>
                                                                     <div className='absolute bottom-0 flex items-center'>
-                                                                        <Edit idPortofolio={item.id_portofolio} portofolio={portofolioList} setPortofolio={setPortofolioList} loading={loading} setLoading={setLoading} toast={toast} />
                                                                         <Button type='button' icon='pi pi-trash' text className='text-white' onClick={() => confirmDelete(item.id_portofolio)} />
                                                                         <Button type='button'  icon="pi pi-external-link" text className='text-white' onClick={() => {
                                                                             setPortofolioIndex(i)
@@ -548,7 +603,12 @@ const Index = () => {
                                     <div className='col-span-2 py-2'>
                                         <div className='flex items-center gap-5'>
                                             <p className='text-sm'>Method payment accepted</p>
-                                            <CreateMethodPayment idProvider={user.idProvider} portofolio={portofolioList} setPortofolio={setPortofolioList} setLoading={setLoading} toast={toast} />
+                                            <Button 
+                                            type='button'
+                                            icon='pi pi-plus' 
+                                            outlined
+                                            severity='secondary'
+                                            className='w-8 h-8' onClick={stripeAccount} />
                                         </div>
                                         <p className='text-xs font-light leading-tight mt-5 px-5'>Without payment methods, set up.</p>
                                     </div>
