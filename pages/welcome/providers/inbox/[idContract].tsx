@@ -12,7 +12,7 @@ import { generateBreadcrumbItems } from '@/functions/breadcrumb';
 import { BreadCrumb } from 'primereact/breadcrumb';
 
 const InboxPage = () => {
-  const { getConversation } = Conversations();
+  const { getMessages } = Conversations();
 
   const [data, setData] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
@@ -55,7 +55,7 @@ const InboxPage = () => {
   const getConversations = async (idContract: number) => {
     console.log(idContract)
     try {
-      const response = await getConversation(idContract);
+      const response = await getMessages(idContract);
       if(response.status == 200) {
         setData(response.data);
 
