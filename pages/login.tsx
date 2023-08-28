@@ -69,7 +69,6 @@ const Login: React.FC = () => {
         try {
             const response = await googleLogin(credentialResponse);
             if(response.status == 200) {
-                console.log(response)
                 if(response.data.newUser == true || response.data.user.check_steps == false) {
                     router.push('/preferences');
                 } else {
@@ -152,7 +151,7 @@ const Login: React.FC = () => {
                     </div>
                     <div className='hidden md:col-span-1 h-[450px] md:flex items-center justify-center overflow-hidden'>
                         <img 
-                        src="https://s3-alpha-sig.figma.com/img/1a3f/69d3/e2ffbce11a16ded3bbb8c0e28b7f75eb?Expires=1693180800&Signature=RsM1Ob-BGifavlrAyEqnuV54WWx~Zy6~HuWMKsbgov4R-8pEkliRV9bZMVJ85nBNWfIIeR7B9wP03~DEIjJmz-WQLZLl07CXZHRqZ8YyvnRLaPlH3H-Qf8eyMLzMSDu76BcZGfuVasv2921gvs-FqykDuQXpJwWwDJpFGmCO-nAXGDq7zhRnpi0bO--~It2UOfhNbJC3jmZL0P5FGZi1Hu5cqvL16jIcT1mLYQJtlWPnMVOYgx3Qk3HTjC6pHKQB6cbB1pyOBiIOguRQGidXdS4qkoX78POxwOtbfNzO7ZvCrf9L6McbYQECjDWc~RPl69YI7AgTs9JWdFZMyIuyBg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" 
+                        src="https://i.postimg.cc/fTpjqHKw/nikldn-t-6-GW8-T6-Jsc-unsplash.jpg" 
                         alt="boat"
                         className='w-full object-cover' />
                     </div>

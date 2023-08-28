@@ -80,7 +80,7 @@ const Preferences = () => {
                     <div className='w-20 h-20 md:w-52 md:h-52 rounded-full overflow-hidden flex items-center justify-center'>
                         <img 
                         id='customer' 
-                        src="https://s3-alpha-sig.figma.com/img/ddd5/77e1/14855842f8a56f007586b8285e9d0847?Expires=1693180800&Signature=dC2L0D7cgdZooQQFXKX8-waC2jEhK~cB-dzAhrE0XvrE0If7a~nu8hU9C8biDadeHKHWFrqa~ZNm1ZPQ9cmFUy5yBF4pgxX-udRrM5MpKMkH~R5H0-4xpLMuCT8AhaxCCFWpCBGK86ImEufpxOuViuyVVPJvP6Y4aZiH4W~Hr6~-ATyES1AF3srA~UAXbsv7vxW58lzzpZ4vssqY05F2JNhgCr3skEyzbvMA-ZpwTR6omtj36zfr1e7vrfH1Z~eTr0evMI1WhIv7z0usnJWiDd5BY5RkFCNkFLR~6qeyyuV-9NZ0lKmxT1Mc-P6nklT0LNTt0deY4KSsrzyxZq5LKQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" 
+                        src="https://i.postimg.cc/MGTBWVts/daniel-olah-Gx0-Zf-Lu-EX9-Y-unsplash.jpg" 
                         alt="sailor"
                         className='w-full h-full object-cover' />
                     </div>
@@ -90,7 +90,7 @@ const Preferences = () => {
                     <div className='w-20 h-20 md:w-52 md:h-52 rounded-full overflow-hidden flex items-center justify-center'>
                         <img 
                         id='provider' 
-                        src="https://s3-alpha-sig.figma.com/img/1a9a/fc2f/184b5b79b23f05c4cd45ec775514c43b?Expires=1693180800&Signature=dESmJYDeD8IZ3e2Eowj-xI2heHR7HZStGMvX6Af12wSKVnlFHJZkU4Ou7XO7wbLXE5-oORow020ZDMVnh-GpFP3A~79ht0VAH1dEDmskCrtCCfKyy9IfBMh5SHQPRyiN2m-tJ~A106~ScQw2dB~WRUmDZpgXXszxfy~z8~O6iDjASoJD03SQg03kdMo7zngZhppAYV-mLOo~c2qXDWoEwOPckixW0IdZVGgotKs1Y5PNLMrOAl1xa-8FJFEdyJtxB7aAlZor5USqIMBBvUCYkrWn8j86BugZuK5jR3FtUJ9r4mSzxmC5if-s2CudJ3UAUIk0XzJTzMr1PyO5QckIQg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+                        src="https://i.postimg.cc/bJnsJTnR/ray-donnelly-rf-Djp-A-f-XY-unsplash.jpg"
                         alt="provider"
                         className='w-full h-full object-cover' />
                     </div>
