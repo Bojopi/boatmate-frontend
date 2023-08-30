@@ -20,6 +20,7 @@ const ProjectsPage = () => {
   const { getRatingProvider } = Ratings();
 
   const [contracts, setContracts] = useState<ContractCustomer[]>([]);
+  const [contractFilter, setContractFilter] = useState<ContractCustomer[]>([]);
   const [contractFilterProgress, setContractFilterProgress] = useState<ContractCustomer[]>([]);
   const [contractFilterFinished, setContractFilterFinished] = useState<ContractCustomer[]>([]);
   const [indexActive, setIndexActive] = useState<number>(0);
@@ -85,7 +86,7 @@ const ProjectsPage = () => {
       const response = await getContractsCustomer(idCustomer);
       if(response.status == 200) {
         setContracts(response.data.contracts);
-        activeIndex(0);
+        setContractFilter(response.data.contracts);
 
         if(response.data.contracts.length > 0) {
           response.data.contracts.map((item: ContractCustomer) => {
@@ -110,12 +111,17 @@ const ProjectsPage = () => {
     setIndexActive(index);
     let filterProgressList: any[] = [];
     let filterFinishedList: any[] = [];
+    let filterList: any[] = [];
 
-    if(index == 0) filterProgressList = contracts.filter((item: ContractCustomer) => item.contract_state == 'APPROVED' || item.contract_state == 'OFFERED')
-    if(index == 1) filterFinishedList = contracts.filter((item: ContractCustomer) => item.contract_state == 'FINISHED' || item.contract_state == 'CANCELED')
+    if(index == 0) filterList = contracts;
+    if(index == 1) filterList = contracts.filter((item: ContractCustomer) => item.contract_state == 'PENDING')
+    if(index == 2) filterList = contracts.filter((item: ContractCustomer) => item.contract_state == 'OFFERED')
+    if(index == 3) filterList = contracts.filter((item: ContractCustomer) => item.contract_state == 'APPROVED')
+    if(index == 4) filterList = contracts.filter((item: ContractCustomer) => item.contract_state == 'FINISHED' || item.contract_state == 'CANCELED')
 
-    setContractFilterProgress(filterProgressList);
-    setContractFilterFinished(filterFinishedList);
+    setContractFilter(filterList);
+    // setContractFilterProgress(filterProgressList);
+    // setContractFilterFinished(filterFinishedList);
   }
 
   const changeStateContract = async (idContract: number, state: string) => {
@@ -154,15 +160,9 @@ const ProjectsPage = () => {
         const response = await updateState(item.id_contract, data);
         if(response.status == 200) {
           item.contract_state = response.data.contract[1][0].contract_state
-          if(data.contractState == 'OFFERED' || data.contractState == 'APPROVED') {
-              setContractFilterProgress([...contractFilterProgress]);
-          } else {
-              const updateList = contractFilterProgress.filter((itemContract: ContractCustomer) => itemContract.id_contract != item.id_contract);
-              setContractFilterProgress(updateList);
-              setContractFilterFinished([...contractFilterFinished, item])
-          }
-            toast.current!.show({severity:'success', summary:'Successfull', detail: response.data.msg, life: 4000});
-            setLoadingButton(false);
+          activeIndex(0);
+          toast.current!.show({severity:'success', summary:'Successfull', detail: response.data.msg, life: 4000});
+          setLoadingButton(false);
         }
     } catch (error) {
         console.log(error);
@@ -195,17 +195,121 @@ const ProjectsPage = () => {
           <Toast ref={toast} />
           <p className='w-full md:w-[80%] mx-auto mt-28 font-semibold'>Projects</p>
           <div className="w-[500px] h-[500px] left-[80%] top-[300px] absolute bg-sky-500/30 rounded-full blur-3xl -z-10" />
-          <div className='w-[80%] h-full mx-auto mt-8 flex gap-8'>
-            <div className='h-full w-96 border rounded-xl shrink-0 overflow-x-hidden'>
+          <div className='w-[80%] h-full mx-auto mt-8'>
+            <div className='w-full flex items-center gap-3 my-5'>
+              <p className='w-auto text-sm font-semibold'>Filters:</p>
+              <Button 
+              label='Pending' 
+              rounded 
+              outlined={indexActive !== 1} 
+              severity='secondary' 
+              className='text-xs' 
+              onClick={() => activeIndex(1)} />
+              <Button 
+              label='Offered' 
+              rounded 
+              outlined={indexActive !== 2} 
+              severity='secondary' 
+              className='text-xs' 
+              onClick={() => activeIndex(2)} />
+              <Button 
+              label='In Progress' 
+              rounded 
+              outlined={indexActive !== 3} 
+              severity='secondary' 
+              className='text-xs' 
+              onClick={() => activeIndex(3)} />
+              <Button 
+              label='Finished' 
+              rounded 
+              outlined={indexActive !== 4} 
+              severity='secondary' 
+              className='text-xs' 
+              onClick={() => activeIndex(4)} />
+              <Button 
+              icon='pi pi-times' 
+              text severity='secondary' 
+              className={`text-xs ${indexActive !== 0 ? 'block' : 'hidden'}`} 
+              onClick={() => activeIndex(0)}
+              />
+            </div>
+            {/* <div className='h-full w-96 border rounded-xl shrink-0 overflow-x-hidden'>
+              <div className={`w-full h-full max-h-44 border flex items-start gap-3 p-3 py-4 ${indexActive == 0 ? 'active-inbox' : ''} cursor-pointer hover:bg-zinc-100`} onClick={() => activeIndex(0)}>
+                <p>In progress</p>
+              </div>
               <div className={`w-full h-full max-h-44 border flex items-start gap-3 p-3 py-4 ${indexActive == 0 ? 'active-inbox' : ''} cursor-pointer hover:bg-zinc-100`} onClick={() => activeIndex(0)}>
                 <p>In progress</p>
               </div>
               <div className={`w-full h-auto max-h-44 border flex items-start gap-3 p-3 py-4 ${indexActive == 1 ? 'active-inbox' : ''} cursor-pointer hover:bg-zinc-100`} onClick={() => activeIndex(1)}>
                 <p>Finished</p>
               </div>
-            </div>
-            <div className='h-[500px] w-full overflow-y-auto flex flex-col gap-3'>
+            </div> */}
+            <div className='w-full overflow-y-auto flex flex-col gap-3'>
               {
+                contractFilter.length > 0 && 
+                contractFilter.map((item: ContractCustomer, i: number) => (
+                  <div key={i} className='border border-neutral-200 rounded-xl p-4'>
+                    <div className='flex items-start gap-5'>
+                      {
+                        item.provider_image != null ?
+                          <Avatar image={item.provider_image} shape="circle" className='w-10 h-10' />
+                          :
+                          <FontAwesomeIcon icon={faCircleUser} className='w-10 h-10' style={{color: "#c2c2c2"}} />
+                      }
+                      <div className='w-full flex flex-col gap-2'>
+                        <div className='flex items-center gap-5'>
+                          <p className='text-zinc-900 font-medium text-lg'>{item.service_name}</p>
+                          <p className={`${setColorStatus(item.contract_state)} text-sm`} style={{textTransform: 'capitalize'}}>{(item.contract_state).toLowerCase()}</p>
+                          <p className="text-green-600/60 font-semibold">$ {item.contract_price || 0}</p>
+                          <Button 
+                          icon='pi pi-send' 
+                          text 
+                          severity='secondary' 
+                          tooltip='Go chat'
+                          tooltipOptions={{style: {fontSize: '12px'}}}
+                          className={`ml-auto text-xs ${item.contract_state !== 'FINISHED' && item.contract_state !== 'CANCELED' ? 'block' : 'hidden'}`}></Button>
+                        </div>
+                        <p className='text-zinc-900'>{item.provider_name}</p>
+                        <p className='text-zinc-900 text-sm font-light'>{item.phone}</p>
+                        <p className='text-neutral-600 text-sm font-light'>{item.contract_description}</p>
+                        <div className='w-full flex items-center justify-between'>
+                          <p className='text-neutral-400 text-xs font-light'>Request made {formatDateFirstMonth(String(item.contract_date))}</p>
+                          {
+                            item.contract_state == 'OFFERED' ?
+                            <div className='flex items-center justify-end gap-3'>
+                              <OverlayPanel ref={op} showCloseIcon>
+                                  <InputNumber inputId="currency-us" value={money} onValueChange={(e) => setMoney(Number(e.value))} mode="currency" currency="USD" locale="en-US" />
+                                  <Button label="Send Offer" text className="rounded-3xl text-sm px-5 py-3 text-sky-500 hover:text-sky-600" onClick={() => updateResponse(item, 'OFFERED')} />
+                              </OverlayPanel>
+                              <Button 
+                              disabled={loadingButton}
+                              label='Decline Offer' 
+                              className='text-sm rounded-xl shadow-lg shadow-rose-500 bg-rose-500 border-rose-500 hover:bg-rose-600 hover:border-rose-600' 
+                              onClick={(e) => op.current.toggle(e)} />
+                              <Button 
+                              disabled={loadingButton}
+                              label='Accept Offer' 
+                              className='text-sm rounded-xl shadow-lg shadow-emerald-500 bg-emerald-500 border-emerald-500 hover:bg-emerald-600 hover:border-emerald-600' 
+                              onClick={() => updateResponse(item, 'APPROVED')} />
+                            </div>
+                            : item.contract_state == 'APPROVED' ?
+                            <Button 
+                            label='Mark Done' 
+                            disabled={loadingButton}
+                            className='text-sm rounded-xl shadow-lg shadow-sky-500 bg-sky-500 border-sky-500 hover:bg-sky-600 hover:border-sky-600'
+                            onClick={() => updateResponse(item, 'FINISHED')} />
+                            :
+                            <div className={`px-7 py-2.5 rounded-xl shadow-lg ${setBackgroundColorStatus(item.contract_state)}`}>
+                              <p className='text-white text-sm' style={{textTransform: 'capitalize'}}>{(item.contract_state).toLowerCase()}</p>
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              }
+              {/* {
                 indexActive == 0 && contractFilterProgress.length > 0 ?
                 contractFilterProgress.map((item: ContractCustomer, i: number) => (
                     <div key={i} className='border border-neutral-200 rounded-xl p-4'>
@@ -224,9 +328,6 @@ const ProjectsPage = () => {
                           </div>
                           <p className='text-zinc-900'>{item.provider_name}</p>
                           <p className='text-zinc-900 text-sm font-light'>{item.phone}</p>
-                          {/* <div className='w-full flex justify-end'>
-                            <RatingComponent value={rating.rating} readOnly cancel={false} />
-                          </div> */}
                           <p className='text-neutral-600 text-sm font-light'>{item.contract_description}</p>
                           <div className='w-full flex items-center justify-between'>
                             <p className='text-neutral-400 text-xs font-light'>Request made {formatDateFirstMonth(String(item.contract_date))}</p>
@@ -290,7 +391,7 @@ const ProjectsPage = () => {
                     </div>
                 ))
                 : null
-              }
+              } */}
             </div>
           </div>
       </LayoutPrincipal>

@@ -6,6 +6,11 @@ export const formatDate = (date: string) => {
     return newDate
 }
 
+export const formatDateMessage = (date: string) => {
+    const newDate = format(new Date(date), 'E dd/MM/yyyy', {locale: enUS})
+    return newDate
+}
+
 export const formatDateFirstMonth = (date: string) => {
     const newDate = format(new Date(date), 'MMMM dd, yyyy', {locale: enUS})
     return newDate

@@ -18,9 +18,20 @@ export const Stripes = () => {
         })
     };
 
+    const createPaymentMethod = (data: any) => {
+        axios.post('/payment-method-create', data)
+        .then((res) => {
+            console.log(res)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+
 
     return {
         createAccount,
+        createPaymentMethod
     }
 }
 

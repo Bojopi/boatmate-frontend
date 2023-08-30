@@ -11,7 +11,7 @@ import { Sidebar } from 'flowbite-react';
 import {BsInbox, BsStar} from 'react-icons/bs'
 import {AiOutlineDashboard, AiOutlinePieChart} from 'react-icons/ai'
 import {PiWallet, PiWrench, PiUsers} from 'react-icons/pi'
-import {MdOutlineLogout} from 'react-icons/md'
+import {MdOutlineForwardToInbox, MdOutlineLogout} from 'react-icons/md'
 import {LiaUsersCogSolid} from 'react-icons/lia'
 import { Avatar } from 'primereact/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -147,6 +147,13 @@ const LayoutAdmin = ({children}: any) => {
                                 className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
                                 >
                                     <p>Reviews</p>
+                                </Sidebar.Item>
+                                <Sidebar.Item
+                                href={`/welcome/inbox/${user.idProvider}`}
+                                className='hover:bg-sky-500 hover:text-white hover:shadow-xl menu-options'
+                                icon={MdOutlineForwardToInbox}
+                                >
+                                    <p>Inbox</p>
                                 </Sidebar.Item>
                             </>
                             :
